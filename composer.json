@@ -1,0 +1,76 @@
+{
+    "name"              : "simtabi/pheg",
+    "license"           : "MIT",
+    "description"       : "A collection of handy and useful utility library for the everyday PHP developer",
+    "type"              : "package",
+    "keywords": [
+        "helpers",
+        "functions"
+    ],
+    "authors": [
+        {
+            "name": "Imani Manyara",
+            "email": "hello@imanimanyara.com",
+            "homepage": "https://www.imanimanyara.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "ext-gd": "*",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "league/color-extractor": "^0.3.2",
+        "annexare/countries-list": "^2.6.1",
+        "mleczek/collections": "dev-master",
+        "adbario/php-dot-notation": "^2.2",
+        "jasny/dotkey": "dev-master",
+        "ichtrojan/laravel-otp": "dev-master",
+        "dyrynda/laravel-model-uuid": "^6.4.0",
+        "ramsey/uuid": "^4.1.1",
+        "dyrynda/laravel-efficient-uuid": "^4.3.0",
+        "spomky-labs/otphp": "^v10.0.1",
+        "nesbot/carbon": "^2.41",
+        "cocur/slugify": "^4.0",
+        "mccool/laravel-auto-presenter": "^7.5",
+        "ausi/slug-generator": "^v1.1.1",
+        "vincoweb/easy-php-file-info": "^v1.0.6",
+        "respect/validation": "^2.2.1",
+        "bjeavons/zxcvbn-php": "^1.2.0",
+        "giggsey/libphonenumber-for-php": "^8.12.18",
+        "simtabi/memory-size": "dev-master",
+        "mattkingshott/axiom": "^3.1.1",
+        "propaganistas/laravel-phone": "^4.2",
+        "irfa/php-sn-generator": "dev-master",
+        "html2text/html2text": "^4.2",
+        "phlak/strgen": "^3.0",
+        "gpslab/base64uid": "dev-master",
+        "ezyang/htmlpurifier": "^v4.13.0",
+        "fightbulc/moment": ">=1.33.0",
+        "maxakawizard/json-collection-parser": "dev-master",
+        "cerbero/json-objects": "^1.2.0",
+        "simtabi/json-db": "dev-master",
+        "simtabi/nyoka": "dev-master",
+        "symfony/uid": "^v5.2.6",
+        "jimmiw/php-time-ago": "dev-master",
+        "sokil/php-isocodes": "^3.3",
+        "masterminds/html5": "^2.0",
+        "spatie/url": "^2.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simtabi\\Pheg\\": "src/"
+        },
+        "files": [
+            "helpers/classes.php",
+            "helpers/constants.php",
+            "helpers/form_helpers.php",
+            "helpers/functions.php",
+            "helpers/support_data.php"
+        ]
+    },
+    "extra": {
+    }
+}
