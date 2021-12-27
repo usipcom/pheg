@@ -8,7 +8,7 @@ use Simtabi\Pheg\Toolbox\Base64;
 use Simtabi\Pheg\Toolbox\Breadcrumbs;
 use Simtabi\Pheg\Toolbox\Colors\Colors;
 use Simtabi\Pheg\Toolbox\CopyrightText;
-use Simtabi\Pheg\Toolbox\Countries;
+use Simtabi\Pheg\Toolbox\Countries\Countries;
 use Simtabi\Pheg\Toolbox\DataHandler;
 use Simtabi\Pheg\Toolbox\Html2Text;
 use Simtabi\Pheg\Toolbox\HtmlCleaner;
@@ -51,77 +51,77 @@ class Pheg
         return Data::getInstance(self::$instance);
     }
 
-    public function getColor(): Colors
+    public function color(): Colors
     {
         return Colors::invoke();
     }
 
-    public function getBase64Uid(): Base64
+    public function base64Uid(): Base64
     {
         return Base64::invoke();
     }
 
-    public function getBreadcrumbs(?string $separator = null): Breadcrumbs
+    public function breadcrumbs(?string $separator = null): Breadcrumbs
     {
         return  Breadcrumbs::invoke($separator);
     }
 
-    public function getCopyrightBuilder(): CopyrightText
+    public function copyrightBuilder(): CopyrightText
     {
         return CopyrightText::invoke();
     }
 
-    public function getAtlas(): Countries
+    public function atlas(): Countries
     {
         return Countries::invoke();
     }
 
-    public function getDataHandler(): DataHandler
+    public function dataHandler(): DataHandler
     {
         return DataHandler::invoke();
     }
 
-    public function getHtml2Text(): Html2Text
+    public function html2Text(): Html2Text
     {
         return Html2Text::invoke();
     }
 
-    public function getHtml5Cleaner(): HtmlCleaner
+    public function html5Cleaner(): HtmlCleaner
     {
         return HtmlCleaner::invoke();
     }
 
-    public function getIntel(): Intel
+    public function intel(): Intel
     {
         return Intel::invoke();
     }
 
-    public function getUuid(): UuidGenerator
+    public function uuid(): UuidGenerator
     {
         return UuidGenerator::invoke();
     }
 
-    public function getSanitizer(): Sanitize
+    public function sanitizer(): Sanitize
     {
         return Sanitize::invoke();
     }
 
-    public function getSimpleTimer(): SimpleTimer
+    public function simpleTimer(): SimpleTimer
     {
         return SimpleTimer::invoke();
     }
 
-    public function getSslToolkit(): SSLToolkit
+    public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
     {
-        return SSLToolkit::invoke();
+        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
     }
 
-    public function getTypeConverter(): TypeConverter
+    public function typeConverter(): TypeConverter
     {
         return TypeConverter::invoke();
     }
 
-    public function getValidator(): Validators
+    public function validator(): Validators
     {
         return Validators::invoke();
     }

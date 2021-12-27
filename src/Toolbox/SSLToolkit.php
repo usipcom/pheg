@@ -27,7 +27,7 @@ final class SSLToolkit
      * @param float $timeOut
      * @throws Exception
      */
-    public function __construct(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30)
+    private function __construct(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30)
     {
         ! empty($url) ? $this->add($url) : $this->urls = $url;
         $this->dateFormat = $dateFormat;
@@ -47,10 +47,10 @@ final class SSLToolkit
 
     /**
      * @param array $data
-     * @return CheckSSL
+     * @return self
      * @throws Exception
      */
-    public function add(...$data): CheckSSL
+    public function add(...$data): self
     {
         /** @var array|string $url */
         foreach ($data as $url) {
