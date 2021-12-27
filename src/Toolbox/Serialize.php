@@ -16,7 +16,7 @@ final class Serialize
 
     /**
      * Check value to find if it was serialized.
-     * If $data is not an string, then returned value will always be false. Serialized data is always a string.
+     * If $data is not a string, then returned value will always be false. Serialized data is always a string.
      *
      * @param mixed $data Value to check to see if was serialized
      * @return bool
@@ -44,7 +44,7 @@ final class Serialize
         $length = strlen($data);
 
         // Check some basic requirements of all serialized strings
-        if ($this->checkBasic($data, $length)) {
+        if ($this->checkBasicRequirements($data, $length)) {
             return false;
         }
 
@@ -59,7 +59,7 @@ final class Serialize
      * @param mixed $data Data that might need to be serialized
      * @return mixed
      */
-    public function maybe($data)
+    public function serialize($data)
     {
         if (is_array($data) || is_object($data)) {
             return serialize($data);
@@ -74,7 +74,7 @@ final class Serialize
      * @param string $data A variable that may or may not be serialized
      * @return mixed
      */
-    public function maybeUn(string $data)
+    public function unserialize(string $data)
     {
         $data = trim($data);
 
@@ -86,7 +86,7 @@ final class Serialize
         $length = strlen($data);
 
         // Check some basic requirements of all serialized strings
-        if ($this->checkBasic($data, $length)) {
+        if ($this->checkBasicRequirements($data, $length)) {
             return $data;
         }
 
@@ -102,7 +102,7 @@ final class Serialize
         // Data failed to unserialize?
         if ($uns === false) {
             /** @noinspection UnserializeExploitsInspection */
-            $uns = @unserialize($this->fix($data), []);
+            $uns = @unserialize($this->fixBroken($data), []);
 
             if ($uns === false) {
                 return $data;
@@ -123,7 +123,7 @@ final class Serialize
      * @param string $brokenSerializedData
      * @return string
      */
-    public function fix(string $brokenSerializedData): string
+    public function fixBroken(string $brokenSerializedData): string
     {
         $fixedSerializedData = preg_replace_callback(
             '!s:(\d+):"(.*?)";!',
@@ -145,14 +145,12 @@ final class Serialize
      * Check some basic requirements of all serialized strings
      *
      * @param string $data
-     * @param int    $length
+     * @param int $length
+     * @param int $minLength
      * @return bool
      */
-    protected function checkBasic(string $data, int $length): bool
+    protected function checkBasicRequirements(string $data, int $length, int $minLength = 4): bool
     {
-        $minLength = 4;
-        return $length < $minLength
-            || $data[1] !== ':'
-            || ($data[$length - 1] !== ';' && $data[$length - 1] !== '}');
+        return $length < $minLength || $data[1] !== ':' || ($data[$length - 1] !== ';' && $data[$length - 1] !== '}');
     }
 }

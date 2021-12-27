@@ -19,6 +19,7 @@
         "ext-gd": "*",
         "ext-dom": "*",
         "ext-libxml": "*",
+        "eclipxe/xmlschemavalidator": "^3.0",
         "league/color-extractor": "^0.3.2",
         "annexare/countries-list": "^2.6.1",
         "mleczek/collections": "dev-master",

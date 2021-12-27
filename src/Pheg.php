@@ -2,10 +2,11 @@
 
 namespace Simtabi\Pheg;
 
+use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Core\Support\Data;
 use Simtabi\Pheg\Toolbox\Base64;
 use Simtabi\Pheg\Toolbox\Breadcrumbs;
-use Simtabi\Pheg\Toolbox\Color\ClassLoader;
+use Simtabi\Pheg\Toolbox\Colors\Colors;
 use Simtabi\Pheg\Toolbox\CopyrightText;
 use Simtabi\Pheg\Toolbox\Countries;
 use Simtabi\Pheg\Toolbox\DataHandler;
@@ -14,10 +15,9 @@ use Simtabi\Pheg\Toolbox\HtmlCleaner;
 use Simtabi\Pheg\Toolbox\Intel;
 use Simtabi\Pheg\Toolbox\Sanitize;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 use Simtabi\Pheg\Toolbox\UuidGenerator;
 use Simtabi\Pheg\Toolbox\SSLToolkit;
-use Simtabi\Pheg\Toolbox\TypeConverter;
-use Simtabi\Pheg\Toolbox\Validator;
 use Respect\Validation\Validator as Respect;
 
 class Pheg
@@ -51,9 +51,9 @@ class Pheg
         return Data::getInstance(self::$instance);
     }
 
-    public function getColor(): ClassLoader
+    public function getColor(): Colors
     {
-        return ClassLoader::invoke();
+        return Colors::invoke();
     }
 
     public function getBase64Uid(): Base64
@@ -121,9 +121,9 @@ class Pheg
         return TypeConverter::invoke();
     }
 
-    public function getValidator(): Validator
+    public function getValidator(): Validators
     {
-        return Validator::invoke();
+        return Validators::invoke();
     }
 
 }
