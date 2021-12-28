@@ -12,6 +12,8 @@ use Simtabi\Pheg\Toolbox\JSON\JSON;
 final class DataFactory
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

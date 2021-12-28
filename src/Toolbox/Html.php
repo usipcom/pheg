@@ -5,13 +5,15 @@ namespace Simtabi\Pheg\Toolbox;
 final class Html
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();
     }
 
     public function bolderHtmlString($string, $type = 1){
-        return '<strong>'. $this->makeItReadable($string, $type) .'</strong>';
+        return '<strong>'. Str::makeItReadable($string, $type) .'</strong>';
     }
 
     public function parseHTMLTags($tags, $enclose = true, $trim = false) {

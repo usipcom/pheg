@@ -12,6 +12,8 @@ use Simtabi\Pheg\Core\Exceptions\PhegException;
 final class Http
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

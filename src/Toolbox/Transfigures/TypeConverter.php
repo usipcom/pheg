@@ -23,7 +23,7 @@ final class TypeConverter {
     private Serialize  $serialize;
     private Xml2Array  $xml2Array;
 
-    public function __construct()
+    private function __construct()
     {
         $this->validators = Validators::invoke();
         $this->serialize  = Serialize::invoke();

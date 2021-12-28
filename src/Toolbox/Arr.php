@@ -14,22 +14,27 @@ use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 final class Arr
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();
     }
 
     public function set($key, $value, array &$data) {
-        if ($key === null) {
+        if ($key === null)
+        {
             return null;
         }
 
         $keys = explode('.', $key);
 
-        while (count($keys) > 1) {
+        while (count($keys) > 1)
+        {
             $key = array_shift($keys);
 
-            if ( ! isset($data[$key]) || ! is_array($data[$key])) {
+            if ( ! isset($data[$key]) || ! is_array($data[$key]))
+            {
                 $data[$key] = [];
             }
 

@@ -56,10 +56,7 @@ final class HtmlCleaner
      */
     protected $ownerDocument;
 
-    public function __construct()
-    {
-
-    }
+    private function __construct() {}
 
     public static function invoke(): self
     {

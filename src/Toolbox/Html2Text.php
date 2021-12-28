@@ -23,9 +23,7 @@ use DOMDocument;
 final class Html2Text
 {
 
-    public function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function invoke(): self
     {

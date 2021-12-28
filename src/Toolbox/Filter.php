@@ -3,8 +3,9 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
-use Simtabi\Pheg\Toolbox\Data\DataTypeFactory;
-use Simtabi\Pheg\Toolbox\Data\JSON;
+use Exception;
+use Simtabi\Pheg\Toolbox\Data\Types\Factory;
+use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 
 /**
  * Class Filter
@@ -13,6 +14,8 @@ use Simtabi\Pheg\Toolbox\Data\JSON;
  */
 final class Filter
 {
+
+    private function __construct() {}
 
     public static function invoke(): self
     {
@@ -391,12 +394,12 @@ final class Filter
     /**
      * Returns JSON object from array
      *
-     * @param array|DataTypeFactory $data
-     * @return DataTypeFactory
+     * @param array|Factory $data
+     * @return Factory
      */
-    public function data($data): DataTypeFactory
+    public function data($data): Factory
     {
-        if ($data instanceof DataTypeFactory) {
+        if ($data instanceof Factory) {
             return $data;
         }
 

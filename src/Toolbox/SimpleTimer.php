@@ -38,7 +38,7 @@ final class SimpleTimer
     /**
      * Timer constructor
      */
-    public function __construct()
+    private function __construct()
     {
         $this->times   = [$this->getTimestamp('Start timer')];
         $this->started = true;

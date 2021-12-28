@@ -5,10 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 final class Intel
 {
 
-    public function __construct()
-    {
-
-    }
+    private function __construct() {}
 
     public static function invoke(): self
     {

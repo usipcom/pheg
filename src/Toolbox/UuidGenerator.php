@@ -19,10 +19,7 @@ final class UuidGenerator
      */
     protected  $uuidFactory;
 
-    public function __construct()
-    {
-
-    }
+    private function __construct() {}
 
     public static function invoke(): self
     {

@@ -11,6 +11,8 @@ namespace Simtabi\Pheg\Toolbox;
 final class System
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

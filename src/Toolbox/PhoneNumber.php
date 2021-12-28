@@ -14,6 +14,8 @@ use Simtabi\Pheg\Core\CoreTools;
 final class PhoneNumber
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

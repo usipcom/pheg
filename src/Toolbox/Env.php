@@ -10,6 +10,8 @@ final class Env
     public const VAR_FLOAT  = 8;
     public const VAR_STRING = 16;
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

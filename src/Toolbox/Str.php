@@ -27,6 +27,8 @@ final class Str
      */
     public static $encoding = 'UTF-8';
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();
@@ -636,7 +638,7 @@ final class Str
             $encodingNew = self::$encoding;
         }
 
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) use ($encodingNew) {
                 if (!is_string($input)) {
@@ -1069,7 +1071,7 @@ final class Str
      */
     public function stringToBoolean($input)
     {
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) {
                 $inputConverted = $input;
@@ -1103,7 +1105,7 @@ final class Str
             return $standard;
         }
 
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $standard,
             function($input) {
                 $inputConverted = $input;
@@ -1130,7 +1132,7 @@ final class Str
      */
     public function stringToInt($input)
     {
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) {
 
@@ -1158,7 +1160,7 @@ final class Str
      */
     public function stringToFloat($input)
     {
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) {
 
@@ -1186,7 +1188,7 @@ final class Str
      */
     public function stringToNumber($input)
     {
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) {
 
@@ -1219,7 +1221,7 @@ final class Str
      */
     public function booleanToString($input)
     {
-        return ArrayHelper::recurse(
+        return Arr::recurse(
             $input,
             function($input) {
                 if ($input === true) {

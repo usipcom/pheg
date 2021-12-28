@@ -36,9 +36,10 @@ final class XmlToArrayConfig
         string $attributesKey,
         string $cdataKey,
         string $valueKey,
-        bool $useNamespaces,
-        bool $forceOneElementArray
-    ) {
+        bool   $useNamespaces,
+        bool   $forceOneElementArray
+    )
+    {
         $this->version              = $version;
         $this->encoding             = $encoding;
         $this->attributesKey        = $attributesKey;
@@ -97,4 +98,5 @@ final class XmlToArrayConfig
     {
         return $this->forceOneElementArray;
     }
+
 }

@@ -14,6 +14,8 @@ final class Cli
 
     public const DEFAULT_WIDTH = 80;
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

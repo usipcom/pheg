@@ -15,6 +15,8 @@ final class Xml
     public const VERSION  = '1.0';
     public const ENCODING = 'UTF-8';
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

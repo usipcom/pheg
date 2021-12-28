@@ -7,7 +7,6 @@ use DateTimeZone;
 use Exception;
 use Moment\Moment;
 use Carbon\Carbon;
-use Simtabi\Pheg\Core\CoreTools;
 use Simtabi\Pheg\Core\Exceptions\PhegException;
 use Westsworld\TimeAgo;
 
@@ -22,6 +21,8 @@ final class Dates
 
     public const SQL_FORMAT = 'Y-m-d H:i:s';
     public const SQL_NULL   = '0000-00-00 00:00:00';
+
+    private function __construct() {}
 
     public static function invoke(): self
     {

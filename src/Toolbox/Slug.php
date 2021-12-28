@@ -12,6 +12,8 @@ use Cocur\Slugify\Slugify;
 final class Slug
 {
 
+    private function __construct() {}
+
     public static function invoke(string $string, $sep = '_', array $args = []): self
     {
         return (new Slugify($args))->slugify($string, $sep);

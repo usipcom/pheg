@@ -14,6 +14,7 @@ use Exception;
  */
 final class Url
 {
+
     /**
      * URL constants as defined in the PHP Manual under "Constants usable with http_build_url()".
      *
@@ -35,6 +36,8 @@ final class Url
 
     public const PORT_HTTP          = 80;
     public const PORT_HTTPS         = 443;
+
+    private function __construct() {}
 
     public static function invoke(): self
     {

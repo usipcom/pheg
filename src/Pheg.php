@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg;
 
 use Simtabi\Enekia\Validators;
-use Simtabi\Pheg\Core\Support\Data;
+use Simtabi\Pheg\Core\Support\PhegData;
 use Respect\Validation\Validator as Respect;
 use Simtabi\Pheg\Toolbox\Arr;
 use Simtabi\Pheg\Toolbox\Avatar;
@@ -61,8 +61,6 @@ use Simtabi\Pheg\Toolbox\Xml;
 class Pheg
 {
 
-    public static Respect $respectValidation;
-
     /**
      * Create class instance
      *
@@ -72,33 +70,24 @@ class Pheg
     private static $instance;
 
     public static function getInstance() {
-        if (isset(self::$instance) && !is_null(self::$instance)) {
-            return self::$instance;
-        } else {
+        if (!isset(self::$instance) || is_null(self::$instance)) {
             self::$instance = new static();
-            self::$respectValidation = new Respect();
-            return self::$instance;
         }
+        return self::$instance;
     }
 
     private function __construct(){}
     private function __clone() {}
 
-    public function supportData(): Data
+    public function data(): PhegData
     {
-        return Data::getInstance(self::$instance);
+        return PhegData::getInstance(self::$instance);
     }
 
     public function validator(): Validators
     {
         return Validators::invoke();
     }
-
-
-
-
-
-
 
     ///
     ///
@@ -119,9 +108,9 @@ class Pheg
         return DataFactory::invoke();
     }
 
-    public function file(): File
+    public function file($path, $mode): File
     {
-        return File::invoke();
+        return File::invoke($path, $mode);
     }
 
     public function json(): JSON
@@ -134,11 +123,6 @@ class Pheg
         return ArrayToXml::invoke();
     }
 
-    public function arrayToXmlConfig(): ArrayToXmlConfig
-    {
-        return ArrayToXmlConfig::invoke();
-    }
-
     public function typeConverter(): TypeConverter
     {
         return TypeConverter::invoke();
@@ -149,14 +133,9 @@ class Pheg
         return Xml2Array::invoke();
     }
 
-    public function xmlResponse(): XmlResponse
+    public function xmlResponse(array $array): XmlResponse
     {
-        return XmlResponse::invoke();
-    }
-
-    public function xmlToArrayConfig(): XmlToArrayConfig
-    {
-        return XmlToArrayConfig::invoke();
+        return XmlResponse::invoke($array);
     }
 
 
@@ -325,9 +304,9 @@ class Pheg
         return SimpleTimer::invoke();
     }
 
-    public function slug(): Slug
+    public function slug(string $string, $separator = '_', array $args = []): Slug
     {
-        return Slug::invoke();
+        return Slug::invoke($string, $separator, $args);
     }
 
     public function sqlHandler(): SqlHandler
@@ -335,9 +314,9 @@ class Pheg
         return SqlHandler::invoke();
     }
 
-    public function sslToolkit(): SSLToolkit
+    public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
     {
-        return SSLToolkit::invoke();
+        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
     }
 
     public function stats(): Stats
@@ -375,11 +354,10 @@ class Pheg
         return Xml::invoke();
     }
 
-
-
     /*
     function dev()
     {
+
         $str = "
 
         ";
@@ -401,6 +379,5 @@ class Pheg
         echo $t;
     }
     */
-
 
 }

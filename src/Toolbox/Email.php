@@ -7,6 +7,8 @@ use Exception;
 final class Email
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

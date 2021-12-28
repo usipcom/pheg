@@ -41,6 +41,8 @@ final class FileSystem
     public const PERM_ALL_EXEC          = 0x0001;
     public const PERM_ALL_EXEC_STICKY   = 0x0200;
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

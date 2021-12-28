@@ -32,7 +32,7 @@ final class ArrayToXml
 
     private ArrayToXmlConfig $config;
 
-    public function __construct(array $config = [])
+    private function __construct(array $config)
     {
         // string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false
         $this->config            = ArrayToXmlConfig::fromArray($config);

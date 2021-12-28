@@ -22,7 +22,7 @@ final class Base64Uid
     private string $charset      = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
     private int    $length       = 16;
 
-    public function __construct() {}
+    private function __construct() {}
 
     public static function invoke(): self
     {

@@ -43,7 +43,7 @@ final class Countries
     private array  $loaded    = [];
     private array  $loadFrom  = [];
 
-    public function __construct(string $basePath = '') {
+    private function __construct(string $basePath) {
         if (!empty($basePath) && is_string($basePath)) {
             $this->basePath = $basePath;
         }else{

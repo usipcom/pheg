@@ -28,6 +28,8 @@ final class Image
     private const EXTENDS_PARTS  = 4;
     private const DETAILED_PARTS = 6;
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

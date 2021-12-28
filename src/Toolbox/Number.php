@@ -8,6 +8,8 @@ use NumberFormatter;
 final class Number
 {
 
+    private function __construct() {}
+
     public static function invoke(): self
     {
         return new self();

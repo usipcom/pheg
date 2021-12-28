@@ -19,7 +19,7 @@ class XmlResponse implements IteratorAggregate, ArrayAccess
      *
      * @param array $array
      */
-    public function __construct(array $array)
+    private function __construct(array $array)
     {
         $this->array = $array;
     }

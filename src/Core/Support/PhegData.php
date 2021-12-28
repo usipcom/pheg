@@ -10,7 +10,7 @@ use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
 use Simtabi\Pheg\Toolbox\TypeConverter;
 
-class Data
+class PhegData
 {
     use DataHelpersTrait;
     use FormHelpersTrait;

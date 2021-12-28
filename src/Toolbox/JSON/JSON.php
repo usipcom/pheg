@@ -40,15 +40,18 @@ class JSON implements JSONInterface
      */
     private $linter;
 
+    private function __construct() {}
+
+    public static function invoke(): self
+    {
+        return new self();
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function decode(
-        $json,
-        $associative = false,
-        $depth = 512,
-        $options = 0
-    ) {
+    public function decode($json, $associative = false, $depth = 512, $options = 0)
+    {
         $decoded = json_decode($json, $associative, $depth, $options);
 
         if ($this->hasError()) {
@@ -71,12 +74,7 @@ class JSON implements JSONInterface
     public function decodeFile($file, $associative = false, $depth = 512, $options = 0)
     {
         try {
-            return $this->decode(
-                (new File($file, 'r'))->read(),
-                $associative,
-                $depth,
-                $options
-            );
+            return $this->decode((new File($file, 'r'))->read(), $associative, $depth, $options);
         } catch (Exception $exception) {
             throw new DecodeException(
                 'The JSON encoded file "%s" could not be decoded.',

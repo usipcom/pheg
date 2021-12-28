@@ -3,34 +3,32 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use DateTime;
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 
 final class CopyrightText
 {
 
-    public const
-        TYPE_COMBINED = 'combined',
-        TYPE_START    = 'start',
-        TYPE_END      = 'end';
+    public const TYPE_COMBINED = 'combined';
+    public const TYPE_START    = 'start';
+    public const TYPE_END      = 'end';
 
-    private
-        $dateTime,
-        $copyrightSymbol = "&copy;",
-        $registeredSign  = "&reg;",
-        $trademarkSign   = "&trade;",
-        $trademarked     = true,
-        $registered      = true,
+    private $dateTime;
+    private $copyrightSymbol   = "&copy;";
+    private $registeredSign    = "&reg;";
+    private $trademarkSign     = "&trade;";
+    private $trademarked       = true;
+    private $registered        = true;
 
+    private $declarationText   = '';
+    private $companyName       = '';
+    private $startYear         = '';
+    private $endYear           = '';
+    private $longVersion       = true;
+    private $longFormat        = true;
+    private $type              = 'combined';
+    private $build             = null;
 
-        $declarationText = '',
-        $companyName     = '',
-        $startYear       = '',
-        $endYear         = '',
-        $longVersion     = true,
-        $longFormat      = true,
-        $type            = 'combined',
-        $build           = null;
-
-    public function __construct()
+    private function __construct()
     {
         $this->dateTime = new DateTime();
     }
@@ -316,9 +314,9 @@ final class CopyrightText
             $this->build = match ($longVersion) {
                 true => match ($type) {
                     "combined" => $startYear . " - " . $endYear,
-                    "start" => $startYear,
-                    "end" => $endYear,
-                    default => $endYear,
+                    "start"    => $startYear,
+                    "end"      => $endYear,
+                    default    => $endYear,
                 },
                 false => match ($type) {
                     "start" => $startYear,
@@ -327,7 +325,7 @@ final class CopyrightText
                 },
                 default => match ($type) {
                     "start" => $startYear,
-                    "end" => $endYear,
+                    "end"   => $endYear,
                     default => $endYear,
                 },
             };
@@ -364,8 +362,8 @@ final class CopyrightText
         $year        = $this->generate()->build;
 
         // construct
-        $htmlText      = $symbol . '&nbsp;' . $year . '&nbsp;' . $companyName . '&nbsp;&centerdot;&nbsp;' . $declaration;
-        return TypeConverter::fromAnyToObject([
+        $htmlText    = $symbol . '&nbsp;' . $year . '&nbsp;' . $companyName . '&nbsp;&centerdot;&nbsp;' . $declaration;
+        return TypeConverter::invoke()->toObject([
             'html' => html_entity_decode($htmlText),
             'text' => [
                 'declaration' => $declaration,

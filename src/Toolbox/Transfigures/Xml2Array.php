@@ -55,7 +55,7 @@ final class Xml2Array
     /** @var array<string, string|int> The working list of XML namespaces */
     private array $namespaces = [];
 
-    public function __construct(array $config = [])
+    private function __construct(array $config)
     {
         $this->config = XmlToArrayConfig::fromArray($config);
     }
@@ -90,7 +90,7 @@ final class Xml2Array
             $array = $init->buildArrayFromString($xmlString);
         }
 
-        return new XmlResponse($array);
+        return XmlResponse::invoke($array);
     }
 
     /**

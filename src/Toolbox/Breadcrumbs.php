@@ -59,7 +59,7 @@ final class Breadcrumbs
      * Breadcrumb constructor.
      * @param null|string $separator
      */
-    public function __construct(?string $separator = null)
+    private function __construct(?string $separator)
     {
 
         $this->separator     = $separator;
