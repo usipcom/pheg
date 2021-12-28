@@ -30,15 +30,7 @@ final class XmlToArrayConfig
 
     private bool $forceOneElementArray;
 
-    private function __construct(
-        string $version,
-        string $encoding,
-        string $attributesKey,
-        string $cdataKey,
-        string $valueKey,
-        bool   $useNamespaces,
-        bool   $forceOneElementArray
-    )
+    private function __construct(string $version, string $encoding, string $attributesKey, string $cdataKey, string $valueKey, bool   $useNamespaces, bool   $forceOneElementArray)
     {
         $this->version              = $version;
         $this->encoding             = $encoding;
@@ -47,6 +39,11 @@ final class XmlToArrayConfig
         $this->valueKey             = $valueKey;
         $this->useNamespaces        = $useNamespaces;
         $this->forceOneElementArray = $forceOneElementArray;
+    }
+
+    public function invoke(string $version, string $encoding, string $attributesKey, string $cdataKey, string $valueKey, bool   $useNamespaces, bool   $forceOneElementArray)
+    {
+        return new self($version, $encoding, $attributesKey, $cdataKey, $valueKey, $useNamespaces, $forceOneElementArray);
     }
 
     public static function fromArray(array $configData = []): self

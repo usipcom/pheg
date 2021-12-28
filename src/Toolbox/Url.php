@@ -545,12 +545,10 @@ final class Url
 
         $url = $this->appendScheme($this->removeHttp($url), $https);
         if(!$formatted){
-            $output = $this->removeHttp($url);
-        }else{
-            $output = $url;
+            return $this->removeHttp($url);
         }
 
-        return $output;
+        return $url;
     }
 
     public function appendScheme($url, $https = false){
@@ -664,9 +662,7 @@ final class Url
             // Ensure we always have a trailing slash,
             // but first we trim all existing ones,
             // then we append to ensure consistency
-            $baseURL = trim($baseURL, '/').'/';
-
-            return $baseURL;
+            return trim($baseURL, '/').'/';
         }catch (Exception $exception){
             return false;
         }
@@ -686,16 +682,17 @@ final class Url
         } elseif (!empty($_SERVER['REDIRECT_URL'])) {
             $url = $_SERVER['REDIRECT_URL'];
         } elseif (!empty($_SERVER['REQUEST_URI'])) {
-            $parseURL = (array) parse_url($_SERVER['REQUEST_URI']);
-            $url = $parseURL['path'] ?? '';
+            $parse = (array) parse_url($_SERVER['REQUEST_URI']);
+            $url   = $parse['path'] ?? '';
         }
 
         return $url;
     }
 
-    public function getBaseUrlHost()
+    public function getBaseUrlHost(): string
     {
-        return $this->parseUrl( $this->getBaseUrl());
+        $url = $this->getBaseUrl();
+        return $url ? $this->parseUrl($url)->getHost() : '';
     }
 
 }
