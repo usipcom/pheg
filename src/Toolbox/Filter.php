@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
-use Simtabi\Pheg\Toolbox\Data\Data;
+use Simtabi\Pheg\Toolbox\Data\DataTypeFactory;
 use Simtabi\Pheg\Toolbox\Data\JSON;
 
 /**
@@ -391,12 +391,12 @@ final class Filter
     /**
      * Returns JSON object from array
      *
-     * @param array|Data $data
-     * @return Data
+     * @param array|DataTypeFactory $data
+     * @return DataTypeFactory
      */
-    public function data($data): Data
+    public function data($data): DataTypeFactory
     {
-        if ($data instanceof Data) {
+        if ($data instanceof DataTypeFactory) {
             return $data;
         }
 

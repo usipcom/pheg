@@ -32,11 +32,11 @@ final class Http
         }
 
         // required for IE, otherwise Content-disposition is ignored
-        if (Sys::iniGet('zlib.output_compression')) {
-            Sys::iniSet('zlib.output_compression', 'Off');
+        if (System::iniGet('zlib.output_compression')) {
+            System::iniSet('zlib.output_compression', 'Off');
         }
 
-        Sys::setTime();
+        System::setTime();
 
         // Set headers
         header('Pragma: public');
@@ -49,7 +49,7 @@ final class Http
         header('Content-Length: ' . filesize($filename));
 
         // output file
-        if (Sys::isFunc('fpassthru')) {
+        if (System::isFunc('fpassthru')) {
             $handle = fopen($filename, 'rb');
             if (!$handle) {
                 throw new PhegException("Can't open file '{$filename}'");

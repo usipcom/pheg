@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Data;
+namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 /**
  * Class Ini
  *
  * @package Simtabi\Pheg\Toolbox\Data
  */
-final class Ini extends Data
+final class Ini extends Factory
 {
     /**
      * Utility Method to unserialize the given data
@@ -54,6 +54,6 @@ final class Ini extends Data
             }
         }
 
-        return \implode(Data::LE, $result);
+        return \implode(DataTypeFactory::LE, $result);
     }
 }

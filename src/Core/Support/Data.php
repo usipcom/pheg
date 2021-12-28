@@ -40,7 +40,7 @@ class Data
             self::$instance->loader = new Loader();
             self::$instance->pheg   = $pheg;
             self::$instance->data   = new Dot(
-                TypeConverter::fromAnyToArray(
+                TypeConverter::toArray(
                     self::$instance->loader
                         ->setFolderName('config')
                         ->setFileNames(['support_data'])

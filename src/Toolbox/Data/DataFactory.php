@@ -1,14 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Data;
 
-use Simtabi\Pheg\Toolbox\Data\Data;
-use Simtabi\Pheg\Toolbox\Data\Ini;
-use Simtabi\Pheg\Toolbox\Data\JSON;
-use Simtabi\Pheg\Toolbox\Data\PhpArray;
-use Simtabi\Pheg\Toolbox\Data\Yml;
+use Simtabi\Pheg\Toolbox\Data\Types\Factory;
+use Simtabi\Pheg\Toolbox\Data\Types\Ini;
+use Simtabi\Pheg\Toolbox\Data\Types\PhpArray;
+use Simtabi\Pheg\Toolbox\Data\Types\Yml;
+use Simtabi\Pheg\Toolbox\JSON\JSON;
 
-final class DataHandler
+
+final class DataFactory
 {
 
     public static function invoke(): self
@@ -37,18 +38,18 @@ final class DataHandler
 
     /**
      * @param mixed $data
-     * @return Data
+     * @return Factory
      */
-    public function fromAnyData($data = null): Data
+    public function fromAnyData($data = null): Factory
     {
-        if ($data instanceof Data) {
+        if ($data instanceof Factory) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new Data($data);
+            $result = new Factory($data);
         } else {
-            $result = new Data((array)$data);
+            $result = new Factory((array)$data);
         }
 
         return $result;

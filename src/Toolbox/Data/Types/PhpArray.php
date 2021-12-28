@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Data;
+namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 /**
  * Class PhpArray
  * @package Simtabi\Pheg\Toolbox\Data
  */
-final class PhpArray extends Data
+final class PhpArray extends Factory
 {
     /**
      * Class constructor

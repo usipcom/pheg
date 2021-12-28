@@ -35,26 +35,44 @@ final class TypeConverter {
         return new self();
     }
 
-    public function isArray($data) {
-        return is_array($data);
+    public function isArray($resource): bool
+    {
+        return is_array($resource);
     }
 
-    public function isJson($data) {
-        return (@json_decode($data) !== null);
+    public function isJson($resource): bool
+    {
+        return (@json_decode($resource) !== null);
     }
 
-    public function isObject($data) {
-        return is_object($data);
+    public function isObject($resource): bool
+    {
+        return is_object($resource);
     }
 
-    public function isSerialized($resource)
+    public function isSerialized($resource): bool
     {
         return $this->serialize->is($resource);
     }
 
-    public function isXml($data) {
-        return $this->validators->xml()->isValid($data, null, true);
+    public function isXml($resource): bool
+    {
+        return $this->validators->xml()->isValid($resource, null, true);
         // return (@simplexml_load_string($data) instanceof SimpleXMLElement);
+    }
+
+    public function isString($resource): bool
+    {
+        return is_string($resource);
+    }
+
+    public function stringToArray($resource): array
+    {
+        return match ($resource) {
+            is_array($resource)  => $resource,
+            is_string($resource) => [$resource],
+            default           => false
+        };
     }
 
     public function json2Array($resource)
@@ -92,7 +110,8 @@ final class TypeConverter {
         return Xml2Array::invoke()->convert($resource, $fromDOM, $config);
     }
 
-    public function array2Object($array) {
+    public function array2Object($array)
+    {
         $obj = new stdClass();
 
         foreach ($array as $key => $value) {
@@ -106,10 +125,12 @@ final class TypeConverter {
         return $obj;
     }
 
-    public function object2Array($object) {
+    public function object2Array($object)
+    {
         $array = [];
 
-        foreach ($object as $key => $value) {
+        foreach ($object as $key => $value)
+        {
             if (is_object($value)) {
                 $array[$key] = $this->object2Array($value);
             } else {
@@ -120,55 +141,58 @@ final class TypeConverter {
         return $array;
     }
 
-    public function utf8Encode($data) {
-        if (is_string($data)) {
-            return utf8_encode($data);
+    public function utf8Encode($resource)
+    {
+        if (is_string($resource)) {
+            return utf8_encode($resource);
 
-        } elseif (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[utf8_encode($key)] = $this->utf8Encode($value);
+        } elseif (is_array($resource)) {
+            foreach ($resource as $key => $value) {
+                $resource[utf8_encode($key)] = $this->utf8Encode($value);
             }
 
-        } elseif (is_object($data)) {
-            foreach ($data as $key => $value) {
-                $data->{$key} = $this->utf8Encode($value);
-            }
-        }
-
-        return $data;
-    }
-
-    public function utf8Decode($data) {
-        if (is_string($data)) {
-            return utf8_decode($data);
-
-        } elseif (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[utf8_decode($key)] = $this->utf8Decode($value);
-            }
-
-        } elseif (is_object($data)) {
-            foreach ($data as $key => $value) {
-                $data->{$key} = $this->utf8Decode($value);
+        } elseif (is_object($resource)) {
+            foreach ($resource as $key => $value) {
+                $resource->{$key} = $this->utf8Encode($value);
             }
         }
 
-        return $data;
+        return $resource;
     }
 
+    public function utf8Decode($resource)
+    {
+        if (is_string($resource)) {
+            return utf8_decode($resource);
+
+        } elseif (is_array($resource)) {
+            foreach ($resource as $key => $value) {
+                $resource[utf8_decode($key)] = $this->utf8Decode($value);
+            }
+
+        } elseif (is_object($resource)) {
+            foreach ($resource as $key => $value) {
+                $resource->{$key} = $this->utf8Decode($value);
+            }
+        }
+
+        return $resource;
+    }
 
     private function throwError()
     {
         throw new PhegException('Unknown data type');
     }
 
-    public function getDataType($resource) {
+    public function getDataType($resource)
+    {
         return match ($resource) {
             $this->isArray($resource)      => 'array',
             $this->isObject($resource)     => 'object',
             $this->isJson($resource)       => 'json',
             $this->isSerialized($resource) => 'serialized',
             $this->isXml($resource)        => 'xml',
+            $this->isString($resource)     => 'string',
             default                        => $this->throwError(),
         };
     }
@@ -181,6 +205,7 @@ final class TypeConverter {
             $this->isJson($resource)       => $this->json2Array($resource),
             $this->isSerialized($resource) => $this->json2Array($resource),
             $this->isXml($resource)        => $this->xmlToArray($resource),
+            $this->isString($resource)     => $this->xmlToArray($resource),
             default                        => $this->throwError(),
         };
     }
@@ -208,4 +233,5 @@ final class TypeConverter {
             default                        => $this->throwError(),
         };
     }
+
 }

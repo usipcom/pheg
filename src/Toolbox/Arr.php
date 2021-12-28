@@ -3,8 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
-use stdClass;
-use JsonException;
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 
 /**
  * Class Arr
@@ -596,19 +595,19 @@ final class Arr
 
                 foreach ($order as $value) {
 
-                    $value = trim($value);
+                    $value  = trim($value);
                     $values = explode(' ', $value);
                     $values = array_map('trim', $values);
 
-                    $field = $values[0] ?? '';
-                    $sort = $values[1] ?? '';
+                    $field  = $values[0] ?? '';
+                    $sort   = $values[1] ?? '';
 
                     if (!isset($itemA[$field], $itemB[$field])) {
                         continue;
                     }
 
                     if (strcasecmp($sort, 'desc') === 0) {
-                        $temp = $itemA;
+                        $temp  = $itemA;
                         $itemA = $itemB;
                         $itemB = $temp;
                     }
@@ -632,7 +631,7 @@ final class Arr
     public function shuffleAssoc(array $list) {
         if (!is_array($list)) return $list;
 
-        $keys = array_keys($list);
+        $keys   = array_keys($list);
         shuffle($keys);
         $random = [];
         foreach ($keys as $key) {
@@ -852,7 +851,7 @@ final class Arr
 
     public function count($data, $associative = false): int
     {
-        return count(TypeConverter::fromAnyToArray($data, $associative));
+        return count(TypeConverter::invoke()->toArray($data, $associative));
     }
 
 

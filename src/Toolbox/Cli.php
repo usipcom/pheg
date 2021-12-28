@@ -177,7 +177,7 @@ final class Cli
         }
 
         // @codeCoverageIgnoreStart
-        if (Sys::isWin()) {
+        if (System::isWin()) {
             return Env::bool('ANSICON') || 'ON' === Env::string('ConEmuANSI') || 'xterm' === Env::string('TERM');
         }
         // @codeCoverageIgnoreEnd
@@ -193,7 +193,7 @@ final class Cli
     public function getNumberOfColumns(): int
     {
         // @codeCoverageIgnoreStart
-        if (Sys::isWin()) {
+        if (System::isWin()) {
             $columns = self::DEFAULT_WIDTH;
 
             if (preg_match('/^(\d+)x\d+ \(\d+x(\d+)\)$/', Env::string('ANSICON'), $matches)) {

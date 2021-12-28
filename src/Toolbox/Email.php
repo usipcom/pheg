@@ -217,7 +217,7 @@ final class Email
         $parts = explode('@', $email);
         $domain = array_pop($parts);
 
-        if (Sys::isFunc('idn_to_utf8')) {
+        if (System::isFunc('idn_to_utf8')) {
             return (string)idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
 

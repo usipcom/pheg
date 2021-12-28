@@ -7,6 +7,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 use Exception;
+use SplFileInfo;
 
 /**
  * Class FileSystem
@@ -250,7 +251,7 @@ final class FileSystem
 
         $dirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, $flags));
 
-        /** @var \SplFileInfo $splFileInfo */
+        /** @var SplFileInfo $splFileInfo */
         foreach ($dirIterator as $splFileInfo) {
             if ($splFileInfo->isFile()) {
                 $size += $splFileInfo->getSize();
@@ -271,15 +272,13 @@ final class FileSystem
      */
     public function ls(string $dir): array
     {
-        $contents = [];
+        $contents    = [];
 
-        $flags = FilesystemIterator::KEY_AS_PATHNAME
-            | FilesystemIterator::CURRENT_AS_FILEINFO
-            | FilesystemIterator::SKIP_DOTS;
+        $flags       = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS;
 
         $dirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, $flags));
 
-        /* @var \SplFileInfo $splFileInfo */
+        /* @var SplFileInfo $splFileInfo */
         foreach ($dirIterator as $splFileInfo) {
             $contents[] = $splFileInfo->getPathname();
         }
@@ -330,7 +329,7 @@ final class FileSystem
         }
 
         // We're on Windows
-        if (Sys::isWin()) {
+        if (System::isWin()) {
             return true;
         }
 
@@ -531,19 +530,14 @@ final class FileSystem
      * @param string      $forceDS
      * @return string
      */
-    public function getRelative(
-        string $path,
-        ?string $rootPath = null,
-        string $forceDS = DIRECTORY_SEPARATOR
-    ): string {
+    public function getRelative(string $path, ?string $rootPath = null, string $forceDS = DIRECTORY_SEPARATOR): string
+    {
         // Cleanup file path
         $cleanedPath = $this->clean((string)$this->real($path), $forceDS);
 
-
         // Cleanup root path
-        $rootPath = $rootPath ?: Sys::getDocRoot();
+        $rootPath = $rootPath ?: System::getDocRoot();
         $rootPath = $this->clean((string)$this->real((string)$rootPath), $forceDS);
-
 
         // Remove root part
         $relPath = (string)preg_replace('#^' . preg_quote($rootPath, '\\') . '#', '', $cleanedPath);

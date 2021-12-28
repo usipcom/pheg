@@ -19,7 +19,7 @@ final class IP
     /**
      * Returns the IP address of the client.
      *
-     * @param bool $trustProxy Whether or not to trust the proxy headers HTTP_CLIENT_IP and HTTP_X_FORWARDED_FOR.
+     * @param bool $trustProxy Whether to trust the proxy headers HTTP_CLIENT_IP and HTTP_X_FORWARDED_FOR.
      *                         ONLY use if your server is behind a proxy that sets these values
      * @return  string
      * @SuppressWarnings(PHPMD.Superglobals)
@@ -31,16 +31,16 @@ final class IP
         }
 
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
+            $address = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_REAL_IP'])) {
-            $ipAddress = $_SERVER['HTTP_X_REAL_IP'];
+            $address = $_SERVER['HTTP_X_REAL_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $address = $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
-            $ipAddress = $_SERVER['REMOTE_ADDR'];
+            $address = $_SERVER['REMOTE_ADDR'];
         }
 
-        return $ipAddress;
+        return $address;
     }
 
     /**
@@ -61,7 +61,7 @@ final class IP
 
             if (strpos($netMask, '.') !== false) {
                 // $netMask is a 255.255.0.0 format
-                $netMask = str_replace('*', '0', $netMask);
+                $netMask    = str_replace('*', '0', $netMask);
                 $netMaskDec = ip2long($netMask);
 
                 return ((ip2long($ipAddress) & $netMaskDec) === (ip2long($range) & $netMaskDec));
@@ -119,32 +119,31 @@ final class IP
     /**
      * Return network mask. For example, '192.0.0.0' => '255.255.255.0'
      *
-     * @param string $ipAddress
+     * @param string $address
      * @return string|null
      */
-    public function getNetMask(string $ipAddress): ?string
+    public function getNetMask(string $address): ?string
     {
-        $ipAddressLong = ip2long($ipAddress);
+        $longAddress = ip2long($address);
+        $maskLevel1  = 0x80000000;
+        $maskLevel2  = 0xC0000000;
+        $maskLevel3  = 0xE0000000;
+        $resultMask  = 0xFFFFFFFF;
 
-        $maskLevel1 = 0x80000000;
-        $maskLevel2 = 0xC0000000;
-        $maskLevel3 = 0xE0000000;
-
-        $resultMask = 0xFFFFFFFF;
-        if (($ipAddressLong & $maskLevel1) === 0) {
+        if (($longAddress & $maskLevel1) === 0) {
             $resultMask = 0xFF000000;
-        } elseif (($ipAddressLong & $maskLevel2) === $maskLevel1) {
+        } elseif (($longAddress & $maskLevel2) === $maskLevel1) {
             $resultMask = 0xFFFF0000;
-        } elseif (($ipAddressLong & $maskLevel3) === $maskLevel2) {
+        } elseif (($longAddress & $maskLevel3) === $maskLevel2) {
             $resultMask = 0xFFFFFF00;
         }
 
         return long2ip($resultMask) ?: null;
     }
 
-    public function blockAddress(string $ipAddress, array $blacklisted, $message = "Your IP('%s') has been blocked!"){
-        if(in_array($ipAddress, $blacklisted)){
-            die(sprintf($message, $ipAddress));
+    public function blockAddress(string $address, array $blacklisted, $message = "Your IP('%s') has been blocked!"){
+        if(in_array($address, $blacklisted)){
+            die(sprintf($message, $address));
         }
     }
 }

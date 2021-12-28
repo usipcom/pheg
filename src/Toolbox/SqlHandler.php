@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-final class Sql
+final class SqlHandler
 {
 
     public static function invoke(): self

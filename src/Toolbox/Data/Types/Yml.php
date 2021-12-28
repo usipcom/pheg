@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Data;
+namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 use Symfony\Component\Yaml\Yaml;
 
@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @package Simtabi\Pheg\Toolbox\Data
  */
-final class Yml extends Data
+final class Yml extends Factory
 {
     /**
      * Utility Method to serialize the given data

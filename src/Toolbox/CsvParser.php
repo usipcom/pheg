@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-final class Csv
+final class CsvParser
 {
     public const LENGTH_LIMIT = 10000000;
 

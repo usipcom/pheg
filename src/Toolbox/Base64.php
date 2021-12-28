@@ -12,22 +12,6 @@ final class Base64
         return new self();
     }
 
-    public function jsonEncode($str, $base64 = true){
-
-        if(true === $base64){
-            return base64_encode(json_encode($str));
-        }
-        return json_encode($str);
-    }
-
-    public function jsonDecode($str, $base64 = true){
-
-        if(true === $base64){
-            return json_decode(base64_decode($str), true);
-        }
-        return json_encode($str, true);
-    }
-
     public function imageEncode($path){
         if(!empty($path) && (file_exists($path))){
             $type = pathinfo($path, PATHINFO_EXTENSION);

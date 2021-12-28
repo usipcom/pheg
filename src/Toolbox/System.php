@@ -8,7 +8,7 @@ namespace Simtabi\Pheg\Toolbox;
  * @package Simtabi\Pheg\Toolbox
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-final class Sys
+final class System
 {
 
     public static function invoke(): self

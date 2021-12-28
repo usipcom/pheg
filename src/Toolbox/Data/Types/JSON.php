@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Data;
+namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 /**
  * Class JSON
  *
  * @package Simtabi\Pheg\Toolbox\Data
  */
-final class JSON extends Data
+final class JSON extends Factory
 {
     /**
      * Utility Method to unserialize the given data

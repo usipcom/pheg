@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Data;
+namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 use ArrayObject;
 use JBZoo\Utils\Filter;
@@ -13,7 +13,7 @@ use function JBZoo\Utils\int;
  * Class Data
  * @package Simtabi\Pheg\Toolbox\Data
  */
-class Data extends ArrayObject
+class Factory extends ArrayObject
 {
     public const LE = "\n";
 

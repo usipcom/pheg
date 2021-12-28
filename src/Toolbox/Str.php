@@ -435,7 +435,7 @@ final class Str
     private function isOverload(): bool
     {
         if (defined('MB_OVERLOAD_STRING') && $this->isMBString()) {
-            return (bool)(Filter::int(Sys::iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
+            return (bool)(Filter::int(System::iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
         }
 
         return false;
