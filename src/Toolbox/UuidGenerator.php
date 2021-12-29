@@ -86,7 +86,7 @@ final class UuidGenerator
         $numToRemove = strlen($className);
         $remaining   = (36 - (int) $numToRemove);
 
-        return $className . pheg()->substr($this->generate(), $numToRemove, $remaining);
+        return $className . substr($this->generate(), $numToRemove, $remaining);
     }
 
     /**

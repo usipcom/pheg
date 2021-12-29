@@ -28,11 +28,12 @@ use Simtabi\Pheg\Toolbox\Http;
 use Simtabi\Pheg\Toolbox\Humanize;
 use Simtabi\Pheg\Toolbox\Image;
 use Simtabi\Pheg\Toolbox\Input;
-use Simtabi\Pheg\Toolbox\Intel;
-use Simtabi\Pheg\Toolbox\IP;
+use Simtabi\Pheg\Toolbox\Server\Intel;
+use Simtabi\Pheg\Toolbox\Server\IP;
 use Simtabi\Pheg\Toolbox\JSON\JSON;
 use Simtabi\Pheg\Toolbox\Name;
-use Simtabi\Pheg\Toolbox\Number;
+use Simtabi\Pheg\Toolbox\Server\Network;
+use Simtabi\Pheg\Toolbox\Numbers;
 use Simtabi\Pheg\Toolbox\Password;
 use Simtabi\Pheg\Toolbox\PhoneNumber;
 use Simtabi\Pheg\Toolbox\PhpDocs;
@@ -42,7 +43,7 @@ use Simtabi\Pheg\Toolbox\Serialize;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
 use Simtabi\Pheg\Toolbox\Slug;
 use Simtabi\Pheg\Toolbox\SqlHandler;
-use Simtabi\Pheg\Toolbox\SSLToolkit;
+use Simtabi\Pheg\Toolbox\Server\SSLToolkit;
 use Simtabi\Pheg\Toolbox\Stats;
 use Simtabi\Pheg\Toolbox\Str;
 use Simtabi\Pheg\Toolbox\System;
@@ -139,6 +140,26 @@ class Pheg
 
 
 
+
+    public function intel(): Intel
+    {
+        return Intel::invoke();
+    }
+
+    public function ip(): IP
+    {
+        return IP::invoke();
+    }
+
+    public function network(): Network
+    {
+        return Network::invoke();
+    }
+
+    public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
+    {
+        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
+    }
 
 
 
@@ -248,24 +269,14 @@ class Pheg
         return Input::invoke();
     }
 
-    public function intel(): Intel
-    {
-        return Intel::invoke();
-    }
-
-    public function ip(): IP
-    {
-        return IP::invoke();
-    }
-
     public function name(): Name
     {
         return Name::invoke();
     }
 
-    public function number(): Number
+    public function number(): Numbers
     {
-        return Number::invoke();
+        return Numbers::invoke();
     }
 
     public function password(): Password
@@ -311,11 +322,6 @@ class Pheg
     public function sqlHandler(): SqlHandler
     {
         return SqlHandler::invoke();
-    }
-
-    public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
-    {
-        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
     }
 
     public function stats(): Stats

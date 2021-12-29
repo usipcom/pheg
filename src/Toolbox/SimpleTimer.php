@@ -31,6 +31,7 @@ use function sprintf;
 
 final class SimpleTimer
 {
+
     protected $times = [];
     protected $started;
     protected $stopped;
@@ -59,7 +60,7 @@ final class SimpleTimer
     protected function getTimestamp(?string $message = null): object
     {
         return (object)[
-            'time'    => date_create_immutable_from_format('U.u', microtime(true)),
+            'time'    => date_create_immutable_from_format('U.u', (string) microtime(true)),
             'message' => $message
         ];
     }

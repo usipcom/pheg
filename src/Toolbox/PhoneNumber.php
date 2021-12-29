@@ -9,12 +9,18 @@ use libphonenumber\PhoneNumberToCarrierMapper;
 use libphonenumber\PhoneNumberToTimeZonesMapper;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\ShortNumberInfo;
+use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Core\CoreTools;
 
 final class PhoneNumber
 {
 
-    private function __construct() {}
+    private Validators $validators;
+
+    private function __construct()
+    {
+        $this->validators = Validators::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -93,14 +99,14 @@ final class PhoneNumber
 
             // validate country iso code
             if(!empty($countryISOCode)){
-                if(!Validators::isCountry($countryISOCode)){
+                if(!$this->validators->isCountry($countryISOCode)){
                     throw new PhegException('Invalid country ISO code');
                 }
             }
 
 
             // validate number
-            if((!Validators::isInteger($number)) && (!Validators::isString($number))){
+            if((!$this->validators->isInteger($number)) && (!$this->validators->isString($number))){
                 throw new PhegException(self::_e('INVALID_PHONE_NUMBER_FORMAT'));
             }
 
@@ -159,7 +165,7 @@ final class PhoneNumber
             //get special number information and timezone info
             $carrierName = PhoneNumberToCarrierMapper::getInstance()->getNameForNumber($phoneNumber, $phoneNumberRegion);
             $timezone    = PhoneNumberToTimeZonesMapper::getInstance()->getTimeZonesForNumber($phoneNumber);
-            $timezone    = !is_array($timezone) && (Validators::isString($timezone)) ? implode(',', $timezone) : $timezone;
+            $timezone    = !is_array($timezone) && ($this->validators->isString($timezone)) ? implode(',', $timezone) : $timezone;
 
             //validate if carrier name is available
             if(empty($carrierName)){
@@ -219,13 +225,13 @@ final class PhoneNumber
      * @param string $defaultRegion
      * @return LibPhoneNumber
      */
-    protected static function getNumberProto($number, $defaultRegion = null) {
+    protected function getNumberProto($number, $defaultRegion = null) {
         if ($number instanceof LibPhoneNumber) {
             return $number;
         }
-        $defaultRegion = Validators::isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
+        $defaultRegion = $this->validators->isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
         $util          = PhoneNumberUtil::getInstance();
-        $region = strpos($number, '+') === false ? $defaultRegion : 'ZZ';
+        $region        = strpos($number, '+') === false ? $defaultRegion : 'ZZ';
         return $util->parse($number, $region);
     }
 
@@ -235,7 +241,7 @@ final class PhoneNumber
      * @return string
      */
     public function e164($number, $defaultRegion = null) {
-        $defaultRegion = Validators::isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
+        $defaultRegion = $this->validators->isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
         $proto         = self::getNumberProto($number, $defaultRegion);
         $util          = PhoneNumberUtil::getInstance();
         return $util->format($proto, PhoneNumberFormat::E164);
@@ -247,7 +253,7 @@ final class PhoneNumber
      * @return string
      */
     public function national($number, $defaultRegion = null) {
-        $defaultRegion = Validators::isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
+        $defaultRegion = $this->validators->isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
         $proto         = self::getNumberProto($number, $defaultRegion);
         $util          = PhoneNumberUtil::getInstance();
         return $util->format($proto, PhoneNumberFormat::NATIONAL);
@@ -259,7 +265,7 @@ final class PhoneNumber
      * @return string
      */
     public function international($number, $defaultRegion = null) {
-        $defaultRegion = Validators::isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
+        $defaultRegion = $this->validators->isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
         $proto         = self::getNumberProto($number, $defaultRegion);
         $util          = PhoneNumberUtil::getInstance();
         return $util->format($proto, PhoneNumberFormat::INTERNATIONAL);
@@ -271,7 +277,7 @@ final class PhoneNumber
      * @return string
      */
     public function localized($number, $defaultRegion) {
-        $defaultRegion = Validators::isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
+        $defaultRegion = $this->validators->isEmpty($defaultRegion) ? self::getDefaultRegion() : $defaultRegion;
         $proto         = self::getNumberProto($number, $defaultRegion);
         $util          = PhoneNumberUtil::getInstance();
         return $util->getRegionCodeForNumber($proto) == $defaultRegion ? self::national($proto) : self::international($proto);

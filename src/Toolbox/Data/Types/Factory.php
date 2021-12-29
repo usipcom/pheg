@@ -21,7 +21,7 @@ class Factory extends ArrayObject
      * Class constructor
      * @param array|string|false $data The data array
      */
-    public function __construct($data = [])
+    protected function __construct(array|string|false|null $data = [])
     {
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
 
@@ -34,6 +34,11 @@ class Factory extends ArrayObject
         }
 
         parent::__construct($data ? (array)$data : []);
+    }
+
+    public static function invoke(array $data = []): self
+    {
+        return new self($data);
     }
 
     /**

@@ -173,7 +173,7 @@ final class Str
 
             $transTable[chr(38)] = '&';
 
-            $regExp = '/&(?![A-Za-z]{0,4}\w{2,3};|#[\d]{2,3};)/';
+            $regExp     = '/&(?![A-Za-z]{0,4}\w{2,3};|#[\d]{2,3};)/';
 
             return (string)preg_replace($regExp, '&amp;', strtr($string, $transTable));
         }

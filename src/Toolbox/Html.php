@@ -2,6 +2,10 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use DOMDocument;
+use DOMXPath;
+use Simtabi\Enekia\Validators;
+
 final class Html
 {
 
@@ -13,13 +17,13 @@ final class Html
     }
 
     public function bolderHtmlString($string, $type = 1){
-        return '<strong>'. Str::makeItReadable($string, $type) .'</strong>';
+        return '<strong>'. Str::invoke()->makeItReadable($string, $type) .'</strong>';
     }
 
     public function parseHTMLTags($tags, $enclose = true, $trim = false) {
 
         // if empty
-        if (Validator::isEmpty($tags)){
+        if (Validators::invoke()->isEmpty($tags)){
             return '';
         }
 
@@ -36,7 +40,7 @@ final class Html
             $tags = explode(',', $tags);
         }
 
-        foreach ($tags as $key => $item){
+        foreach ($tags as $item){
             if(!is_array($item)){
                 // decode entities
                 $item = html_entity_decode($item);
@@ -72,7 +76,7 @@ final class Html
     }
 
     public function oddEvenClass(int $number){
-        return strtolower(Pheg()->getValidator()->isOddNumber($number) ? 'Even' : 'Odd');
+        return strtolower(Validators::invoke()->number()->isOddNumber($number) ? 'Even' : 'Odd');
     }
 
     public function progressbar($done, $total, $info = "", $width = 50) {
@@ -168,7 +172,7 @@ final class Html
         // remove empty lines
         $string = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $string);
 
-        $cls = ["svg-icon"];
+        $cls    = ["svg-icon"];
 
         if ( ! empty($iconClass)) {
             $cls = array_merge($cls, explode(" ", $iconClass));
@@ -203,8 +207,10 @@ final class Html
         '<li>','<dl>', '<dt>','<dd>','<h2>','<h3>','<h4>','<h5>','<h6>']): string
     {
         $tags = '';
+
         // Add uppercase and lowercase of all allowed tags as a string.
         foreach ($allowed as $tag) {
+
             $tags .= strtolower($tag) . strtoupper($tag);
         }
         // Remove all but allowed tags.
@@ -217,9 +223,8 @@ final class Html
         $stripped = preg_replace('/\s?\bclass=MsoNormal\b\s?/i', '$1', $stripped);
         // Remove empty </p> and </span> tags.
         $stripped = preg_replace('/<p[^>]*>[\s|&nbsp;]*<\/p>/i', '', $stripped);
-        $stripped = preg_replace('/<span[^>]*>[\s|&nbsp;]*<\/span>/i', '', $stripped);
 
-        return $stripped;
+        return preg_replace('/<span[^>]*>[\s|&nbsp;]*<\/span>/i', '', $stripped);
     }
 
     /**

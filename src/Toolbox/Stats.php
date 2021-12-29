@@ -2,6 +2,8 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Exception;
+
 /**
  * Class Stats
  * @package Simtabi\Pheg\Toolbox

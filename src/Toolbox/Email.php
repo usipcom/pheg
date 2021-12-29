@@ -3,6 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
+use Simtabi\Enekia\Validators;
 
 final class Email
 {
@@ -23,7 +24,7 @@ final class Email
      */
     public function random(int $userNameLength = 10): string
     {
-        return Str::random($userNameLength) . '@' . Str::random(5) . '.com';
+        return Str::invoke()->random($userNameLength) . '@' . Str::invoke()->random(5) . '.com';
     }
 
     /**
@@ -144,15 +145,15 @@ final class Email
             return null;
         }
 
-        $hash = md5(strtolower(trim($email)));
-
+        $hash  = md5(strtolower(trim($email)));
         $parts = ['scheme' => 'http', 'host' => 'www.gravatar.com'];
-        if (Url::isHttps()) {
+
+        if (Url::invoke()->isHttps()) {
             $parts = ['scheme' => 'https', 'host' => 'secure.gravatar.com'];
         }
 
         // Get size
-        $size = Vars::limit(Filter::int($size), 32, 2048);
+        $size = Numbers::invoke()->limit(Filter::invoke()->int($size), 32, 2048);
 
         // Prepare default images
         $defaultImage = trim($defaultImage);
@@ -160,7 +161,7 @@ final class Email
             $defaultImage = urldecode($defaultImage);
         } else {
             $defaultImage = strtolower($defaultImage);
-            if (!Arr::isInArray($defaultImage, $this->getGravatarBuiltInImages())) {
+            if (!Validators::invoke()->array()->isInArray($defaultImage, $this->getGravatarBuiltInImages())) {
                 $defaultImage = $this->getGravatarBuiltInImages()[2];
             }
         }
@@ -172,7 +173,7 @@ final class Email
             'd' => $defaultImage,
         ];
 
-        return Url::create($parts);
+        return Url::invoke()->create($parts);
     }
 
     /**
@@ -219,7 +220,7 @@ final class Email
         $parts = explode('@', $email);
         $domain = array_pop($parts);
 
-        if (System::isFunc('idn_to_utf8')) {
+        if (System::invoke()->isFunc('idn_to_utf8')) {
             return (string)idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
 

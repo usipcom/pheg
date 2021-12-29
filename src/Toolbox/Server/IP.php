@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Server;
 
 /**
  * Class IP
@@ -148,4 +148,5 @@ final class IP
             die(sprintf($message, $address));
         }
     }
+
 }

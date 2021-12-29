@@ -2,6 +2,8 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Simtabi\Pheg\Toolbox\File\FileSystem;
+
 /**
  * Class Sys
  *
@@ -11,7 +13,12 @@ namespace Simtabi\Pheg\Toolbox;
 final class System
 {
 
-    private function __construct() {}
+    private FileSystem $fileSystem;
+
+    private function __construct()
+    {
+        $this->fileSystem = FileSystem::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -87,7 +94,7 @@ final class System
     public function iniSet(string $phpIniKey, string $newValue): bool
     {
         if ($this->isFunc('ini_set')) {
-            return Filter::bool(ini_set($phpIniKey, $newValue));
+            return Filter::invoke()->bool(ini_set($phpIniKey, $newValue));
         }
 
         return false;
@@ -172,7 +179,7 @@ final class System
             $memory = memory_get_usage(false);
         }
 
-        return FileSystem::format($memory);
+        return $this->fileSystem->format($memory);
     }
 
     /**
@@ -184,11 +191,11 @@ final class System
     public function getDocRoot(): ?string
     {
         $result = $_SERVER['DOCUMENT_ROOT'] ?? '.';
-        $result = FileSystem::clean($result);
-        $result = FileSystem::real($result);
+        $result = $this->fileSystem->clean($result);
+        $result = $this->fileSystem->real($result);
 
         if (!$result) {
-            $result = FileSystem::real('.');
+            $result = $this->fileSystem->real('.');
         }
 
         return $result;
@@ -215,7 +222,7 @@ final class System
      */
     public function getBinary(): string
     {
-        if ($customPath = Env::string('PHP_BINARY_CUSTOM')) {
+        if ($customPath = Env::invoke()->string('PHP_BINARY_CUSTOM')) {
             return $customPath;
         }
 
@@ -253,7 +260,7 @@ final class System
      */
     public function getNameWithVersion(): string
     {
-        $name = $this->getName();
+        $name    = $this->getName();
         $version = $this->getVersion();
 
         return trim("{$name} {$version}");

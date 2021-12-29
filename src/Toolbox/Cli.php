@@ -5,6 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Exception;
 
 final class Cli
 {
@@ -14,7 +15,14 @@ final class Cli
 
     public const DEFAULT_WIDTH = 80;
 
-    private function __construct() {}
+    private System $system;
+    private Env    $env;
+
+    private function __construct()
+    {
+        $this->system = System::invoke();
+        $this->env    = Env::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -137,7 +145,7 @@ final class Cli
      */
     public function build(string $command, array $args = []): string
     {
-        $stringArgs = [];
+        $stringArgs  = [];
         $realCommand = $command;
 
         if (count($args) > 0) {
@@ -179,8 +187,8 @@ final class Cli
         }
 
         // @codeCoverageIgnoreStart
-        if (System::isWin()) {
-            return Env::bool('ANSICON') || 'ON' === Env::string('ConEmuANSI') || 'xterm' === Env::string('TERM');
+        if ($this->system->isWin()) {
+            return $this->env->bool('ANSICON') || 'ON' === $this->env->string('ConEmuANSI') || 'xterm' === $this->env->string('TERM');
         }
         // @codeCoverageIgnoreEnd
 
@@ -195,10 +203,10 @@ final class Cli
     public function getNumberOfColumns(): int
     {
         // @codeCoverageIgnoreStart
-        if (System::isWin()) {
+        if ($this->system->isWin()) {
             $columns = self::DEFAULT_WIDTH;
 
-            if (preg_match('/^(\d+)x\d+ \(\d+x(\d+)\)$/', Env::string('ANSICON'), $matches)) {
+            if (preg_match('/^(\d+)x\d+ \(\d+x(\d+)\)$/', $this->env->string('ANSICON'), $matches)) {
                 $columns = $matches[1];
             } elseif (function_exists('proc_open')) {
                 $process = proc_open(
@@ -241,7 +249,7 @@ final class Cli
             return (int)$match[1];
         }
 
-        return Env::int('COLUMNS', self::DEFAULT_WIDTH);
+        return $this->env->int('COLUMNS', self::DEFAULT_WIDTH);
     }
 
     /**

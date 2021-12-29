@@ -6,7 +6,12 @@ namespace Simtabi\Pheg\Toolbox;
 final class Sanitize
 {
 
-    private function __construct() {}
+    private Arr $arr;
+
+    private function __construct()
+    {
+        $this->arr = Arr::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -56,7 +61,7 @@ final class Sanitize
      */
     public function htmlEntities($input, string $charset = 'UTF-8')
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) use ($charset) {
                 return htmlentities($input, ENT_QUOTES, $charset);
@@ -73,7 +78,7 @@ final class Sanitize
      */
     public function htmlEntityDecode($input, string $charset = 'UTF-8')
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) use ($charset) {
                 return html_entity_decode($input, ENT_QUOTES, $charset);
@@ -90,7 +95,7 @@ final class Sanitize
      */
     public function htmlSpecialChars($input, string $charset = 'UTF-8')
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) use ($charset) {
                 return htmlspecialchars($input, ENT_QUOTES, $charset);
@@ -118,4 +123,5 @@ final class Sanitize
         }
         return $array;
     }
+
 }

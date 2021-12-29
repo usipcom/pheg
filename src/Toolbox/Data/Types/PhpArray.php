@@ -8,12 +8,13 @@ namespace Simtabi\Pheg\Toolbox\Data\Types;
  */
 final class PhpArray extends Factory
 {
+
     /**
      * Class constructor
      *
      * @param array|string $data The data array
      */
-    public function __construct($data = [])
+    private function __construct($data = [])
     {
         if ($data && \is_string($data) && \file_exists($data)) {
             $data = $this->decode($data);

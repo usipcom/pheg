@@ -4,6 +4,7 @@ namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
 use Exception;
+use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Toolbox\Data\Types\Factory;
 use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 
@@ -15,7 +16,13 @@ use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 final class Filter
 {
 
-    private function __construct() {}
+    private Arr $arr;
+    private Str $str;
+
+    private function __construct() {
+        $this->arr = $this->arr->invoke();
+        $this->str = $this->str->invoke();
+    }
 
     public static function invoke(): self
     {
@@ -35,10 +42,11 @@ final class Filter
     public function _($value, $filters = 'raw')
     {
         if (is_string($filters)) {
-            $filters = Str::trim($filters);
+            $filters = $this->str->trim($filters);
             $filters = explode(',', $filters);
 
-            foreach ($filters as $filter) {
+            foreach ($filters as $filter)
+            {
                 $filterName = $this->cmd($filter);
 
                 if ($filterName) {
@@ -49,6 +57,7 @@ final class Filter
                     }
                 }
             }
+
         } else {
             $value = $filters($value);
         }
@@ -122,13 +131,13 @@ final class Filter
             'undefined',
         ];
 
-        $variable = Str::low($variable);
+        $variable = $this->str->low($variable);
 
-        if (Arr::isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
+        if (Validators::invoke()->array()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
             return true;
         }
 
-        if (Arr::isInArray($variable, $noList)) {
+        if (Validators::invoke()->array()->isInArray($variable, $noList)) {
             return false;
         }
 
@@ -239,7 +248,7 @@ final class Filter
      */
     public function trim(string $value): string
     {
-        return Str::trim($value);
+        return $this->str->trim($value);
     }
 
     /**
@@ -250,7 +259,7 @@ final class Filter
      */
     public function trimExtend(string $value): string
     {
-        return Str::trim($value, true);
+        return $this->str->trim($value, true);
     }
 
     /**
@@ -265,7 +274,7 @@ final class Filter
         $array = (array)$value;
 
         if ($filter === 'noempty') {
-            $array = Arr::clean($array);
+            $array = $this->arr->clean($array);
         } elseif ($filter instanceof Closure) {
             $array = array_filter($array, $filter); // TODO add support both - key + value
         }
@@ -281,9 +290,9 @@ final class Filter
      */
     public function cmd(string $value): string
     {
-        $value = Str::low($value);
+        $value = $this->str->low($value);
         $value = (string)preg_replace('#[^a-z0-9\_\-\.]#', '', $value);
-        return Str::trim($value);
+        return $this->str->trim($value);
     }
 
     /**
@@ -295,7 +304,7 @@ final class Filter
     public function strip(string $string): string
     {
         $cleaned = strip_tags($string);
-        return Str::trim($cleaned);
+        return $this->str->trim($cleaned);
     }
 
     /**
@@ -307,7 +316,7 @@ final class Filter
     public function alias(string $string): string
     {
         $cleaned = $this->strip($string);
-        return Str::slug($cleaned);
+        return $this->str->slug($cleaned);
     }
 
     /**
@@ -318,8 +327,8 @@ final class Filter
      */
     public function low(string $string): string
     {
-        $cleaned = Str::low($string);
-        return Str::trim($cleaned);
+        $cleaned = $this->str->low($string);
+        return $this->str->trim($cleaned);
     }
 
     /**
@@ -332,8 +341,8 @@ final class Filter
      */
     public function up(string $string): string
     {
-        $cleaned = Str::up($string);
-        return Str::trim($cleaned);
+        $cleaned = $this->str->up($string);
+        return $this->str->trim($cleaned);
     }
 
     /**
@@ -344,29 +353,29 @@ final class Filter
      */
     public function stripSpace(string $string): string
     {
-        return Str::stripSpace($string);
+        return $this->str->stripSpace($string);
     }
 
     /**
-     * Alias of "Str::clean($string, true, true)"
+     * Alias of "$this->str->clean($string, true, true)"
      *
      * @param string $string
      * @return string
      */
     public function clean(string $string): string
     {
-        return Str::clean($string, true, true);
+        return $this->str->clean($string, true, true);
     }
 
     /**
-     * Alias of "Str::htmlEnt($string)"
+     * Alias of "$this->str->htmlEnt($string)"
      *
      * @param string $string
      * @return string
      */
     public function html(string $string): string
     {
-        return Str::htmlEnt($string);
+        return $this->str->htmlEnt($string);
     }
 
     /**
@@ -377,18 +386,18 @@ final class Filter
      */
     public function xml(string $string): string
     {
-        return Xml::escape($string);
+        return Xml::invoke()->escape($string);
     }
 
     /**
-     * Alias of "Str::esc($string)"
+     * Alias of "$this->str->esc($string)"
      *
      * @param string $string
      * @return string
      */
     public function esc(string $string): string
     {
-        return Str::esc($string);
+        return $this->str->esc($string);
     }
 
     /**
@@ -403,7 +412,7 @@ final class Filter
             return $data;
         }
 
-        return new JSON($data);
+        return JSON::invoke($data);
     }
 
     /**
@@ -425,7 +434,7 @@ final class Filter
      */
     public function ucFirst(string $input): string
     {
-        $string = Str::low($input);
+        $string = $this->str->low($input);
         $string = ucfirst($string);
 
         return $string;
@@ -443,7 +452,7 @@ final class Filter
             $input = implode(PHP_EOL, $input);
         }
 
-        return Str::parseLines($input);
+        return $this->str->parseLines($input);
     }
 
     /**

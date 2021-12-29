@@ -503,7 +503,7 @@ final class Arr
             return [];
         }
 
-        if (is_array($object) && !self::isAssocArray($object)) {
+        if (is_array($object) && !$this->isAssocArray($object)) {
             return $object;
         }
 
@@ -520,6 +520,7 @@ final class Arr
     public function implode(string $glue, array $array): string
     {
         $result = '';
+        $str    = Str::invoke();
 
         foreach ($array as $item) {
             if (is_array($item)) {
@@ -530,7 +531,7 @@ final class Arr
         }
 
         if ($glue) {
-            $result = Str::sub($result, 0, 0 - Str::len($glue));
+            $result = $str->sub($result, 0, 0 - $str->len($glue));
         }
 
         return $result;
@@ -668,7 +669,7 @@ final class Arr
 
     public function groupBy(array $arr, callable $keySelector) {
         // @author http://codereview.stackexchange.com/questions/23919/generic-array-group-by-using-lambda
-        $result = array();
+        $result = [];
         foreach ($arr as $i) {
             $key = call_user_func($keySelector, $i);
             $result[$key][] = $i;
@@ -856,7 +857,7 @@ final class Arr
 
     public function count($data, $associative = false): int
     {
-        return count(TypeConverter::invoke()->toArray($data, $associative));
+        return count(TypeConverter::invoke()->toArray($data));
     }
 
 

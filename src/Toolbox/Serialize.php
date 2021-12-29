@@ -127,7 +127,7 @@ final class Serialize
      */
     public function fixBroken(string $brokenSerializedData): string
     {
-        $fixedSerializedData = preg_replace_callback(
+        return (string) preg_replace_callback(
             '!s:(\d+):"(.*?)";!',
             /**
              * @param array $matches
@@ -139,8 +139,6 @@ final class Serialize
             },
             $brokenSerializedData
         );
-
-        return (string)$fixedSerializedData;
     }
 
     /**

@@ -16,6 +16,7 @@ namespace Simtabi\Pheg\Toolbox;
  * @license     https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use DOMException;
 use DOMNode;
 use DOMXPath;
 use DOMDocument;
@@ -46,8 +47,9 @@ final class Html2Text
         if ($options['escape']) {
             $text = $this->escape($text);
         }
-        $out = [];
-        $text = str_replace("\r\n", "\n", $text); // Standarize line endings
+
+        $out   = [];
+        $text  = str_replace("\r\n", "\n", $text); // Standardize line endings
         $lines = explode("\n\n", $text);
         foreach ($lines as $line) {
             $line = str_replace("\n", '<br>', $line);
@@ -99,11 +101,11 @@ final class Html2Text
     public function minify(string $html, array $options = []): string
     {
         $options += [
-            'collapseWhitespace' => true,
-            'conservativeCollapse' => false,
+            'collapseWhitespace'          => true,
+            'conservativeCollapse'        => false,
             'collapseInlineTagWhitespace' => false,
-            'minifyJs' => false,
-            'minifyCss' => false
+            'minifyJs'                    => false,
+            'minifyCss'                   => false
 
         ];
 
@@ -145,8 +147,8 @@ final class Html2Text
             }
 
             $previousIsInline = $node->previousSibling && in_array($node->previousSibling->nodeName, $inlineElements);
-            $nextIsInline = $node->nextSibling && in_array($node->nextSibling->nodeName, $inlineElements);
-            $betweenInline = $previousIsInline && $nextIsInline;
+            $nextIsInline     = $node->nextSibling && in_array($node->nextSibling->nodeName, $inlineElements);
+            $betweenInline    = $previousIsInline && $nextIsInline;
 
             /**
              * Whitespace between block elements are ignored and whitespace between inline elements
@@ -165,6 +167,7 @@ final class Html2Text
             if ($options['conservativeCollapse']) {
                 continue;
             }
+
             /**
              * Clean up in tag values, this needs to be done carefully hence the ltrim & rtrim
              * cleans up things like <h1> heading </h1>.
@@ -173,15 +176,18 @@ final class Html2Text
                 if ($node->previousSibling && ! $previousIsInline) {
                     $node->nodeValue = ltrim($node->nodeValue);
                 }
+
                 if ($node->nextSibling && ! $nextIsInline) {
                     $node->nodeValue = rtrim($node->nodeValue);
                 }
+
                 /**
                  * I have added this for when there are no siblings and its not in an inline element.
                  */
                 if (! $node->previousSibling && ! $node->nextSibling && ! in_array($node->parentNode->nodeName, $inlineElements)) {
                     $node->nodeValue = trim($node->nodeValue);
                 }
+
                 continue;
             }
 
@@ -211,9 +217,9 @@ final class Html2Text
         $html = $this->stripTags($html, ['script', 'style', 'iframe']);
         $html = $this->minify($html);
 
-        $doc = new DOMDocument();
+        $doc  = new DOMDocument();
         $doc->preserveWhiteSpace = false;
-        $doc->formatOutput = false;
+        $doc->formatOutput       = false;
 
         $html = str_replace(["\r\n", "\n"], PHP_EOL, $html); // Standardize line endings
 
@@ -222,7 +228,7 @@ final class Html2Text
          * or *
          */
         if ($options['format'] === false) {
-            // ul/li needs to be formatted to work with sublists
+            // ul/li needs to be formatted to work with sub-lists
             $html = preg_replace('/^ +/m', '', $html); // remove whitespaces from start of each line
             $html = preg_replace('/(<\/(h1|h2|h3|h4|h5|h6|tr|blockquote|dt|dd|table|p)>)/', '$1' . PHP_EOL, $html);
             $html = preg_replace('/(<(h1|h2|h3|h4|h5|h6|table|blockquote|p[^re])[^>]*>)/', PHP_EOL . '$1', $html);
@@ -265,14 +271,15 @@ final class Html2Text
 
         return $value;
     }
+
     /**
      * Processes a tag from a DOMDocument
      *
-     * @internal Attempting to modify the dom causes strange issues and even recursion
-     * @param \DOMNode $tag
-     * @param \DOMDocument $doc
-     * @param boolean $format
+     * @param DOMNode $tag
+     * @param DOMDocument $doc
      * @return void
+     * @throws DOMException
+     * @internal Attempting to modify the dom causes strange issues and even recursion
      */
 
     private function processTag(DOMNode $tag, DOMDocument $doc): void
@@ -310,7 +317,7 @@ final class Html2Text
                  * Use insertBefore instead of replace which causes issues even if you
                  * use array to loop
                  */
-                $u = str_repeat($repeat, mb_strlen($tag->nodeValue));
+                $u   = str_repeat($repeat, mb_strlen($tag->nodeValue));
                 $div = $doc->createElement('div', "\n{$value}\n{$u}\n");
                 $tag->parentNode->insertBefore($div, $tag);
                 $tag->nodeValue = null;
@@ -332,6 +339,7 @@ final class Html2Text
                 if ($tag->hasAttribute('alt')) {
                     $alt = $tag->getAttribute('alt') . ' ';
                 }
+
                 $alt = htmlspecialchars($alt);
                 $tag->nodeValue = "[image: {$alt}" . $this->htmlspecialchars($tag->getAttribute('src')) . ']';
                 break;
@@ -381,8 +389,8 @@ final class Html2Text
             case 'ul':
 
                 $lineBreak = PHP_EOL;
-                $indent = $this->getIndentLevel($tag);
-                $pre = str_repeat(' ', $indent);
+                $indent    = $this->getIndentLevel($tag);
+                $pre       = str_repeat(' ', $indent);
 
                 foreach ($tag->childNodes as $child) {
                     if (isset($child->tagName) && $child->tagName === 'li') {
@@ -393,6 +401,7 @@ final class Html2Text
                 }
                 break;
         }
+
         // Remove all attributes
         foreach ($tag->attributes as $attr) {
             $tag->removeAttribute($attr->nodeName);
@@ -407,14 +416,14 @@ final class Html2Text
      */
     private function getIndentLevel(DOMNode $node): int
     {
-        $indent = 0;
+        $indent       = 0;
         $checkLevelUp = true;
-        $current = $node;
+        $current      = $node;
 
         while ($checkLevelUp) {
             if ($current->parentNode->nodeName === 'li') {
                 $current = $current->parentNode;
-                $indent = $indent + 3;
+                $indent  = $indent + 3;
             } else {
                 $checkLevelUp = false;
             }
@@ -446,14 +455,14 @@ final class Html2Text
             }
         }
 
-        $out = [];
-        $seperator = '';
+        $out       = [];
+        $separator = '';
 
         foreach ($array[0] as $i => $cell) {
-            $seperator .= str_pad('+', $widths[$i], '-', STR_PAD_RIGHT);
+            $separator .= str_pad('+', $widths[$i], '-', STR_PAD_RIGHT);
         }
-        $seperator .= '+';
-        $out[] = $seperator;
+        $separator .= '+';
+        $out[] = $separator;
 
         if ($headers) {
             $headers = '|';
@@ -461,7 +470,7 @@ final class Html2Text
                 $headers .= ' ' . str_pad($cell, $widths[$i] - 2, ' ', STR_PAD_RIGHT) . '|';
             }
             $out[] = $headers;
-            $out[] = $seperator;
+            $out[] = $separator;
             array_shift($array);
         }
 
@@ -472,7 +481,7 @@ final class Html2Text
             }
             $out[] = $cells;
         }
-        $out[] = $seperator;
+        $out[] = $separator;
 
         return $out;
     }
@@ -529,7 +538,7 @@ final class Html2Text
     /**
      * Workhorse
      *
-     * @param \DOMNode $node
+     * @param DOMNode $node
      * @param array $tags
      * @return void
      */

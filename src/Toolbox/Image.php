@@ -100,9 +100,9 @@ final class Image
             throw new PhegException('Undefined color format (string): ' . $origColor);
         }
 
-        $red = hexdec($red);
+        $red   = hexdec($red);
         $green = hexdec($green);
-        $blue = hexdec($blue);
+        $blue  = hexdec($blue);
 
         return [$red, $green, $blue, 0];
     }
@@ -164,21 +164,21 @@ final class Image
         array $srcSizes,
         int $opacity
     ): void {
-        [$dstX, $dstY] = $dist;
-        [$srcX, $srcY] = $src;
+        [$dstX, $dstY]          = $dist;
+        [$srcX, $srcY]          = $src;
         [$srcWidth, $srcHeight] = $srcSizes;
 
         // Get image width and height and percentage
         $opacity /= 100;
-        $width = (int)imagesx($srcImg);
-        $height = (int)imagesy($srcImg);
+        $width   = (int)imagesx($srcImg);
+        $height  = (int)imagesy($srcImg);
 
         // Turn alpha blending off
         $this->addAlpha($srcImg, false);
 
         // Find the most opaque pixel in the image (the one with the smallest alpha value)
         $minBaseAlpha = 127;
-        $minAlpha = $minBaseAlpha;
+        $minAlpha     = $minBaseAlpha;
         for ($x = 0; $x < $width; $x++) {
             for ($y = 0; $y < $height; $y++) {
                 $alpha = (imagecolorat($srcImg, $x, $y) >> 24) & 0xFF;
@@ -238,7 +238,7 @@ final class Image
         }
 
         $opacity = Filter::int($opacity);
-        $opacity = Vars::limit($opacity, 0, 100);
+        $opacity = Numbers::limit($opacity, 0, 100);
 
         return $opacity;
     }
@@ -268,7 +268,7 @@ final class Image
      */
     public function color(float $color): int
     {
-        return Vars::range($color, 0, 255);
+        return Numbers::range($color, 0, 255);
     }
 
     /**
@@ -279,7 +279,7 @@ final class Image
      */
     public function alpha(float $color): int
     {
-        return Vars::range($color, 0, 127);
+        return Numbers::range($color, 0, 127);
     }
 
     /**
@@ -290,7 +290,7 @@ final class Image
      */
     public function rotate(float $color): int
     {
-        return Vars::range($color, -360, 360);
+        return Numbers::range($color, -360, 360);
     }
 
     /**
@@ -301,7 +301,7 @@ final class Image
      */
     public function brightness(float $brightness): int
     {
-        return Vars::range($brightness, -255, 255);
+        return Numbers::range($brightness, -255, 255);
     }
 
     /**
@@ -312,7 +312,7 @@ final class Image
      */
     public function contrast(float $contrast): int
     {
-        return Vars::range($contrast, -100, 100);
+        return Numbers::range($contrast, -100, 100);
     }
 
     /**
@@ -323,7 +323,7 @@ final class Image
      */
     public function colorize(float $colorize): int
     {
-        return Vars::range($colorize, -255, 255);
+        return Numbers::range($colorize, -255, 255);
     }
 
     /**
@@ -334,7 +334,7 @@ final class Image
      */
     public function smooth(float $smooth): int
     {
-        return Vars::range($smooth, 1, 10);
+        return Numbers::range($smooth, 1, 10);
     }
 
     /**
@@ -362,7 +362,7 @@ final class Image
      */
     public function blur(float $blur): int
     {
-        return Vars::range($blur, 1, 10);
+        return Numbers::range($blur, 1, 10);
     }
 
     /**
@@ -373,7 +373,7 @@ final class Image
      */
     public function percent(float $percent): int
     {
-        return Vars::range($percent, 0, 100);
+        return Numbers::range($percent, 0, 100);
     }
 
     /**
@@ -384,7 +384,7 @@ final class Image
      */
     public function quality(float $percent): int
     {
-        return Vars::range($percent, 0, 100);
+        return Numbers::range($percent, 0, 100);
     }
 
     /**

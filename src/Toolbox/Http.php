@@ -12,7 +12,12 @@ use Simtabi\Pheg\Core\Exceptions\PhegException;
 final class Http
 {
 
-    private function __construct() {}
+    private System $system;
+
+    private function __construct()
+    {
+        $this->system = System::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -34,11 +39,11 @@ final class Http
         }
 
         // required for IE, otherwise Content-disposition is ignored
-        if (System::iniGet('zlib.output_compression')) {
-            System::iniSet('zlib.output_compression', 'Off');
+        if ($this->system->iniGet('zlib.output_compression')) {
+            $this->system->iniSet('zlib.output_compression', 'Off');
         }
 
-        System::setTime();
+        $this->system->setTime();
 
         // Set headers
         header('Pragma: public');
@@ -51,7 +56,7 @@ final class Http
         header('Content-Length: ' . filesize($filename));
 
         // output file
-        if (System::isFunc('fpassthru')) {
+        if ($this->system->isFunc('fpassthru')) {
             $handle = fopen($filename, 'rb');
             if (!$handle) {
                 throw new PhegException("Can't open file '{$filename}'");
@@ -119,9 +124,12 @@ final class Http
      */
     public function getHeaders(): array
     {
-        $headers = [];
-
-        $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
+        $headers        = [];
+        $contentHeaders = [
+            'CONTENT_LENGTH' => true,
+            'CONTENT_MD5'    => true,
+            'CONTENT_TYPE'   => true,
+        ];
 
         foreach ($_SERVER as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
@@ -185,10 +193,10 @@ final class Http
 
         // PHP_AUTH_USER/PHP_AUTH_PW
         if (isset($headers['PHP_AUTH_USER'])) {
-            $user = $headers['PHP_AUTH_USER'] ?? '';
-            $password = $headers['PHP_AUTH_PW'] ?? '';
+            $user     = $headers['PHP_AUTH_USER'] ?? '';
+            $password = $headers['PHP_AUTH_PW']   ?? '';
 
-            $authorization = 'Basic ' . base64_encode($user . ':' . $password);
+            $authorization            = 'Basic ' . base64_encode($user . ':' . $password);
             $headers['AUTHORIZATION'] = $authorization;
         } elseif (isset($headers['PHP_AUTH_DIGEST'])) {
             $headers['AUTHORIZATION'] = $headers['PHP_AUTH_DIGEST'];

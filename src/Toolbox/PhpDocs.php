@@ -62,7 +62,7 @@ final class PhpDocs
                 $paramName = $matches[1];
 
                 // remove the param from the string
-                $value = str_replace("@{$paramName} ", '', $info);
+                $value     = str_replace("@{$paramName} ", '', $info);
 
                 // if the param hasn't been added yet, create a key for it
                 if (!isset($result['params'][$paramName])) {

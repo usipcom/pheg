@@ -488,11 +488,11 @@ final class Dates
         $inputFormat = empty($inputFormat) ? 'Y-m-d H:i:s' : $inputFormat;
 
         // init date object
-        $dateObj = new DateTime();
+        $dateObj     = new DateTime();
         $dateObj->setTimezone(new DateTimeZone($timezone));
 
-        $time    = $dateObj->setTimestamp($time)->format($inputFormat);
-        $formatted = DateTime::createFromFormat($inputFormat, $time);
+        $time        = $dateObj->setTimestamp($time)->format($inputFormat);
+        $formatted   = DateTime::createFromFormat($inputFormat, $time);
         if($formatted && $formatted->format($inputFormat) == $time){
             return (new DateTime($time))->format($outputFormat);
         }

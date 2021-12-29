@@ -26,20 +26,20 @@ final class Env
      * @return mixed
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public static function get(string $envVarName, $default = null, int $options = self::VAR_STRING)
+    public function get(string $envVarName, $default = null, int $options = self::VAR_STRING)
     {
         $envKey = trim($envVarName);
-
-        $value = getenv($envKey);
+        $value  = getenv($envKey);
+        
         if ($value === false) {
             if (array_key_exists($envKey, $_ENV)) {
-                return self::convert($_ENV[$envKey], $options);
+                return $this->convert($_ENV[$envKey], $options);
             }
 
             return $default;
         }
 
-        return self::convert($value, $options);
+        return $this->convert($value, $options);
     }
 
     /**
@@ -49,9 +49,10 @@ final class Env
      * @param int         $options
      * @return string|float|int|bool|null
      */
-    public static function convert(?string $value, int $options = self::VAR_STRING)
+    public function convert(?string $value, int $options = self::VAR_STRING)
     {
-        $cleanedValue = trim(Filter::stripQuotes((string)$value));
+        $filter       = Filter::invoke();
+        $cleanedValue = trim($filter->stripQuotes((string)$value));
 
         if ($options & self::VAR_NULL) {
             $cleanedValue = strtolower($cleanedValue);
@@ -65,15 +66,15 @@ final class Env
         }
 
         if ($options & self::VAR_FLOAT) {
-            return Filter::float($cleanedValue);
+            return $filter->float($cleanedValue);
         }
 
         if ($options & self::VAR_INT) {
-            return Filter::int((int)$cleanedValue);
+            return $filter->int((int)$cleanedValue);
         }
 
         if ($options & self::VAR_BOOL) {
-            return Filter::bool($cleanedValue);
+            return $filter->bool($cleanedValue);
         }
 
         return $value;
@@ -86,10 +87,10 @@ final class Env
      * @param string $default
      * @return string
      */
-    public static function string(string $envVarName, string $default = ''): string
+    public function string(string $envVarName, string $default = ''): string
     {
-        if (self::isExists($envVarName)) {
-            return (string)self::get($envVarName, $default, self::VAR_STRING);
+        if ($this->isExists($envVarName)) {
+            return (string)$this->get($envVarName, $default, self::VAR_STRING);
         }
 
         return $default;
@@ -102,10 +103,10 @@ final class Env
      * @param int    $default
      * @return int
      */
-    public static function int(string $envVarName, int $default = 0): int
+    public function int(string $envVarName, int $default = 0): int
     {
-        if (self::isExists($envVarName)) {
-            return (int)self::get($envVarName, $default, self::VAR_INT);
+        if ($this->isExists($envVarName)) {
+            return (int)$this->get($envVarName, $default, self::VAR_INT);
         }
 
         return $default;
@@ -118,10 +119,10 @@ final class Env
      * @param float  $default
      * @return float
      */
-    public static function float(string $envVarName, float $default = 0.0): float
+    public function float(string $envVarName, float $default = 0.0): float
     {
-        if (self::isExists($envVarName)) {
-            return (float)self::get($envVarName, $default, self::VAR_FLOAT);
+        if ($this->isExists($envVarName)) {
+            return (float)$this->get($envVarName, $default, self::VAR_FLOAT);
         }
 
         return $default;
@@ -134,10 +135,10 @@ final class Env
      * @param bool   $default
      * @return bool
      */
-    public static function bool(string $envVarName, bool $default = false): bool
+    public function bool(string $envVarName, bool $default = false): bool
     {
-        if (self::isExists($envVarName)) {
-            return (bool)self::get($envVarName, $default, self::VAR_BOOL);
+        if ($this->isExists($envVarName)) {
+            return (bool)$this->get($envVarName, $default, self::VAR_BOOL);
         }
 
         return $default;
@@ -149,8 +150,8 @@ final class Env
      * @param string $envVarName
      * @return bool
      */
-    public static function isExists(string $envVarName): bool
+    public function isExists(string $envVarName): bool
     {
-        return self::get($envVarName, null, self::VAR_NULL) !== null;
+        return $this->get($envVarName, null, self::VAR_NULL) !== null;
     }
 }

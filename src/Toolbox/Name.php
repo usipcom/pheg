@@ -12,7 +12,7 @@ final class Name
         return new self();
     }
 
-    public function generateFull($obj, $substitute = false){
+    public function generateFullName($obj, $substitute = false){
 
         $salutation = ucfirst($obj->salutation);
         $firstName  = ucfirst($obj->first_name);
@@ -43,7 +43,7 @@ final class Name
 
     public function generateInitials(string $string): string
     {
-
+        return Str::invoke()->generateInitials($string);
     }
 
     public function randomUsername(string $firstName = "John", string $lastName = "Doe", int $randNo = 1000)

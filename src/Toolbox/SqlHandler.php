@@ -2,6 +2,8 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
+
 final class SqlHandler
 {
 
@@ -132,16 +134,16 @@ final class SqlHandler
 
         // if match one has something
         if ($matchOneCount) {
-            $pdoMessage     = $matchOne[2];
-            $sqlState       = $matchOne[0];
-            $code           = $matchOne[1];
+            $pdoMessage = $matchOne[2];
+            $sqlState   = $matchOne[0];
+            $code       = $matchOne[1];
         }elseif ($matchTwoCount) {
             $pdoMessage = $matchTwo[2];
             $sqlState   = $matchTwo[0];
             $code       = $matchTwo[1];
         }
 
-        return TypeConverter::toObject([
+        return TypeConverter::invoke()->toObject([
             'message' => $pdoMessage,
             'state'   => $sqlState,
             'code'    => !empty($code) ? $code : 0,

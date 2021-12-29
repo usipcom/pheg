@@ -5,6 +5,8 @@ namespace Simtabi\Pheg\Toolbox;
 use gugglegum\MemorySize\Exception;
 use gugglegum\MemorySize\Formatter;
 use gugglegum\MemorySize\Parser;
+use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception as BaseException;
 
 final class Humanize
 {
@@ -22,22 +24,18 @@ final class Humanize
 
     public function parse($bytes){
         try{
-            $sp = new Parser();
-            return $sp->parse($bytes);
-        }catch (Exception $exception){
-            self::setErrors([$exception->getMessage()]);
+            return (new Parser())->parse($bytes);
+        }catch (BaseException $exception){
+            throw new PhegException($exception->getMessage());
         }
-        return false;
     }
 
     public function formatSize($number){
         try{
-            $sf = new Formatter();
-            return $sf->format($number);
-        }catch (Exception $exception){
-            self::setErrors([$exception->getMessage()]);
+            return (new Formatter())->format($number);
+        }catch (BaseException $exception){
+            throw new PhegException($exception->getMessage());
         }
-        return false;
     }
 
     public function formatBytes(int $bytes, $precision = 2): string
@@ -105,7 +103,7 @@ final class Humanize
     public function stringToBytes($string) {
 
         $string = ucfirst(strtolower($string));
-        $sizes = [
+        $sizes  = [
             'B'  => 0,
             'KB' => 1,
             'MB' => 2,

@@ -278,37 +278,33 @@ final class CopyrightText
 
         // start process
         if (!empty($startYear) && !empty($endYear)) {
+            $dateTime->setTimestamp(strtotime($startYear));
+            $dateTime->setTimestamp(strtotime($endYear));
             switch ($longFormat) {
                 // lets filter format output
                 case true :
                     // start year
-                    $dateTime->setTimestamp(strtotime($startYear));
                     $startYear = $dateTime->format('Y');
 
                     // end year
-                    $dateTime->setTimestamp(strtotime($endYear));
-                    $endYear = $dateTime->format('Y');;
+                    $endYear = $dateTime->format('Y');
                     break;
                 case false :
 
                     // start year
-                    $dateTime->setTimestamp(strtotime($startYear));
                     $startYear = $dateTime->format('y');
 
                     // end year
-                    $dateTime->setTimestamp(strtotime($endYear));
-                    $endYear = $dateTime->format('y');;
+                    $endYear = $dateTime->format('y');
                     break;
                 default :
                     // start year
-                    $dateTime->setTimestamp(strtotime($startYear));
                     $startYear = $dateTime->format('y');
 
                     // end year
-                    $dateTime->setTimestamp(strtotime($endYear));
-                    $endYear = $dateTime->format('y');;
+                    $endYear = $dateTime->format('y');
                     break;
-            }
+            };
 
             // lets filter version request
             $this->build = match ($longVersion) {

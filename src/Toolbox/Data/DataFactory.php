@@ -4,9 +4,9 @@ namespace Simtabi\Pheg\Toolbox\Data;
 
 use Simtabi\Pheg\Toolbox\Data\Types\Factory;
 use Simtabi\Pheg\Toolbox\Data\Types\Ini;
+use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 use Simtabi\Pheg\Toolbox\Data\Types\PhpArray;
 use Simtabi\Pheg\Toolbox\Data\Types\Yml;
-use Simtabi\Pheg\Toolbox\JSON\JSON;
 
 
 final class DataFactory
@@ -23,16 +23,16 @@ final class DataFactory
      * @param mixed $data
      * @return Json
      */
-    public function fromJson($data = null): JSON
+    public function json($data = null): JSON
     {
         if ($data instanceof JSON) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new JSON($data);
+            $result = JSON::invoke($data);
         } else {
-            $result = new JSON((array)$data);
+            $result = JSON::invoke((array)$data);
         }
 
         return $result;
@@ -42,16 +42,16 @@ final class DataFactory
      * @param mixed $data
      * @return Factory
      */
-    public function fromAnyData($data = null): Factory
+    public function data($data = null): Factory
     {
         if ($data instanceof Factory) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new Factory($data);
+            $result = Factory::invoke($data);
         } else {
-            $result = new Factory((array)$data);
+            $result = Factory::invoke((array)$data);
         }
 
         return $result;
@@ -61,16 +61,16 @@ final class DataFactory
      * @param mixed $data
      * @return PhpArray
      */
-    public function fromPhpArray($data = null): PhpArray
+    public function phpArray($data = null): PhpArray
     {
         if ($data instanceof PhpArray) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new PhpArray($data);
+            $result = PhpArray::invoke($data);
         } else {
-            $result = new PhpArray((array)$data);
+            $result = PhpArray::invoke((array)$data);
         }
 
         return $result;
@@ -80,16 +80,16 @@ final class DataFactory
      * @param mixed $data
      * @return Ini
      */
-    public function fromIni($data = null): Ini
+    public function ini($data = null): Ini
     {
         if ($data instanceof Ini) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new Ini($data);
+            $result = Ini::invoke($data);
         } else {
-            $result = new Ini((array)$data);
+            $result = Ini::invoke((array)$data);
         }
 
         return $result;
@@ -99,16 +99,16 @@ final class DataFactory
      * @param mixed $data
      * @return Yml
      */
-    public function fromYml($data = null): Yml
+    public function yml($data = null): Yml
     {
         if ($data instanceof Yml) {
             return $data;
         }
 
         if (is_string($data)) {
-            $result = new Yml($data);
+            $result = Yml::invoke($data);
         } else {
-            $result = new Yml((array)$data);
+            $result = Yml::invoke((array)$data);
         }
 
         return $result;

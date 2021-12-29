@@ -5,7 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 use Exception;
 use NumberFormatter;
 
-final class Number
+final class Numbers
 {
 
     private function __construct() {}
@@ -51,7 +51,7 @@ final class Number
             }
         }
 
-        $numberArr = array_reverse($numberArrRev);
+        $numberArr   = array_reverse($numberArrRev);
         $numberClean = implode('', $numberArr);
         $numberClean = (float) $numberClean;
 
@@ -78,16 +78,16 @@ final class Number
 
         // get unsigned
         if ($getUnsigned){
-            $data = array(
+            $data = [
                 'whole' => floor($number),
                 'float' => ($number - floor($number))
-            );
+            ];
         }
         else{
-            $data = array(
+            $data = [
                 'whole' => floor($number) * $negative,
                 'float' => ($number - floor($number)) * $negative,
-            );
+            ];
         }
 
         return $data;
