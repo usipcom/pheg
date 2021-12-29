@@ -7,7 +7,10 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 use Exception;
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 use SplFileInfo;
+use Simtabi\Pheg\Toolbox\System;
+use DirectoryIterator;
 
 /**
  * Class FileSystem
@@ -331,7 +334,7 @@ final class FileSystem
         }
 
         // We're on Windows
-        if (System::isWin()) {
+        if (System::invoke()->isWin()) {
             return true;
         }
 
@@ -538,7 +541,7 @@ final class FileSystem
         $cleanedPath = $this->clean((string)$this->real($path), $forceDS);
 
         // Cleanup root path
-        $rootPath = $rootPath ?: System::getDocRoot();
+        $rootPath = $rootPath ?: System::invoke()->getDocRoot();
         $rootPath = $this->clean((string)$this->real((string)$rootPath), $forceDS);
 
         // Remove root part
@@ -601,6 +604,78 @@ final class FileSystem
             $file = file_get_contents($filename);
         }
         return $file ?? null;
+    }
+
+    public function getAllDirs($path): array
+    {
+
+        ## - @author http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
+        $iterate = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST,
+            RecursiveIteratorIterator::CATCH_GET_CHILD // Ignore "Permission denied"
+        );
+
+        $paths = [$path];
+        foreach ($iterate as $this_path => $dir) {
+            if ($dir->isDir()) {
+                $paths[] = $this_path;
+            }
+        }
+
+        ## - Return found paths
+        return $paths;
+    }
+
+    public function getFilesInDirectory($path = null, $extension = null){
+
+        $grabFiles = function ($fileInfo){
+            return [
+                'name' => $fileInfo->getBasename(),
+                'file' => $fileInfo->getPathname(),
+                'type' => $fileInfo->getExtension(),
+            ];
+        };
+
+        // validate extension
+        $extensions = [];
+        if (!empty($extension)){
+            if (is_array($extension)){
+                foreach ($extension as $i => $e)
+                {
+                    $extensions[] = str_replace('.', '', $e);
+                }
+            }elseif (is_string($extension)){
+                $extensions[] = str_replace('.', '', $extension);
+            }
+        }
+
+        $files = [];
+        foreach ((new DirectoryIterator($path)) as $fileInfo)
+        {
+            // skip directories
+            if (!$fileInfo->isDot())
+            {
+                if (!empty($extensions)) {
+                    // loop through given extensions
+                    foreach ($extensions as $r => $ext)
+                    {
+                        if ($fileInfo->getExtension() == $ext)
+                        {
+                            // if file extension is met
+                            $files[] = $grabFiles($fileInfo);
+                        }
+                    }
+                }else{
+                    $files[] = $grabFiles($fileInfo);
+                }
+            }
+        }
+
+        return TypeConverter::invoke()->toObject([
+            'list'  => $files,
+            'one'   => $files[array_rand($files)], // randomize file output
+        ]);
     }
 
 

@@ -133,11 +133,11 @@ final class Filter
 
         $variable = $this->str->low($variable);
 
-        if (Validators::invoke()->array()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
+        if (Validators::invoke()->arr()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
             return true;
         }
 
-        if (Validators::invoke()->array()->isInArray($variable, $noList)) {
+        if (Validators::invoke()->arr()->isInArray($variable, $noList)) {
             return false;
         }
 

@@ -4,6 +4,7 @@ namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
 use NumberFormatter;
+use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
 
 final class Numbers
 {
@@ -126,42 +127,28 @@ final class Numbers
 
     public function addOrdinalSuffix($number) {
 
-        // output variables
-        $status = false;
-        $errors = null;
-        $ord    = null;
+        $ord = null;
 
-        try{
-
-            if (!in_array(($number % 100), array(11,12,13))){
-                $ord = match ($number % 10) {
-                    1       => 'st',
-                    2       => 'nd',
-                    3       => 'rd',
-                    default => 'th',
-                };
-            }
-            $status = true;
-
-        }catch (Exception $e){
-            $errors = $e->getMessage();
+        if (!in_array(($number % 100), array(11,12,13))){
+            $ord = match ($number % 10) {
+                1       => 'st',
+                2       => 'nd',
+                3       => 'rd',
+                default => 'th',
+            };
         }
-        return TypeConverter::toObject(array(
-            'status' => $status,
-            'errors' => self::filterArray($errors),
-            'data'   => array(
-                'string'  => true === $status ? $number . $ord : null,
-                'ordinal' => $ord,
-                'number'  => $number,
-            )
+
+        return TypeConverter::invoke()->toObject(array(
+            'string'  => !empty($ord) ? $number . $ord : null,
+            'ordinal' => $ord,
+            'number'  => $number,
         ));
     }
 
     public function generatePercentageBetween2Numbers($number, $total, $precision = 2){
 
         //  variables
-        $number = (float) $number;
-        $total  = (float) $total;
+        $total = (float) $total;
 
         // if number is greater than total
         if ($number > $total){
@@ -169,7 +156,7 @@ final class Numbers
         }
 
         // calculate
-        $out = $number / ($total / 100);
+        $out = (float) $number / ($total / 100);
         if (false === $precision){
             $out = round($out,2);
         }
@@ -297,8 +284,7 @@ final class Numbers
             return '100';
         }
 
-        $normal = abs($normal);
-        $percent = round($current / $normal * 100);
+        $percent = round($current / abs($normal) * 100);
 
         return number_format($percent, 0, '.', ' ');
     }
@@ -315,11 +301,8 @@ final class Numbers
      */
     public function range(float $value, float $min, float $max): int
     {
-        $value = Filter::int($value);
-        $min   = Filter::int($min);
-        $max   = Filter::int($max);
-
-        return $this->limit($value, $min, $max);
+        $filter = Filter::invoke();
+        return $this->limit($filter->int($value), $filter->int($min), $filter->int($max));
     }
 
 }

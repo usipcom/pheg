@@ -161,7 +161,7 @@ final class Email
             $defaultImage = urldecode($defaultImage);
         } else {
             $defaultImage = strtolower($defaultImage);
-            if (!Validators::invoke()->array()->isInArray($defaultImage, $this->getGravatarBuiltInImages())) {
+            if (!Validators::invoke()->arr()->isInArray($defaultImage, $this->getGravatarBuiltInImages())) {
                 $defaultImage = $this->getGravatarBuiltInImages()[2];
             }
         }

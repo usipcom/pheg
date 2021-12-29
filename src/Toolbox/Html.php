@@ -76,7 +76,7 @@ final class Html
     }
 
     public function oddEvenClass(int $number){
-        return strtolower(Validators::invoke()->number()->isOddNumber($number) ? 'Even' : 'Odd');
+        return strtolower(Validators::invoke()->vars()->isOddNumber($number) ? 'Even' : 'Odd');
     }
 
     public function progressbar($done, $total, $info = "", $width = 50) {

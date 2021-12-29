@@ -106,7 +106,7 @@ final class Xml
      * @return DOMDocument
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function array2Dom(array         $xmlAsArray, ?DOMElement   $domElement = null, ?DOMDocument $document = null): DOMDocument {
+    public function array2Dom(array $xmlAsArray, ?DOMElement $domElement = null, ?DOMDocument $document = null): DOMDocument {
         if (null === $document) {
             $document = $this->createFromString();
         }
@@ -269,6 +269,6 @@ final class Xml
         );
 
         libxml_clear_errors();
-        libxml_use_internal_errors($useInternalErrors);
+        libxml_use_internal_errors(true);
     }
 }
