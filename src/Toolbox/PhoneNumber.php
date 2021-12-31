@@ -181,7 +181,7 @@ final class PhoneNumber
             $errors = $e->getMessage();
         }
 
-        return TypeConverter::toObject([
+        return Transfigure::toObject([
             'status' => $status,
             'errors' => Helpers::filterArray($errors),
             'query'  => [

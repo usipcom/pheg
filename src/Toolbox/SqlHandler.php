@@ -150,4 +150,8 @@ final class SqlHandler
         ]);
     }
 
+    public function generateSearchTerm($term)
+    {
+        return preg_split('/\s+/', str_replace(['-', '+', '<', '>', '@', '(', ')', '~'], ' ', $term), -1, PREG_SPLIT_NO_EMPTY);
+    }
 }

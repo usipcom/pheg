@@ -300,7 +300,7 @@ class JSON implements JSONInterface
     }
 
     public function escapeUnicode($str){
-        return json_decode((preg_replace('/\\\u([0-9a-z]{4})/', '&#x$1;', TypeConverter::toJson($str))));
+        return json_decode((preg_replace('/\\\u([0-9a-z]{4})/', '&#x$1;', Transfigure::toJson($str))));
     }
 
     public function toArray(string $jsonString, $parentId = 0)

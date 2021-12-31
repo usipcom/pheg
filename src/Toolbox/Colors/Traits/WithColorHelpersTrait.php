@@ -55,7 +55,7 @@ trait WithColorHelpersTrait
         }
 
         //Return rgb(a) color string
-        return TypeConverter::toObject(array(
+        return Transfigure::toObject(array(
             'opacity' => $opacity,
             'array'   => $array,
             'css'     => $output,
@@ -150,7 +150,7 @@ trait WithColorHelpersTrait
      */
     public function calculateBrightness($color)
     {
-        $components = is_array($color) ? $color : TypeConverter::toArray(self::hex2rgba($color)->array);
+        $components = is_array($color) ? $color : Transfigure::toArray(self::hex2rgba($color)->array);
         return sqrt(0.241 * pow($components['r'], 2) + 0.691 * pow($components['g'], 2) + 0.068 * pow($components['b'], 2));
     }
 
@@ -162,7 +162,7 @@ trait WithColorHelpersTrait
      */
     public function calculateSaturation($color)
     {
-        $components = is_array($color) ? $color : TypeConverter::toArray(self::hex2rgba($color)->array);
+        $components = is_array($color) ? $color : Transfigure::toArray(self::hex2rgba($color)->array);
         $var_Min    = min($components['r'], $components['g'], $components['b']);
         $var_Max    = max($components['r'], $components['g'], $components['b']);
         $del_Max    = $var_Max - $var_Min;

@@ -3,8 +3,12 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
+use Simtabi\Enekia\Validators;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use function mb_strtolower;
 use Html2Text\Html2Text;
+use Cocur\Slugify\Slugify;
+use Stringy\Stringy as S;
 
 /**
  * Class Str
@@ -24,7 +28,12 @@ final class Str
      */
     public static $encoding = 'UTF-8';
 
-    private function __construct() {}
+    private Arr $arr;
+
+    private function __construct()
+    {
+        $this->arr = Arr::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -139,7 +148,7 @@ final class Str
         bool $removeAccents = true
     ): string {
         if ($removeAccents) {
-            $string = Slug::removeAccents($string);
+            $string = $this->removeAccents($string);
         }
 
         $string = strip_tags($string);
@@ -406,35 +415,13 @@ final class Str
     }
 
     /**
-     * Converts any accent characters to their equivalent normal characters
-     *
-     * @param string $text
-     * @param bool   $isCache
-     * @return string
-     */
-    public function slug(string $text = '', bool $isCache = false): string
-    {
-        static $cache = [];
-
-        if (!$isCache) {
-            return Slug::filter($text);
-        }
-
-        if (!array_key_exists($text, $cache)) { // Not Arr::key() for performance
-            $cache[$text] = Slug::filter($text);
-        }
-
-        return $cache[$text];
-    }
-
-    /**
      * Check is mbstring overload standard functions
      * @return bool
      */
     private function isOverload(): bool
     {
         if (defined('MB_OVERLOAD_STRING') && $this->isMBString()) {
-            return (bool)(Filter::int(System::iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
+            return (bool)(Filter::invoke()->int(System::invoke()->iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
         }
 
         return false;
@@ -635,15 +622,15 @@ final class Str
             $encodingNew = self::$encoding;
         }
 
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) use ($encodingNew) {
                 if (!is_string($input)) {
                     return $input;
                 }
 
-                $firstCharacter = mb_substr($input, 0, 1);
-                $firstCharacter = mb_strtoupper($firstCharacter, $encodingNew);
+                $firstCharacter  = mb_substr($input, 0, 1);
+                $firstCharacter  = mb_strtoupper($firstCharacter, $encodingNew);
                 $otherCharacters = mb_substr($input, 1);
                 return $firstCharacter.$otherCharacters;
             }
@@ -692,7 +679,7 @@ final class Str
     public function kebabCase($string): string
     {
         // Replace invalid characters with a space.
-        $string = $this->filterString($string);
+        $string = Sanitize::invoke()->filterString($string);
         $string = trim($string);
         $string = strtolower($string);
         return str_replace(' ', '-', $string);
@@ -816,7 +803,7 @@ final class Str
      */
     public function escXml(string $string): string
     {
-        return Xml::escape($string);
+        return Xml::invoke()->escape($string);
     }
 
     /**
@@ -1068,7 +1055,7 @@ final class Str
      */
     public function stringToBoolean($input)
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) {
                 $inputConverted = $input;
@@ -1102,8 +1089,7 @@ final class Str
             return $standard;
         }
 
-        return Arr::recurse(
-            $standard,
+        return $this->arr->recurse($standard,
             function($input) {
                 $inputConverted = $input;
 
@@ -1129,7 +1115,7 @@ final class Str
      */
     public function stringToInt($input)
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) {
 
@@ -1137,7 +1123,7 @@ final class Str
                     return $input;
                 }
 
-                $number = (int) $input;
+                $number     = (int) $input;
                 $sameLength = strlen($input) === strlen((string) $number);
 
                 if ($sameLength) {
@@ -1157,7 +1143,7 @@ final class Str
      */
     public function stringToFloat($input)
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) {
 
@@ -1165,7 +1151,7 @@ final class Str
                     return $input;
                 }
 
-                $number = (float) $input;
+                $number     = (float) $input;
                 $sameLength = strlen($input) === strlen((string) $number);
 
                 if ($sameLength) {
@@ -1185,7 +1171,7 @@ final class Str
      */
     public function stringToNumber($input)
     {
-        return Arr::recurse(
+        return $this->arr->recurse(
             $input,
             function($input) {
 
@@ -1216,26 +1202,23 @@ final class Str
      * @param mixed $input
      * @return mixed
      */
-    public function booleanToString($input)
+    public function booleanToString($input): mixed
     {
-        return Arr::recurse(
-            $input,
-            function($input) {
-                if ($input === true) {
-                    return 'true';
-                }
-
-                if ($input === false) {
-                    return 'false';
-                }
-
-                if ($input === null) {
-                    return 'null';
-                }
-
-                return $input;
+        return $this->arr->recurse($input, function($input) {
+            if ($input === true) {
+                return 'true';
             }
-        );
+
+            if ($input === false) {
+                return 'false';
+            }
+
+            if ($input === null) {
+                return 'null';
+            }
+
+            return $input;
+        });
     }
 
     public function naturalLanguageJoin(array $list, $conjunction = 'and')
@@ -1245,11 +1228,10 @@ final class Str
         //https://gist.github.com/angry-dan/e01b8712d6538510dd9c
 
         // option 1
-        $last = array_slice($list, -1);
+        $last  = array_slice($list, -1);
         $first = join(', ', array_slice($list, 0, -1));
-        $both = array_filter(array_merge(array($first), $last), 'strlen');
-        $last = join(" $conjunction ", $both);
-        return $last;
+        $both  = array_filter(array_merge(array($first), $last), 'strlen');
+        return join(" $conjunction ", $both);
 
         // option 2
         $last = array_pop($list);
@@ -1270,7 +1252,7 @@ final class Str
      */
     public function strReplaceMulti($search, $replace, array $subject): array
     {
-        $subjectEncoded = json_encode($subject);
+        $subjectEncoded  = json_encode($subject);
         $subjectReplaced = str_replace($search, $replace, (string) $subjectEncoded);
         return json_decode($subjectReplaced, true);
     }
@@ -1395,83 +1377,60 @@ final class Str
         return $generate($string);
     }
 
-    public function generateSearchTerm($term)
+    public function readingTime(string $story, $spacing = null, $shortForm = false)
     {
-        return preg_split('/\s+/', str_replace(['-', '+', '<', '>', '@', '(', ')', '~'], ' ', $term), -1, PREG_SPLIT_NO_EMPTY);
-    }
-
-    public function readingTime($story, $spacing = null, $short_form = false)
-    {
-
-        // if empty story
-        if (empty($story) && !is_string($story)) {
-            return false;
-        }
 
         // escape
         $story = trim(htmlspecialchars($story, ENT_QUOTES, 'UTF-8'));
 
         // set variables
-        $word_count = $this->wordCountUtf8($story);
-        $minutes = floor($word_count / 120);
-        $seconds = floor($word_count % 120 / (120 / 60));
+        $wordCount = $this->wordCountUtf8($story);
+        $minutes   = floor($wordCount / 120);
+        $seconds   = floor($wordCount % 120 / (120 / 60));
 
-        $min_str = true === $short_form ? 'min' : 'minute';
-        $sec_str = true === $short_form ? 'sec' : 'second';
-        $var_str = 's';
+        $minStr = $shortForm ? 'min' : 'minute';
+        $secStr = $shortForm ? 'sec' : 'second';
+        $varStr = 's';
 
-        if (is_null($spacing)) {
-            $spacing = '';
-        } else {
-            $spacing = (!empty($spacing) ? $spacing : ' ');
-        }
-
-        $min_var = (($minutes == 1) ? false : true);
-        $sec_var = (($seconds == 1) ? false : true);
+        $spacing = (!empty($spacing) ? $spacing : ' ');
+        $minVar  = (($minutes == 1) ? false : true);
+        $secVar  = (($seconds == 1) ? false : true);
 
         if (1 <= $minutes) {
-            $set_reading_minutes = $minutes . $spacing . ucwords(strtolower($min_str . ((true === $min_var ? $var_str : null))));
-            $set_reading_seconds = $seconds . $spacing . ucwords(strtolower($sec_str . ((true === $sec_var ? $var_str : null))));
+            $readingMins = $minutes . $spacing . ucwords(strtolower($minStr . ((true === $minVar ? $varStr : null))));
+            $readingSecs = $seconds . $spacing . ucwords(strtolower($secStr . ((true === $secVar ? $varStr : null))));
         } else {
-            $set_reading_minutes = $minutes . $spacing . ucwords(strtolower($min_str . "'" . ((true === $min_var ? $var_str : null))));
-            $set_reading_seconds = $seconds . $spacing . ucwords(strtolower($sec_str . "'" . ((true === $sec_var ? $var_str : null))));
+            $readingMins = $minutes . $spacing . ucwords(strtolower($minStr . "'" . ((true === $minVar ? $varStr : null))));
+            $readingSecs = $seconds . $spacing . ucwords(strtolower($secStr . "'" . ((true === $secVar ? $varStr : null))));
         }
 
-        $data['time'] = TypeConverter::toObject(array(
-            'formatted' => array(
-                'minutes' => html_entity_decode($set_reading_minutes),
-                'seconds' => html_entity_decode($set_reading_seconds),
-            ),
-            'raw' => array(
-                'minutes' => $minutes,
-                'seconds' => $seconds,
-            ),
-
-        ));
-
-        $data['words'] = $this->getTypeConverter()->toObject(array(
-            'total' => $word_count,
-            'chars' => strlen(strip_tags($story)),
-            'article' => $story,
-        ));
-        return $data;
+        return [
+            'time' => [
+                'formatted' => [
+                    'minutes' => html_entity_decode($readingMins),
+                    'seconds' => html_entity_decode($readingSecs),
+                ],
+                'raw' => [
+                    'minutes' => $minutes,
+                    'seconds' => $seconds,
+                ],
+            ],
+            'words' => [
+                'total'   => $wordCount,
+                'chars'   => strlen(strip_tags($story)),
+                'article' => $story,
+            ]
+        ];
     }
 
-    public function formatReadCount($readCounts, $str = 'Read', $multiple = 's', $spacing = null)
+    public function formatReadCount(int $readCounts, $str = 'Read', $multiple = 's', $spacing = null): array
     {
 
-        // validate
-        if (true !== $this->getValidator()->isInteger($readCounts)) {
-            return false;
-        }
+        $spacing     = (!empty($spacing) ? $spacing : "&nbsp;");
+        $data        = [];
+        $data['raw'] = $readCounts;
 
-        if (is_null($spacing)) {
-            $spacing = '';
-        } else {
-            $spacing = (!empty($spacing) ? $spacing : "&nbsp;");
-        }
-
-        if ($readCounts !== 0) {
+        if ($readCounts >=1) {
             if ($readCounts > 1) {
                 $data['formatted'] = $readCounts . $spacing . ucfirst($str . $multiple);
             } elseif ($readCounts === 1) {
@@ -1479,95 +1438,11 @@ final class Str
             } else {
                 $data['formatted'] = $readCounts . $spacing . ucfirst($str);
             }
-        } else {
-
-            if (false === $readCounts || ($readCounts === 0)) {
-                $data['formatted'] = $readCounts . $spacing . ucfirst($str . $multiple);
-            } else {
-                $data['formatted'] = $readCounts . $spacing . ucfirst($str);
-            }
-
+        }else{
+            $data['formatted'] = $readCounts . $spacing . ucfirst($str);
         }
-        $data['raw'] = $readCounts;
+
         return $data;
-    }
-
-    /**
-     * Convert number to word representation
-     * @param  int $number number to convert to word
-     * @return string converted string
-     */
-    public function numberToWord($number) {
-        $hyphen = '-';
-        $conjunction = ' and ';
-        $separator = ', ';
-        $negative = 'negative ';
-        $decimal = ' point ';
-        $string = $fraction = null;
-        $dictionary = array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six', 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten', 11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen', 16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen', 19 => 'nineteen', 20 => 'twenty', 30 => 'thirty', 40 => 'fourty', 50 => 'fifty', 60 => 'sixty', 70 => 'seventy', 80 => 'eighty', 90 => 'ninety', 100 => 'hundred', 1000 => 'thousand', 1000000 => 'million', 1000000000 => 'billion', 1000000000000 => 'trillion', 1000000000000000 => 'quadrillion', 1000000000000000000 => 'quintillion');
-
-        if (!is_numeric($number)):
-            return false;
-        endif;
-
-        if (($number >= 0 AND (int)$number < 0) OR (int)$number < 0 - PHP_INT_MAX):
-            trigger_error('numberToWord only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX, E_USER_WARNING);
-            return false;
-        endif;
-
-        if ($number < 0):
-            return $negative . self::numberToWord(abs($number));
-        endif;
-
-        if (strpos($number, '.') !== false):
-            list($number, $fraction) = explode('.', $number);
-        endif;
-
-        switch (true):
-            case $number < 21:
-                $string = $dictionary[$number];
-                break;
-
-            case $number < 100:
-                $tens = ((int)($number / 10)) * 10;
-                $units = $number % 10;
-                $string = $dictionary[$tens];
-                if ($units):
-                    $string.= $hyphen . $dictionary[$units];
-                endif;
-                break;
-
-            case $number < 1000:
-                $hundreds = $number / 100;
-                $remainder = $number % 100;
-                $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
-                if ($remainder):
-                    $string.= $conjunction . self::numberToWord($remainder);
-                endif;
-                break;
-
-            default:
-                $baseUnit = pow(1000, floor(log($number, 1000)));
-                $numBaseUnits = (int)($number / $baseUnit);
-                $remainder = $number % $baseUnit;
-                $string = self::numberToWord($numBaseUnits) . ' ' . $dictionary[$baseUnit];
-                if ($remainder):
-                    $string.= $remainder < 100 ? $conjunction : $separator;
-                    $string.= self::numberToWord($remainder);
-                endif;
-                break;
-        endswitch;
-
-        if (null !== $fraction and is_numeric($fraction)):
-            $string.= $decimal;
-            $words = array();
-            foreach (str_split((string)$fraction) as $number):
-                $words[] = $dictionary[$number];
-            endforeach;
-            $string.= implode(' ', $words);
-        endif;
-
-        return $string;
     }
 
     /**
@@ -1579,26 +1454,45 @@ final class Str
      * @return string Shotened Text
      */
     public function shortenString($string, $maxLength, $addEllipsis = true, $wordsafe = false) {
-        $ellipsis = '';
+        $ellipsis  = '';
         $maxLength = max($maxLength, 0);
         if (mb_strlen($string) <= $maxLength):
             return $string;
         endif;
+
         if ($addEllipsis):
             $ellipsis = mb_substr('...', 0, $maxLength);
             $maxLength-= mb_strlen($ellipsis);
             $maxLength = max($maxLength, 0);
         endif;
+
         if ($wordsafe):
-            $matches = array();
             $string = preg_replace('/\s+?(\S+)?$/', '', mb_substr($string, 0, $maxLength));
         else:
             $string = mb_substr($string, 0, $maxLength);
         endif;
+
         if ($addEllipsis):
             $string.= $ellipsis;
         endif;
+
         return $string;
     }
 
+    /**
+     * Converts all accent characters to ASCII characters.
+     * If there are no accent characters, then the string given is just returned.
+     *
+     * @param string $string Text that might have accent characters
+     * @return string Filtered  string with replaced "nice" characters
+     */
+    public function removeAccents(string $string): string
+    {
+        return (S::create($string))->toTransliterate();
+    }
+
+    public function slug(string $string, $sep = '_', array $args = [])
+    {
+        return (new Slugify($args))->slugify($string, $sep);
+    }
 }

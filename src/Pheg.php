@@ -274,11 +274,6 @@ class Pheg
         return SimpleTimer::invoke();
     }
 
-    public function slug(string $string, $sep = '_', array $args = []): Slug
-    {
-        return Slug::invoke($string, $sep, $args);
-    }
-
     public function socialMedia(): SocialMedia
     {
         return SocialMedia::invoke();

@@ -37,6 +37,21 @@ final class Transfigure {
         return new self();
     }
 
+    public function arrayToXml(): ArrayToXml
+    {
+        return ArrayToXml::invoke();
+    }
+
+    public function xml2Array(): Xml2Array
+    {
+        return Xml2Array::invoke();
+    }
+
+    public function xmlResponse(array $array): XmlResponse
+    {
+        return XmlResponse::invoke($array);
+    }
+
     public function utf8Encode(string|array|object $resource): object|array|string
     {
         if (is_string($resource)) {
@@ -139,12 +154,8 @@ final class Transfigure {
 
     public function object2Array(object $resource): array
     {
-        if (!is_object($resource) && !is_array($resource)) {
-            return $resource;
-        }
-        if (is_object($resource)) {
-            $resource = get_object_vars($resource);
-        }
+
+        $resource = get_object_vars($resource);
         return array_map(array('self', 'object2Array'), $resource);
 
         $array = [];
@@ -224,6 +235,7 @@ final class Transfigure {
 
     public function toObject($resource)
     {
+
         if (empty($resource)) $this->throwEmptyDataError();
 
         $this->resource = $resource;
@@ -238,19 +250,4 @@ final class Transfigure {
         };
     }
 
-
-    public function arrayToXml(): ArrayToXml
-    {
-        return ArrayToXml::invoke();
-    }
-
-    public function xml2Array(): Xml2Array
-    {
-        return Xml2Array::invoke();
-    }
-
-    public function xmlResponse(array $array): XmlResponse
-    {
-        return XmlResponse::invoke($array);
-    }
 }
