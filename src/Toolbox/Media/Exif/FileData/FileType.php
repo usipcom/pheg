@@ -1,13 +1,13 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\FileData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\EnumerableInt;
+use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasEnumerableIntTrait;
 
 class FileType
 {
-    use EnumerableInt;
+
+    use HasEnumerableIntTrait;
 
     /**
      * See https://github.com/php/php-src/blob/master/ext/standard/php_image.h#L31-L55

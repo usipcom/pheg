@@ -1,9 +1,8 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Media\Exif;
+namespace Simtabi\Pheg\Toolbox\Media\Exif\Trait;
 
-trait EmptiableString
+trait HasEmptiableStringTrait
 {
     /** @var string */
     private $string;

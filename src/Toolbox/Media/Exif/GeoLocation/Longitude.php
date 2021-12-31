@@ -1,15 +1,16 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\GeoLocation;
 
+use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasCoordinatesTrait;
+
 class Longitude
 {
-    use Coordinate;
+    use HasCoordinatesTrait;
 
     /** @var array<string> */
     private const AVAILABLE_REF = ['W', 'E'];
 
     /** @var int */
-    private const BOUNDARY = 180;
+    private const BOUNDARY      = 180;
 }

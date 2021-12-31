@@ -2,8 +2,6 @@
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\FileData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\EmptiableDateTime;
-
 class FileDateTime extends EmptiableDateTime
 {
     public static function fromTimestamp(int $timestamp): self

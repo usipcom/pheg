@@ -1,10 +1,8 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\FileData;
 
 use DateTimeImmutable;
-use Simtabi\Pheg\Toolbox\Media\Exif\EmptiableDateTime;
 
 class LastModifiedDate extends EmptiableDateTime
 {

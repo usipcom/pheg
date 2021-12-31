@@ -1,13 +1,12 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\CameraData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\ExifRational;
+use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasExifRationalTrait;
 
 class Aperture
 {
-    use ExifRational;
+    use HasExifRationalTrait;
 
     public function __toString(): string
     {

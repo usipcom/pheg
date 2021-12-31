@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Simtabi\Pheg\Toolbox\Media\Exif;
 
 use Simtabi\Pheg\Core\Exceptions\CannotReadExifData;
+use Exception;
 
 class ExifReader
 {
@@ -14,7 +15,7 @@ class ExifReader
     {
         try {
             $exifDataArray = @exif_read_data($filename);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new CannotReadExifData($e->getMessage());
         }
 

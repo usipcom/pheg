@@ -1,11 +1,10 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\CameraData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\EmptiableString;
+use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasEmptiableStringTrait;
 
 class Model
 {
-    use EmptiableString;
+    use HasEmptiableStringTrait;
 }

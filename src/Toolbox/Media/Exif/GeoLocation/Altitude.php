@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\GeoLocation;
 
@@ -20,7 +19,7 @@ class Altitude
         }
 
         $stringParts = explode('/', $string);
-        $floatValue = round(intval($stringParts[0]) / intval($stringParts[1]), 2);
+        $floatValue  = round(intval($stringParts[0]) / intval($stringParts[1]), 2);
 
         return new self($floatValue);
     }
@@ -35,6 +34,7 @@ class Altitude
         if (strpos($string, '/') === false) {
             return false;
         }
+
         $stringParts = explode('/', $string);
         if (! is_numeric($stringParts[0]) || ! is_numeric($stringParts[1])) {
             return false;

@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif;
 
@@ -58,16 +57,16 @@ class CameraData
         Aperture $aperture,
         ISOSpeed $ISOSpeed
     ) {
-        $this->maker = $maker;
-        $this->model = $model;
-        $this->makerNote = $makerNote;
-        $this->orientation = $orientation;
+        $this->maker           = $maker;
+        $this->model           = $model;
+        $this->makerNote       = $makerNote;
+        $this->orientation     = $orientation;
         $this->exposureProgram = $exposureProgram;
-        $this->exposureTime = $exposureTime;
-        $this->focalLength = $focalLength;
-        $this->flash = $flash;
-        $this->aperture = $aperture;
-        $this->ISOSpeed = $ISOSpeed;
+        $this->exposureTime    = $exposureTime;
+        $this->focalLength     = $focalLength;
+        $this->flash           = $flash;
+        $this->aperture        = $aperture;
+        $this->ISOSpeed        = $ISOSpeed;
     }
 
     public static function fromExifArray(array $exifArray): self

@@ -2,9 +2,7 @@
 
 namespace Simtabi\Pheg\Core\Exceptions;
 
-use Exception;
-
-final class Exception extends Exception
+final class Exception extends \Exception
 {
 
 }
