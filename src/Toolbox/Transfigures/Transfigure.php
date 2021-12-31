@@ -182,7 +182,7 @@ final class Transfigure {
         throw new Exception(self::DATA_IS_EMPTY_MSG);
     }
 
-    private function validate(): Validators\DataType
+    private function validate(): Validators\Transfigure
     {
         return $this->validators->dataType();
     }
