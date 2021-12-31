@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Media\Exif\Trait;
+namespace Simtabi\Pheg\Toolbox\Media\Exif\Traits;
 
 trait HasCoordinatesTrait
 {
