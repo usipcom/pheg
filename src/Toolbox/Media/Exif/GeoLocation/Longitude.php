@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\GeoLocation;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasCoordinatesTrait;
+use Simtabi\Pheg\Toolbox\Media\Exif\Traits\HasCoordinatesTrait;
 
 class Longitude
 {

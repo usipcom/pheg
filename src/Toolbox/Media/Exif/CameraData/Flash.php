@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\CameraData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasEnumerableIntTrait;
+use Simtabi\Pheg\Toolbox\Media\Exif\Traits\HasEnumerableIntTrait;
 
 class Flash
 {

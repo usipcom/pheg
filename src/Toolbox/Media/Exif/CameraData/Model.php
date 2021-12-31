@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox\Media\Exif\CameraData;
 
-use Simtabi\Pheg\Toolbox\Media\Exif\Trait\HasEmptiableStringTrait;
+use Simtabi\Pheg\Toolbox\Media\Exif\Traits\HasEmptiableStringTrait;
 
 class Model
 {
