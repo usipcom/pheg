@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Colors\Types;
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 
 abstract class BaseFactory
 {
@@ -65,12 +65,12 @@ abstract class BaseFactory
      *
      * @param string $code
      *
-     * @throws PhegException
+     * @throws Exception
      */
     public function __construct($code)
     {
         if (($color = $this->validate($code)) === false) {
-            throw new PhegException($this->getExceptionMessage() . ' => ' . $code);
+            throw new Exception($this->getExceptionMessage() . ' => ' . $code);
         }
         $this->initialize($color);
     }

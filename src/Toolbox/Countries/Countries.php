@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Countries;
 
@@ -11,8 +11,8 @@ use Simtabi\Pheg\Toolbox\Countries\Traits\WithISOCodesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithLanguagesTrait;
 use Simtabi\JsonDB\Services\File\Json2File;
 use Simtabi\Pheg\Core\CoreTools;
+use Simtabi\Pheg\Toolbox\Countries\Traits\WithTimezonesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithValidatorsTrait;
-use stdClass;
 
 final class Countries
 {
@@ -22,6 +22,7 @@ final class Countries
     use WithCurrenciesTrait;
     use WithISOCodesTrait;
     use WithLanguagesTrait;
+    use WithTimezonesTrait;
     use WithValidatorsTrait;
 
     public const TIMEZONE_AFRICA     = 'africa';
@@ -43,7 +44,7 @@ final class Countries
     private array  $loaded    = [];
     private array  $loadFrom  = [];
 
-    private function __construct(string $basePath) {
+    private function __construct(?string $basePath) {
         if (!empty($basePath) && is_string($basePath)) {
             $this->basePath = $basePath;
         }else{
@@ -68,7 +69,7 @@ final class Countries
         $autoloadJSONFiles = function (string $directory, $id) {
 
             $data = [];
-            $name = function ($filename){
+            $name = function ($filename) {
                 return str_replace('.json', '', $filename);
             };
 
@@ -83,14 +84,12 @@ final class Countries
                     ];
                     $this->setKeys($_name);
                     $this->setLoaded($id);
-                    $data[$_name] = Json2File::fileToArray($fileInfo->getPathname());
+                    $data[$_name]           = Json2File::fileToArray($fileInfo->getPathname());
                 }
             }
 
             return $data;
         };
-
-
 
         $array = [];
         foreach ($this->loadFrom as $key => $item){
@@ -108,15 +107,6 @@ final class Countries
         return $this;
     }
 
-
-    /**
-     * @return array
-     */
-    public function getRaw(): array
-    {
-        return $this->raw;
-    }
-
     /**
      * @param array $raw
      * @return self
@@ -127,14 +117,12 @@ final class Countries
         return $this;
     }
 
-
-
     /**
      * @return array
      */
-    public function getLoaded(): array
+    public function getRaw(): array
     {
-        return $this->loaded;
+        return $this->raw;
     }
 
     /**
@@ -150,9 +138,9 @@ final class Countries
     /**
      * @return array
      */
-    public function getLoadFrom(): array
+    public function getLoaded(): array
     {
-        return $this->loadFrom;
+        return $this->loaded;
     }
 
     /**
@@ -165,24 +153,12 @@ final class Countries
         return $this;
     }
 
-
-
     /**
-     * @return bool
+     * @return array
      */
-    public function isAsObject(): bool
+    public function getLoadFrom(): array
     {
-        return $this->asObject;
-    }
-
-    /**
-     * @param bool $asObject
-     * @return self
-     */
-    public function setAsObject(bool $asObject): self
-    {
-        $this->asObject = $asObject;
-        return $this;
+        return $this->loadFrom;
     }
 
     /**
@@ -204,21 +180,6 @@ final class Countries
     }
 
     /**
-     * @param null $request
-     * @return object|stdClass
-     */
-    public function getData($request)
-    {
-        $request = trim($request);
-        $data    = [];
-
-        if ($this->data->has($request)) {
-            $data = $this->data->get($request);
-        }
-        return $this->isAsObject() ? TypeConverter::fromAnyToObject($data) : $data;
-    }
-
-    /**
      * @param Dot $data
      * @return self
      */
@@ -228,8 +189,24 @@ final class Countries
         return $this;
     }
 
-    public function getAll(){
-        return $this->isAsObject() ? TypeConverter::fromAnyToObject($this->data->all()) : $this->data->all();
+    /**
+     * @param string $request
+     * @return array
+     */
+    public function getData(string $request): array
+    {
+        $request = trim($request);
+        $data    = [];
+
+        if ($this->data->has($request)) {
+            $data = $this->data->get($request);
+        }
+        return $data;
+    }
+
+    public function getAll()
+    {
+        return $this->data->all();
     }
 
 }

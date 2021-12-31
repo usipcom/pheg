@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
-use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 /**
  * Class Arr
@@ -857,7 +857,7 @@ final class Arr
 
     public function count($data, $associative = false): int
     {
-        return count(TypeConverter::invoke()->toArray($data));
+        return count(Transfigure::invoke()->toArray($data));
     }
 
 

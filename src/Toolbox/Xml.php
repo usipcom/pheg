@@ -261,7 +261,7 @@ final class Xml
      */
     public function loadDomHTML(DOMDocument $domDocument, string $input): void
     {
-        $useInternalErrors = libxml_use_internal_errors(true);
+        libxml_use_internal_errors(true);
 
         $domDocument->loadHTML(
             mb_convert_encoding($input, 'HTML-ENTITIES', 'UTF-8'),

@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Countries\Traits;
+
+use InvalidArgumentException;
 
 // https://github.com/PruvoNet/price-extractor
 
@@ -8,8 +10,7 @@ trait WithCurrenciesTrait
 {
 
     private string $currencyCode;
-
-    private array $currency_symbols = [
+    private array $currencyHtmlEntitySymbols = [
         'AED' => '&#1583;.&#1573;', // ?
         'AFN' => '&#65;&#102;',
         'ALL' => '&#76;&#101;&#107;',
@@ -170,8 +171,7 @@ trait WithCurrenciesTrait
         'ZMK' => '&#90;&#75;', // ?
         'ZWL' => '&#90;&#36;',
     ];
-
-    private array $symbols = [
+    private array $currencySymbols           = [
         'AED' => 'د.إ',
         'AFN' => '؋',
         'ALL' => 'L',
@@ -347,46 +347,26 @@ trait WithCurrenciesTrait
         'ZWD' => 'Z$'
     ];
 
-    public function values(): array
+    public function getCurrencyHtmlEntitySymbols(): array
     {
-        return $this->symbols;
+        return $this->currencyHtmlEntitySymbols;
     }
 
-    public function getSymbol(string $currency): string
+    public function getCurrencySymbols(): array
     {
-        $currencySymbolMapping = $this->values();
-        /** @var string $symbol */
-        $symbol = $currencySymbolMapping[$currency] ?? null;
-
-        if ($symbol === null) {
-            throw new \InvalidArgumentException('Invalid currency code');
-        }
-
-        return $symbol;
+        return $this->currencySymbols;
     }
 
-
-
-
-
-    /**
-     * @return string
-     */
-    public function getCurrencyCode(): string
-    {
-        return $this->currencyCode;
-    }
-
-    /**
-     * @param string $currencyCode
-     * @return self
-     */
     public function setCurrencyCode(string $currencyCode): self
     {
         $this->currencyCode = strtoupper(trim($currencyCode));
         return $this;
     }
 
+    public function getCurrencyCode(): string
+    {
+        return $this->currencyCode;
+    }
 
     protected function getCurrencyData($request = null){
         $data = $this->getData('currency');
@@ -397,22 +377,35 @@ trait WithCurrenciesTrait
     }
 
     public function getCurrencies(){
-        $data = $this->getCurrencyData();
-        return $data['currency_symbols'] ?? null;
+        return $this->getCurrencyData()['currency_symbols'] ?? null;
     }
 
     public function getCurrencyInfo(){
-        $data = $this->getCurrencies();
-        return $data[$this->currencyCode] ?? null;
+        return $this->getCurrencies()[$this->currencyCode] ?? null;
     }
 
     public function getCurrenciesList(){
-        $data = $this->getCurrencies();
         $out  = [];
-        foreach ($data as $code => $datum){
+        foreach ($this->getCurrencies() as $code => $datum){
             $out[$datum['code']] = $datum['name'] . " (" . $datum['symbol_native'] .")";
         }
         return $out;
+    }
+
+    public function getSymbol(string $currency, $asHtmlEntity = false): string
+    {
+
+        if ($asHtmlEntity) {
+            $symbol = $this->getCurrencyHtmlEntitySymbols()[$currency] ?? null;
+        }else{
+            $symbol = $this->getCurrencySymbols()[$currency] ?? null;
+        }
+
+        if (empty($symbol)) {
+            throw new InvalidArgumentException('Invalid currency code');
+        }
+
+        return $symbol;
     }
 
 }

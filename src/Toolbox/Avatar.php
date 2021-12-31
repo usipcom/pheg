@@ -22,9 +22,9 @@ final class Avatar
      * @return string
      */
 
-    public function getGravatar($email, $size = 200, $is_https = false, $rating = 'g', $default = 'monsterid' ): ?string
+    public function getGravatar($email, $size = 200, $isHttps = false, $rating = 'g', $default = 'monsterid' ): ?string
     {
-        if ( $is_https ) {
+        if ( $isHttps ) {
             $url = 'https://secure.gravatar.com/';
         } else {
             $url = 'http://www.gravatar.com/';

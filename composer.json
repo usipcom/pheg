@@ -20,6 +20,8 @@
         "ext-dom": "*",
         "ext-libxml": "*",
         "ext-json": "*",
+        "ext-exif": "*",
+        "ext-ctype": "*",
         "eclipxe/xmlschemavalidator": "^3.0",
         "league/color-extractor": "^0.3.2",
         "annexare/countries-list": "^2.6.1",
@@ -72,8 +74,7 @@
             "helpers/classes.php",
             "helpers/constants.php",
             "helpers/form_helpers.php",
-            "helpers/functions.php",
-            "helpers/support_data.php"
+            "helpers/functions.php"
         ]
     },
     "extra": {

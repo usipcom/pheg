@@ -4,7 +4,7 @@ namespace Simtabi\Pheg\Core\Exceptions;
 
 use Exception;
 
-final class PhegException extends Exception
+final class Exception extends Exception
 {
 
 }

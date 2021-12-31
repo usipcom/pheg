@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Core\Support;
 
@@ -8,7 +8,7 @@ use Simtabi\Pheg\Core\Support\Traits\DataHelpersTrait;
 use Simtabi\Pheg\Core\Support\Traits\FormHelpersTrait;
 use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
-use Simtabi\Pheg\Toolbox\TypeConverter;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 class PhegData
 {
@@ -40,7 +40,7 @@ class PhegData
             self::$instance->loader = new Loader();
             self::$instance->pheg   = $pheg;
             self::$instance->data   = new Dot(
-                TypeConverter::toArray(
+                Transfigure::invoke()->toArray(
                     self::$instance->loader
                         ->setFolderName('config')
                         ->setFileNames(['support_data'])
@@ -100,7 +100,7 @@ class PhegData
         }
 
         if (!empty($this->default) && (is_array($data) && count($data) > 0)) {
-            $data = $this->pheg->getFromArray($this->default, $data);
+            $data = $this->pheg->arr()->fetch($this->default, $data);
         }
 
         return $data;

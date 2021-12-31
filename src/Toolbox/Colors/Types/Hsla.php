@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Colors\Types;
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 use Simtabi\Pheg\Toolbox\Colors\Helpers\DefinedColor;
 use Simtabi\Pheg\Toolbox\Colors\Traits\WithAlphaTrait;
 use Simtabi\Pheg\Toolbox\Colors\Traits\WithHslTrait;
@@ -54,7 +54,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Hsl
      */
     public function toHsl()
@@ -63,7 +63,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Rgba
      */
     public function toRgba()
@@ -72,7 +72,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Rgb
      */
     public function toRgb()
@@ -89,7 +89,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Hsv
      */
     public function toHsv()
@@ -98,7 +98,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Hex
      */
     public function toHex()
@@ -107,7 +107,7 @@ class Hsla extends BaseFactory
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Hexa
      */
     public function toHexa()

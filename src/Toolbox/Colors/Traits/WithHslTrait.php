@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Colors\Traits;
 
 use Simtabi\Pheg\Toolbox\Colors\Types\Rgb;
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 
 trait WithHslTrait
 {
@@ -29,7 +29,7 @@ trait WithHslTrait
     }
 
     /**
-     * @throws PhegException
+     * @throws Exception
      * @return Rgb
      */
     public function convertToRgb()

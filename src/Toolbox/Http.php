@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 
 /**
  * Class Http
@@ -59,7 +59,7 @@ final class Http
         if ($this->system->isFunc('fpassthru')) {
             $handle = fopen($filename, 'rb');
             if (!$handle) {
-                throw new PhegException("Can't open file '{$filename}'");
+                throw new Exception("Can't open file '{$filename}'");
             }
             fpassthru($handle);
             fclose($handle);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Transfigures;
 
@@ -6,11 +6,11 @@ use ArrayAccess;
 use ArrayIterator;
 use Exception;
 use IteratorAggregate;
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 use RecursiveIterator;
 use Traversable;
 
-class XmlResponse implements IteratorAggregate, ArrayAccess
+final class XmlResponse implements IteratorAggregate, ArrayAccess
 {
     protected $array;
 
@@ -80,7 +80,7 @@ class XmlResponse implements IteratorAggregate, ArrayAccess
         if (function_exists('collect')) {
             return collect($this->array);
         }
-        throw new PhegException('Laravel Collections do not appear to be installed');
+        throw new Exception('Laravel Collections do not appear to be installed');
     }
 
     /**

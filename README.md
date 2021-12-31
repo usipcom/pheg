@@ -14,3 +14,4 @@
 - https://github.com/JBZoo/Data
 - https://github.com/JBZoo/Cli
 - https://github.com/alextartan/xml2array
+- https://github.com/antodippo/exif-reader

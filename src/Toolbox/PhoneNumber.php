@@ -100,14 +100,14 @@ final class PhoneNumber
             // validate country iso code
             if(!empty($countryISOCode)){
                 if(!$this->validators->isCountry($countryISOCode)){
-                    throw new PhegException('Invalid country ISO code');
+                    throw new Exception('Invalid country ISO code');
                 }
             }
 
 
             // validate number
             if((!$this->validators->isInteger($number)) && (!$this->validators->isString($number))){
-                throw new PhegException(self::_e('INVALID_PHONE_NUMBER_FORMAT'));
+                throw new Exception(self::_e('INVALID_PHONE_NUMBER_FORMAT'));
             }
 
             //initialize classes
@@ -175,7 +175,7 @@ final class PhoneNumber
             // set status
             $status = true;
 
-        }catch (PhegException $e){
+        }catch (Exception $e){
             $errors = $e->getMessage();
         } catch (NumberParseException $e) {
             $errors = $e->getMessage();

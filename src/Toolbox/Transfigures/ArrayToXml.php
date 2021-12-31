@@ -18,7 +18,7 @@
 
 namespace Simtabi\Pheg\Toolbox\Transfigures;
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -48,7 +48,7 @@ final class ArrayToXml
     public function buildXml(array $data): DOMDocument
     {
         if (count($data) !== 1) {
-            throw new PhegException('Xml needs to have one root element');
+            throw new Exception('Xml needs to have one root element');
         }
 
         $firstKey = (string)array_keys($data)[0];
@@ -109,7 +109,7 @@ final class ArrayToXml
         // now parse the actual keys->value pairs
         foreach ($array as $key => $value) {
             if (!$this->isValidTagName($key)) {
-                throw new PhegException(
+                throw new Exception(
                     'Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName
                 );
             }
@@ -131,7 +131,7 @@ final class ArrayToXml
         if (array_key_exists($attributesKey, $array) && is_array($array[$attributesKey])) {
             foreach ($array[$attributesKey] as $key => $value) {
                 if (!$this->isValidTagName($key)) {
-                    throw new PhegException(
+                    throw new Exception(
                         'Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
                     );
                 }

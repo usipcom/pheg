@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
-use Simtabi\Pheg\Toolbox\File\FileSystem;
+use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Spatie\Url\Url as SpatieUrl;
 use Exception;
 
@@ -733,6 +733,47 @@ final class Url
     {
         $url = $this->getBaseUrl();
         return $url ? $this->parseUrl($url)->getHost() : '';
+    }
+
+    /**
+     * Parse text to find all URLs that are not linked and create A tag
+     * @param  string $string     Text to parse
+     * @param  array  $attributes Optional, additional key/value attributes to include in the A tag
+     * @return string
+     */
+    public function makeClickableLinks($string, $attributes = array()) {
+        $attr = "";
+        foreach ($attributes as $attributeName => $attributeValue):
+            $attr.= $attributeName . '="' . $attributeValue . '" ';
+        endforeach;
+        return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" ' . $attr . '>$1</a>', $string);
+    }
+
+    /**
+     * Create HTML A Tag
+     * @param  string $link       URL or Email address
+     * @param  string $text       Optional, If link text is empty, $link variable value will be used by default
+     * @param  array  $attributes Optional, additional key/value attributes to include in the IMG tag
+     * @return string             containing complete a tag
+     */
+    public function createLinkTag($link, $text = "", $attributes = array()) {
+        if (self::validateEmail($link)):
+            $linkTag = '<a href="mailto:' . $link . '"';
+        else:
+            $linkTag = '<a href="' . $link . '"';
+        endif;
+        $attr = "";
+        if (!isset($attributes['title'])):
+            $linkTag.= ' title="' . str_replace('"', '', strip_tags($text)) . '"';
+        endif;
+        if (empty($text)):
+            $text = $link;
+        endif;
+        foreach ($attributes as $attributeName => $attributeValue):
+            $attr.= $attributeName . '="' . $attributeValue . '" ';
+        endforeach;
+        $linkTag.= trim($attr) . '>' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</a>";
+        return $linkTag;
     }
 
 }

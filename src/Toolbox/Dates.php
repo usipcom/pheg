@@ -7,8 +7,9 @@ use DateTimeZone;
 use Exception;
 use Moment\Moment;
 use Carbon\Carbon;
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Westsworld\TimeAgo;
+use Simtabi\Enekia\Validators;
 
 final class Dates
 {
@@ -21,8 +22,13 @@ final class Dates
 
     public const SQL_FORMAT = 'Y-m-d H:i:s';
     public const SQL_NULL   = '0000-00-00 00:00:00';
+    
+    private Validators $validators;
 
-    private function __construct() {}
+    private function __construct()
+    {
+        $this->validators = Validators::invoke();
+    }
 
     public static function invoke(): self
     {
@@ -191,8 +197,7 @@ final class Dates
     }
 
     public function getDateDifference($end, $start, $endTimeZone = 'Africa/Nairobi', $startTimeZone = 'Africa/Nairobi'){
-        $moment = new Moment($end, $endTimeZone);
-        return $moment->from($start, $startTimeZone);
+        return (new Moment($end, $endTimeZone))->from($start, $startTimeZone);
     }
 
     public function getDateTimeDifference($endTime, $startTime, $twoDigitView = false){
@@ -248,31 +253,31 @@ final class Dates
             $string = $diff->format("%y years %a months %d days %h hours %i minutes %s seconds");
         }
 
-        return TypeConverter::toObject(array(
-            'years' => array(
+        return Transfigure::invoke()->toObject(array(
+            'years' => [
                 'digits' => $_y,
                 'string' => $y_s,
-            ),
-            'months' => array(
+            ],
+            'months' => [
                 'digits' => $_mn,
                 'string' => $mn_s,
-            ),
-            'days' => array(
+            ],
+            'days' => [
                 'digits' => $_d,
                 'string' => $d_s,
-            ),
-            'hours' => array(
+            ],
+            'hours' => [
                 'digits' => $_h,
                 'string' => $h_s,
-            ),
-            'minutes' => array(
+            ],
+            'minutes' => [
                 'digits' => $_m,
                 'string' => $m_s,
-            ),
-            'seconds' => array(
+            ],
+            'seconds' => [
                 'digits' => $_s,
                 'string' => $s_s,
-            ),
+            ],
 
             'string' => $string,
         ));
@@ -284,7 +289,7 @@ final class Dates
         if(empty($startYear)){
             $startYear = 1900;
         }
-        if(true !== Pheg()->getValidator()->isYear($startYear)){
+        if(true !== $this->validators->time()->isYear($startYear)){
             $startYear = 1900;
         }
 
@@ -293,7 +298,7 @@ final class Dates
         if(empty($endYear)){
             $endYear = date('Y');
         }
-        if(true !== Pheg()->getValidator()->isYear($endYear)){
+        if(true !== $this->validators->time()->isYear($endYear)){
             $endYear = date('Y');
         }
 
@@ -379,8 +384,7 @@ final class Dates
      */
     public function getAssociativeDatesInArray($from, $to, $default = null, string $step = '+1 day', string $outputFormat = 'Y-m-d'): array
     {
-        $dates = $this->getIndexedDatesInArray($from, $to, $step, $outputFormat);
-        return array_fill_keys($dates, $default);
+        return array_fill_keys($this->getIndexedDatesInArray($from, $to, $step, $outputFormat), $default);
     }
 
     /**
@@ -526,8 +530,59 @@ final class Dates
             '>=' => ($timeAgo >= $timeNow),
             '<'  => ($timeAgo < $timeNow),
             '<=' => ($timeAgo <= $timeNow),
-            default => throw new PhegException('Operand not set or is invalid'),
+            default => throw new Exception('Operand not set or is invalid'),
         };
+    }
+
+
+    /**
+     * Convert seconds to real time
+     * @param  int $seconds time in seconds
+     * @param  boolean $returnAsWords return time in words (example one minute and 20 seconds) if value is True or (1 minute and 20 seconds) if value is false, default false
+     * @return string
+     */
+    public function secondsToText($seconds, $returnAsWords = false) {
+        $periods = array('year' => 3.156e+7, 'month' => 2.63e+6, 'week' => 604800, 'day' => 86400, 'hour' => 3600, 'minute' => 60, 'second' => 1);
+        $parts = array();
+        foreach ($periods as $name => $dur) {
+            $div = floor($seconds / $dur);
+            if ($div == 0):
+                continue;
+            elseif ($div == 1):
+                $parts[] = ($returnAsWords ? self::numberToWord($div) : $div) . " " . $name;
+            else:
+                $parts[] = ($returnAsWords ? self::numberToWord($div) : $div) . " " . $name . "s";
+            endif;
+            $seconds%= $dur;
+        }
+        $last = array_pop($parts);
+        if (empty($parts)):
+            return $last;
+        else:
+            return join(', ', $parts) . " and " . $last;
+        endif;
+    }
+
+    /**
+     * Convert minutes to real time
+     * @param  int $minutes time in minutes
+     * @param  boolean $returnAsWords return time in words (example one hour and 20 minutes) if value is True or (1 hour and 20 minutes) if value is false, default false
+     * @return string
+     */
+    public function minutesToText($minutes, $returnAsWords = false) {
+        $seconds = $minutes * 60;
+        return self::secondsToText($seconds, $returnAsWords);
+    }
+
+    /**
+     * Convert hours to real time
+     * @param  int $hours time in hours
+     * @param  boolean $returnAsWords return time in words (example one hour) if value is True or (1 hour) if value is false, default false
+     * @return string
+     */
+    public function hoursToText($hours, $returnAsWords = false) {
+        $seconds = $hours * 3600;
+        return self::secondsToText($seconds, $returnAsWords);
     }
 
 }

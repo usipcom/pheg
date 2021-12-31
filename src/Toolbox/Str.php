@@ -3,11 +3,8 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
-use Simtabi\Pheg\Pheg;
 use function mb_strtolower;
 use Html2Text\Html2Text;
-use DOMDocument;
-use DOMXPath;
 
 /**
  * Class Str
@@ -1493,6 +1490,115 @@ final class Str
         }
         $data['raw'] = $readCounts;
         return $data;
+    }
+
+    /**
+     * Convert number to word representation
+     * @param  int $number number to convert to word
+     * @return string converted string
+     */
+    public function numberToWord($number) {
+        $hyphen = '-';
+        $conjunction = ' and ';
+        $separator = ', ';
+        $negative = 'negative ';
+        $decimal = ' point ';
+        $string = $fraction = null;
+        $dictionary = array(0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six', 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten', 11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen', 16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen', 19 => 'nineteen', 20 => 'twenty', 30 => 'thirty', 40 => 'fourty', 50 => 'fifty', 60 => 'sixty', 70 => 'seventy', 80 => 'eighty', 90 => 'ninety', 100 => 'hundred', 1000 => 'thousand', 1000000 => 'million', 1000000000 => 'billion', 1000000000000 => 'trillion', 1000000000000000 => 'quadrillion', 1000000000000000000 => 'quintillion');
+
+        if (!is_numeric($number)):
+            return false;
+        endif;
+
+        if (($number >= 0 AND (int)$number < 0) OR (int)$number < 0 - PHP_INT_MAX):
+            trigger_error('numberToWord only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX, E_USER_WARNING);
+            return false;
+        endif;
+
+        if ($number < 0):
+            return $negative . self::numberToWord(abs($number));
+        endif;
+
+        if (strpos($number, '.') !== false):
+            list($number, $fraction) = explode('.', $number);
+        endif;
+
+        switch (true):
+            case $number < 21:
+                $string = $dictionary[$number];
+                break;
+
+            case $number < 100:
+                $tens = ((int)($number / 10)) * 10;
+                $units = $number % 10;
+                $string = $dictionary[$tens];
+                if ($units):
+                    $string.= $hyphen . $dictionary[$units];
+                endif;
+                break;
+
+            case $number < 1000:
+                $hundreds = $number / 100;
+                $remainder = $number % 100;
+                $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+                if ($remainder):
+                    $string.= $conjunction . self::numberToWord($remainder);
+                endif;
+                break;
+
+            default:
+                $baseUnit = pow(1000, floor(log($number, 1000)));
+                $numBaseUnits = (int)($number / $baseUnit);
+                $remainder = $number % $baseUnit;
+                $string = self::numberToWord($numBaseUnits) . ' ' . $dictionary[$baseUnit];
+                if ($remainder):
+                    $string.= $remainder < 100 ? $conjunction : $separator;
+                    $string.= self::numberToWord($remainder);
+                endif;
+                break;
+        endswitch;
+
+        if (null !== $fraction and is_numeric($fraction)):
+            $string.= $decimal;
+            $words = array();
+            foreach (str_split((string)$fraction) as $number):
+                $words[] = $dictionary[$number];
+            endforeach;
+            $string.= implode(' ', $words);
+        endif;
+
+        return $string;
+    }
+
+    /**
+     * Truncate String with or without ellipsis
+     * @param  string  $string String to truncate
+     * @param  int  $maxLength Maximum length of string
+     * @param  boolean $addEllipsis if True, "..." is added in the end of the string, default true
+     * @param  boolean $wordsafe if True, Words will not be cut in the middle
+     * @return string Shotened Text
+     */
+    public function shortenString($string, $maxLength, $addEllipsis = true, $wordsafe = false) {
+        $ellipsis = '';
+        $maxLength = max($maxLength, 0);
+        if (mb_strlen($string) <= $maxLength):
+            return $string;
+        endif;
+        if ($addEllipsis):
+            $ellipsis = mb_substr('...', 0, $maxLength);
+            $maxLength-= mb_strlen($ellipsis);
+            $maxLength = max($maxLength, 0);
+        endif;
+        if ($wordsafe):
+            $matches = array();
+            $string = preg_replace('/\s+?(\S+)?$/', '', mb_substr($string, 0, $maxLength));
+        else:
+            $string = mb_substr($string, 0, $maxLength);
+        endif;
+        if ($addEllipsis):
+            $string.= $ellipsis;
+        endif;
+        return $string;
     }
 
 }

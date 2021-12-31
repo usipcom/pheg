@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Core;
 
-use Simtabi\Pheg\Toolbox\TypeConverter;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 class Loader
 {
@@ -128,7 +128,7 @@ class Loader
     }
 
     public function toObject(){
-        return TypeConverter::fromAnyToObject($this->run()->getData($this->fileNames));
+        return Transfigure::invoke()->toObject($this->run()->getData($this->fileNames));
     }
 
 }

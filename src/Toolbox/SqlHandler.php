@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 final class SqlHandler
 {
@@ -143,7 +143,7 @@ final class SqlHandler
             $code       = $matchTwo[1];
         }
 
-        return TypeConverter::invoke()->toObject([
+        return Transfigure::invoke()->toObject([
             'message' => $pdoMessage,
             'state'   => $sqlState,
             'code'    => !empty($code) ? $code : 0,

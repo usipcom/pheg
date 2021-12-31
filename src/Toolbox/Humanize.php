@@ -5,7 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 use gugglegum\MemorySize\Exception;
 use gugglegum\MemorySize\Formatter;
 use gugglegum\MemorySize\Parser;
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 use Exception as BaseException;
 
 final class Humanize
@@ -26,7 +26,7 @@ final class Humanize
         try{
             return (new Parser())->parse($bytes);
         }catch (BaseException $exception){
-            throw new PhegException($exception->getMessage());
+            throw new Exception($exception->getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ final class Humanize
         try{
             return (new Formatter())->format($number);
         }catch (BaseException $exception){
-            throw new PhegException($exception->getMessage());
+            throw new Exception($exception->getMessage());
         }
     }
 

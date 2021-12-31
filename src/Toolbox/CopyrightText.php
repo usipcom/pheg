@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use DateTime;
-use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 final class CopyrightText
 {
@@ -359,7 +359,7 @@ final class CopyrightText
 
         // construct
         $htmlText    = $symbol . '&nbsp;' . $year . '&nbsp;' . $companyName . '&nbsp;&centerdot;&nbsp;' . $declaration;
-        return TypeConverter::invoke()->toObject([
+        return Transfigure::invoke()->toObject([
             'html' => html_entity_decode($htmlText),
             'text' => [
                 'declaration' => $declaration,

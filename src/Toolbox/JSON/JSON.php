@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\JSON;
 
@@ -6,7 +6,7 @@ use Exception;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
-use Simtabi\Pheg\Toolbox\File\File;
+use Simtabi\Pheg\Toolbox\Media\File\File;
 use Simtabi\Pheg\Toolbox\JSON\Exception\Decode\ControlCharacterException;
 use Simtabi\Pheg\Toolbox\JSON\Exception\Decode\DepthException as DecodeDepthException;
 use Simtabi\Pheg\Toolbox\JSON\Exception\Decode\StateMismatchException;

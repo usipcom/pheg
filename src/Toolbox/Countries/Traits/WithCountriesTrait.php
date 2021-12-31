@@ -1,21 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Countries\Traits;
-
-use DateTimeZone;
 
 trait WithCountriesTrait
 {
 
     private string $countryCode;
-
-    /**
-     * @return string
-     */
-    public function getCountryCode(): string
-    {
-        return $this->countryCode;
-    }
 
     /**
      * @param string $countryCode
@@ -27,13 +17,23 @@ trait WithCountriesTrait
         return $this;
     }
 
-    protected function getCountriesData($request = null){
+    /**
+     * @return string
+     */
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    protected function getCountriesData($request = null)
+    {
         $data = $this->getData('countries');
-        return isset($data[$request]) && is_array($data) ? $data[$request] : $data;
+        return $data[$request] ?? $data;
     }
 
 
-    public function getAllCountriesWithData(){
+    public function getAllCountriesWithData(): array
+    {
         $countries = $this->getCountriesData('countries');
         $iso2data  = $this->getCountriesData('countries2to3');
         $data      = [];
@@ -48,7 +48,8 @@ trait WithCountriesTrait
         return $data;
     }
 
-    public function getAllCountries(){
+    public function getAllCountries(): array
+    {
         $countries = $this->getAllCountriesWithData();
         $data      = [];
         foreach ($countries as $code => $country){
@@ -57,96 +58,130 @@ trait WithCountriesTrait
         return $data;
     }
 
-    public function getCountryInfo(){
+    public function getCountryInfo(): array|false
+    {
         $data = $this->getAllCountriesWithData();
         // reverse if we are having a valid iso3 code
-        $code = $this->isValidIso3CountryCode() ? $this->getCountryIsoReversed() : $this->countryCode;
+        $code = $this->isValidISO3CountryCode() ? $this->getCountryIsoReversed() : $this->countryCode;
 
-        return $data[$code] ?? null;
+        return $data[$code] ?? false;
     }
 
-    public function getCountryName(){
-        $data = $this->getCountryInfo();
-        return $data['name'] ?? null;
+    public function getCountryName()
+    {
+        return $this->getCountryInfo()['name'] ?? false;
     }
 
     public function getCountryNativeName(){
-        $data = $this->getCountryInfo();
-        return $data['native'] ?? null;
+        return $this->getCountryInfo()['native'] ?? false;
     }
 
-    public function getCountryDialingCode(){
-        $data = $this->getCountryInfo();
-        return $data['phone'] ?? null;
+    public function getCountryDialingCode()
+    {
+        return $this->getCountryInfo()['phone'] ?? false;
     }
 
-    public function getCountryContinentCode(){
-        $data = $this->getCountryInfo();
-        return $data['continent'] ?? null;
+    public function getCountryContinentCode()
+    {
+        return $this->getCountryInfo()['continent'] ?? false;
     }
 
-    public function getCountryContinentName(){
-        $countryInfo = $this->getCountryInfo();
+    public function getCountryContinentName()
+    {
         $continents  = $this->getAllContinents();
-        $countryCode = $countryInfo['continent'] ?? null;
+        $countryCode = $this->getCountryInfo()['continent'] ?? false;
 
-        return isset($continents[$countryCode]) && !empty($countryCode) ? $continents[$countryCode] : null;
+        return isset($continents[$countryCode]) && !empty($countryCode) ? $continents[$countryCode] : false;
     }
 
-    public function getCountryCapitalCity(){
-        $data = $this->getCountryInfo();
-        return $data['capital'] ?? null;
+    public function getCountryCapitalCity()
+    {
+        return $this->getCountryInfo()['capital'] ?? false;
     }
 
-    public function getCountryCurrency(){
-        $data = $this->getCountryInfo();
-        return $data['currency'] ?? null;
+    public function getCountryCurrency()
+    {
+        return $this->getCountryInfo()['currency'] ?? false;
     }
 
-    public function getCountryLanguages(){
-        $data = $this->getCountryInfo();
-        return $data['languages'] ?? null;
+    public function getCountryLanguages()
+    {
+        return $this->getCountryInfo()['languages'] ?? false;
     }
 
-    public function getCountryIsoReversed(){
+    public function getCountryIsoReversed()
+    {
         $code = $this->countryCode;
         $iso2 = $this->getCountryIso3ToIso2();
         $iso3 = $this->getCountryIso2ToIso3();
 
-        if ($this->isValidIso2CountryCode()) {
+        if ($this->isValidISO2CountryCode()) {
             foreach ($iso3 as $i => $item){
                 if ($i === $code){
                     return $item;
                 }
             }
-        }elseif ($this->isValidIso3CountryCode()) {
+        }elseif ($this->isValidISO3CountryCode()) {
             foreach ($iso2 as $k => $item){
                 if ($k === $code){
                     return $item;
                 }
             }
         }
-        return null;
+        return false;
     }
 
-    public function getCountryIso3ToIso2(){
+    public function getCountryIso3ToIso2()
+    {
         return $this->getCountriesData('countries3to2');
     }
 
-    public function getCountryIso2ToIso3(){
+    public function getCountryIso2ToIso3()
+    {
         return $this->getCountriesData('countries2to3');
     }
 
-    /**
-     * Get the timezones.
-     *
-     * @return array|null
-     */
-    public function getTimezones()
-    {
-        $code = $this->isValidIso3CountryCode() ? $this->getCountryIsoReversed() : $this->countryCode;
 
-        return DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $code);
+
+
+
+
+
+
+
+    /**
+     * Get Country Calling Code by Country Code
+     *
+     * @param  string $code
+     * @return string
+     */
+    public function getCountryCode2DialingCode($code, $type = 'alpha2'): string|false
+    {
+
     }
 
+
+    /**
+     * Get Country Name by Country Code
+     *
+     * @param  string $code
+     * @return string
+     */
+    public function getCountryCode2CountryName($code): string|false
+    {
+
+    }
+
+
+    public function getCallingCode2CountryName($countryCode)
+    {
+        return $this->getCountryISOData($countryCode)->getLocalName();
+    }
+
+    public function getCountryCode2CurrencyCode($countryCode)
+    {
+        $country = $this->getCountryISOData($countryCode);
+
+        return $this->getIsoCodesFactory()->getCurrencies();
+    }
 }

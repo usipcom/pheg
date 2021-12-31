@@ -19,7 +19,7 @@ namespace Simtabi\Pheg\Toolbox\Transfigures;
  **/
 
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -42,18 +42,19 @@ use const XML_TEXT_NODE;
  */
 final class Xml2Array
 {
+
     /** The name of the XML attribute that indicates a namespace definition*/
-    private const ATTRIBUTE_NAMESPACE = 'xmlns';
+    private const ATTRIBUTE_NAMESPACE          = 'xmlns';
 
     /** The string that separates the namespace attribute from the prefix for the namespace*/
     private const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
     private XmlToArrayConfig $config;
 
-    private DOMDocument $xml;
+    private DOMDocument       $xml;
 
     /** @var array<string, string|int> The working list of XML namespaces */
-    private array $namespaces = [];
+    private array             $namespaces = [];
 
     private function __construct(array $config)
     {
@@ -72,8 +73,8 @@ final class Xml2Array
      * @param bool $fromDOM
      * @param array $config
      * @return array|string
-     * @throws PhegException
-     * @throws PhegException
+     * @throws Exception
+     * @throws Exception
      */
     public function convert($xmlString, bool $fromDOM = false, array $config = XmlToArrayConfig::DEFAULTS): array|XmlResponse|string
     {
@@ -85,7 +86,7 @@ final class Xml2Array
             $array = $init->buildArrayFromDomDocument($xmlString);
         }else{
             if (! is_string($xmlString) || substr(trim($xmlString), 0, 1) != '<') {
-                throw new PhegException('XML passed must be a string');
+                throw new Exception('XML passed must be a string');
             }
             $array = $init->buildArrayFromString($xmlString);
         }
@@ -100,7 +101,7 @@ final class Xml2Array
      *
      * @return array An array representation of the input XML
      *
-     * @throws PhegException
+     * @throws Exception
      */
     public function buildArrayFromString(string $inputXml): array
     {
@@ -302,7 +303,7 @@ final class Xml2Array
         libxml_clear_errors();
 
         if ($firstError instanceof LibXMLError) {
-            throw new PhegException($firstError->message);
+            throw new Exception($firstError->message);
         }
 
         return $xml;

@@ -3,11 +3,8 @@
 namespace Simtabi\Pheg\Toolbox\Data\Types;
 
 use ArrayObject;
-use JBZoo\Utils\Filter;
-
-use function JBZoo\Utils\bool;
-use function JBZoo\Utils\float;
-use function JBZoo\Utils\int;
+use Exception;
+use Simtabi\Pheg\Toolbox\Filter;
 
 /**
  * Class Data
@@ -17,12 +14,16 @@ class Factory extends ArrayObject
 {
     public const LE = "\n";
 
+    private Filter $filter;
+
     /**
      * Class constructor
      * @param array|string|false $data The data array
      */
     protected function __construct(array|string|false|null $data = [])
     {
+        $this->filter = Filter::invoke();
+
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
 
         if ($data && \is_string($data) && \file_exists($data)) {
@@ -86,7 +87,7 @@ class Factory extends ArrayObject
             $result = $this->offsetGet($key);
         }
 
-        return self::filter($result, $filter);
+        return $this->filter($result, $filter);
     }
 
     /**
@@ -153,7 +154,7 @@ class Factory extends ArrayObject
 
         // check if key exists in array
         if (null !== $value) {
-            return self::filter($value, $filter);
+            return $this->filter($value, $filter);
         }
 
         // explode search key and init search data
@@ -162,7 +163,7 @@ class Factory extends ArrayObject
         }
 
         $parts = \explode($separator, $key);
-        $data = $this;
+        $data  = $this;
 
         foreach ($parts as $part) {
             // handle ArrayObject and Array
@@ -182,11 +183,11 @@ class Factory extends ArrayObject
                 continue;
             }
 
-            return self::filter($default, $filter);
+            return $this->filter($default, $filter);
         }
 
         // return existing value
-        return self::filter($data, $filter);
+        return $this->filter($data, $filter);
     }
 
     /**
@@ -196,10 +197,10 @@ class Factory extends ArrayObject
      * @param mixed $filter
      * @return mixed
      */
-    protected static function filter($value, $filter)
+    protected function filter($value, $filter)
     {
         if (null !== $filter) {
-            $value = Filter::_($value, $filter);
+            $value = $this->filter->_($value, $filter);
         }
 
         return $value;
@@ -315,7 +316,7 @@ class Factory extends ArrayObject
      */
     public function getInt(string $key, int $default = 0): int
     {
-        return int($this->get($key, $default));
+        return $this->filter->int($this->get($key, $default));
     }
 
     /**
@@ -325,7 +326,7 @@ class Factory extends ArrayObject
      */
     public function getFloat(string $key, float $default = 0.0): float
     {
-        return float($this->get($key, $default));
+        return $this->filter->float($this->get($key, $default));
     }
 
     /**
@@ -356,7 +357,7 @@ class Factory extends ArrayObject
      */
     public function getBool(string $key, bool $default = false): bool
     {
-        return bool($this->get($key, $default));
+        return $this->filter->bool($this->get($key, $default));
     }
 
     /**
@@ -383,7 +384,7 @@ class Factory extends ArrayObject
      */
     public function findInt(string $key, int $default = 0): int
     {
-        return int($this->find($key, $default));
+        return $this->filter->int($this->find($key, $default));
     }
 
     /**
@@ -393,7 +394,7 @@ class Factory extends ArrayObject
      */
     public function findFloat(string $key, float $default = 0.0): float
     {
-        return float($this->find($key, $default));
+        return $this->filter->float($this->find($key, $default));
     }
 
     /**
@@ -423,7 +424,7 @@ class Factory extends ArrayObject
      */
     public function findBool(string $key, bool $default = false): bool
     {
-        return bool($this->find($key, $default));
+        return $this->filter->bool($this->find($key, $default));
     }
 
     /**

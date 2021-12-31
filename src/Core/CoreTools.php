@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Core;
-
-use Respect\Validation\Validator as Respect;
 
 class CoreTools
 {

@@ -16,12 +16,14 @@ use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 final class Filter
 {
 
-    private Arr $arr;
-    private Str $str;
+    private Validators $validators;
+    private Arr        $arr;
+    private Str        $str;
 
     private function __construct() {
-        $this->arr = $this->arr->invoke();
-        $this->str = $this->str->invoke();
+        $this->validators = Validators::invoke();
+        $this->arr        = Arr::invoke();
+        $this->str        = Str::invoke();
     }
 
     public static function invoke(): self
@@ -48,8 +50,8 @@ final class Filter
             foreach ($filters as $filter)
             {
                 $filterName = $this->cmd($filter);
-
-                if ($filterName) {
+                if ($filterName)
+                {
                     if (method_exists(__CLASS__, $filterName)) {
                         $value = $this->$filterName($value);
                     } else {
@@ -105,7 +107,7 @@ final class Filter
             '*',
         ];
 
-        $noList = [
+        $noList  = [
             'no*',
             'no way',
             'nope',
@@ -133,11 +135,11 @@ final class Filter
 
         $variable = $this->str->low($variable);
 
-        if (Validators::invoke()->arr()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
+        if ($this->validators->arr()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
             return true;
         }
 
-        if (Validators::invoke()->arr()->isInArray($variable, $noList)) {
+        if ($this->validators->arr()->isInArray($variable, $noList)) {
             return false;
         }
 
@@ -159,9 +161,7 @@ final class Filter
         preg_match('#[-+]?[\d]+(\.[\d]+)?([eE][-+]?[\d]+)?#', $cleaned, $matches);
         $result = (float)($matches[0] ?? 0.0);
 
-        $result = round($result, $round);
-
-        return $result;
+        return round($result, $round);
     }
 
     /**
@@ -189,9 +189,7 @@ final class Filter
     {
         // we need to remove - and + because they're allowed in the filter
         $cleaned = str_replace(['-', '+'], '', (string)$value);
-        $cleaned = (string)filter_var($cleaned, FILTER_SANITIZE_NUMBER_INT);
-
-        return $cleaned;
+        return (string)filter_var($cleaned, FILTER_SANITIZE_NUMBER_INT);
     }
 
     /**
@@ -266,12 +264,12 @@ final class Filter
      * Cleanup array
      *
      * @param mixed          $value
-     * @param string|Closure $filter
+     * @param Closure|string|null $filter
      * @return array
      */
-    public function arr($value, $filter = null): array
+    public function arr(array $value, Closure|string $filter = null): array
     {
-        $array = (array)$value;
+        $array = (array) $value;
 
         if ($filter === 'noempty') {
             $array = $this->arr->clean($array);

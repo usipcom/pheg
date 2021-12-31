@@ -5,6 +5,7 @@ namespace Simtabi\Pheg;
 use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Core\Support\PhegData;
 use Simtabi\Pheg\Toolbox\Arr;
+use Simtabi\Pheg\Toolbox\Asset;
 use Simtabi\Pheg\Toolbox\Avatar;
 use Simtabi\Pheg\Toolbox\Base64;
 use Simtabi\Pheg\Toolbox\Base64Uid;
@@ -18,44 +19,38 @@ use Simtabi\Pheg\Toolbox\Data\DataFactory;
 use Simtabi\Pheg\Toolbox\Dates;
 use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
-use Simtabi\Pheg\Toolbox\File\File;
-use Simtabi\Pheg\Toolbox\File\FileSystem;
+use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Filter;
 use Simtabi\Pheg\Toolbox\Html;
 use Simtabi\Pheg\Toolbox\Html2Text;
 use Simtabi\Pheg\Toolbox\HtmlCleaner;
 use Simtabi\Pheg\Toolbox\Http;
 use Simtabi\Pheg\Toolbox\Humanize;
-use Simtabi\Pheg\Toolbox\Image;
 use Simtabi\Pheg\Toolbox\Input;
-use Simtabi\Pheg\Toolbox\Server\Intel;
-use Simtabi\Pheg\Toolbox\Server\IP;
+use Simtabi\Pheg\Toolbox\Media\Media;
 use Simtabi\Pheg\Toolbox\JSON\JSON;
 use Simtabi\Pheg\Toolbox\Name;
-use Simtabi\Pheg\Toolbox\Server\Network;
-use Simtabi\Pheg\Toolbox\Numbers;
 use Simtabi\Pheg\Toolbox\Password;
 use Simtabi\Pheg\Toolbox\PhoneNumber;
 use Simtabi\Pheg\Toolbox\PhpDocs;
 use Simtabi\Pheg\Toolbox\Request;
 use Simtabi\Pheg\Toolbox\Sanitize;
+use Simtabi\Pheg\Toolbox\SEO;
 use Simtabi\Pheg\Toolbox\Serialize;
+use Simtabi\Pheg\Toolbox\Server\Server;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
 use Simtabi\Pheg\Toolbox\Slug;
+use Simtabi\Pheg\Toolbox\SocialMedia;
 use Simtabi\Pheg\Toolbox\SqlHandler;
-use Simtabi\Pheg\Toolbox\Server\SSLToolkit;
 use Simtabi\Pheg\Toolbox\Stats;
 use Simtabi\Pheg\Toolbox\Str;
 use Simtabi\Pheg\Toolbox\System;
 use Simtabi\Pheg\Toolbox\Timer;
-use Simtabi\Pheg\Toolbox\Transfigures\ArrayToXml;
-use Simtabi\Pheg\Toolbox\Transfigures\ArrayToXmlConfig;
-use Simtabi\Pheg\Toolbox\Transfigures\TypeConverter;
-use Simtabi\Pheg\Toolbox\Transfigures\Xml2Array;
-use Simtabi\Pheg\Toolbox\Transfigures\XmlResponse;
-use Simtabi\Pheg\Toolbox\Transfigures\XmlToArrayConfig;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Simtabi\Pheg\Toolbox\Url;
 use Simtabi\Pheg\Toolbox\UuidGenerator;
+use Simtabi\Pheg\Toolbox\Vars;
+use Simtabi\Pheg\Toolbox\WebServices;
 use Simtabi\Pheg\Toolbox\Xml;
 
 class Pheg
@@ -108,63 +103,25 @@ class Pheg
         return DataFactory::invoke();
     }
 
-    public function file($path, $mode): File
-    {
-        return File::invoke($path, $mode);
-    }
-
     public function json(): JSON
     {
         return JSON::invoke();
     }
 
-    public function arrayToXml(): ArrayToXml
+    public function media(): Media
     {
-        return ArrayToXml::invoke();
+        return Media::invoke();
     }
 
-    public function typeConverter(): TypeConverter
+    public function server(): Server
     {
-        return TypeConverter::invoke();
+        return Server::invoke();
     }
 
-    public function xml2Array(): Xml2Array
+    public function transfigure(): Transfigure
     {
-        return Xml2Array::invoke();
+        return Transfigure::invoke();
     }
-
-    public function xmlResponse(array $array): XmlResponse
-    {
-        return XmlResponse::invoke($array);
-    }
-
-
-
-
-    public function intel(): Intel
-    {
-        return Intel::invoke();
-    }
-
-    public function ip(): IP
-    {
-        return IP::invoke();
-    }
-
-    public function network(): Network
-    {
-        return Network::invoke();
-    }
-
-    public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
-    {
-        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
-    }
-
-
-
-
-
 
 
 
@@ -174,9 +131,16 @@ class Pheg
         return FileSystem::invoke();
     }
 
+
+
     public function arr(): Arr
     {
         return Arr::invoke();
+    }
+
+    public function asset(): Asset
+    {
+        return Asset::invoke();
     }
 
     public function avatar(): Avatar
@@ -259,24 +223,15 @@ class Pheg
         return Humanize::invoke();
     }
 
-    public function image(): Image
-    {
-        return Image::invoke();
-    }
-
     public function input(): Input
     {
         return Input::invoke();
     }
 
+
     public function name(): Name
     {
         return Name::invoke();
-    }
-
-    public function number(): Numbers
-    {
-        return Numbers::invoke();
     }
 
     public function password(): Password
@@ -304,6 +259,11 @@ class Pheg
         return Sanitize::invoke();
     }
 
+    public function seo(): SEO
+    {
+        return SEO::invoke();
+    }
+
     public function serialize(): Serialize
     {
         return Serialize::invoke();
@@ -314,9 +274,14 @@ class Pheg
         return SimpleTimer::invoke();
     }
 
-    public function slug(string $string, $separator = '_', array $args = []): Slug
+    public function slug(string $string, $sep = '_', array $args = []): Slug
     {
-        return Slug::invoke($string, $separator, $args);
+        return Slug::invoke($string, $sep, $args);
+    }
+
+    public function socialMedia(): SocialMedia
+    {
+        return SocialMedia::invoke();
     }
 
     public function sqlHandler(): SqlHandler
@@ -354,35 +319,22 @@ class Pheg
         return UuidGenerator::invoke();
     }
 
+    public function vars(): Vars
+    {
+        return Vars::invoke();
+    }
+
+    public function webServices(): WebServices
+    {
+        return WebServices::invoke();
+    }
+
     public function xml(): Xml
     {
         return Xml::invoke();
     }
 
-    /*
-    function dev()
-    {
-
-        $str = "
-
-        ";
-
-        $t = '';
-        foreach( explode(PHP_EOL, $str) as $value ){
-            $class = trim($value);
-            if (!empty($value)) {
-                $name = strlen($class) > 3 ? lcfirst($class) : strtolower($class);
-                $t   .= "
-                public function $name(): $class
-                {
-                    return $class::invoke();
-                }
-            "."\n";
-            }
-        }
-
-        echo $t;
-    }
-    */
-
 }
+
+
+

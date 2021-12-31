@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-use Simtabi\Pheg\Toolbox\File\FileSystem;
+use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 
 /**
  * Class Sys

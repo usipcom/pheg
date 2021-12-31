@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Core\Support\Traits;
 
@@ -10,7 +10,7 @@ trait SupportHelpersTrait
         if (empty($key)) {
             return null;
         }
-        return $this->pheg->getFromArray($key, $data);
+        return $this->pheg->fetch($key, $data);
     }
 
 }

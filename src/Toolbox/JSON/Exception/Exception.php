@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\JSON\Exception;
 
@@ -18,9 +18,7 @@ class Exception extends \Exception
      */
     public function __construct($format = '', ...$value)
     {
-        $previous = (end($value) instanceof \Exception)
-            ? array_pop($value)
-            : null;
+        $previous = (end($value) instanceof \Exception) ? array_pop($value) : null;
 
         parent::__construct(vsprintf($format, $value), 0, $previous);
     }

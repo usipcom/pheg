@@ -1,14 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Colors\Helpers;
 
-use Simtabi\Pheg\Core\Exceptions\PhegException;
+use Exception;
 
 class Factory
 {
     /**
-     * @throws PhegException
-     * @throws PhegException
+     * @throws Exception
+     * @throws Exception
      */
     public static function init($color)
     {
@@ -41,6 +41,6 @@ class Factory
             return new Hsla($color);
         }
         // Cannot determine between hsv and hsl
-        throw new PhegException("Cannot determine color type of '{$color}'");
+        throw new Exception("Cannot determine color type of '{$color}'");
     }
 }

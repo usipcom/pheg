@@ -1,26 +1,25 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Countries\Traits;
-
 
 trait WithValidatorsTrait
 {
 
-    public function isValidIso2CountryCode(){
-        $data = $this->getCountryIso2ToIso3();
+    public function isValidISO2CountryCode(): bool
+    {
         $code = $this->countryCode;
-        return !empty($code) && isset($data[$code]) === true;
+        return !empty($code) && isset($this->getCountryIso2ToIso3()[$code]);
     }
 
-    public function isValidIso3CountryCode(){
-        $data = $this->getCountryIso3ToIso2();
+    public function isValidISO3CountryCode(): bool
+    {
         $code = $this->countryCode;
-        return !empty($code) && isset($data[$code]) === true;
+        return !empty($code) && isset($this->getCountryIso3ToIso2()[$code]) === true;
     }
 
-    public function isValidCountryCode(){
-        if ($this->isValidIso3CountryCode() || $this->isValidIso2CountryCode()) {
+    public function isValidCountryCode(): bool
+    {
+        if ($this->isValidISO3CountryCode() || $this->isValidISO2CountryCode()) {
             return true;
         }
         return false;

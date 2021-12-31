@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Simtabi\Pheg\Toolbox\Colors\Helpers;
 
@@ -519,4 +519,53 @@ class Color
 
         return $diff < $threshold;
     }
+
+
+
+
+
+    /**
+     * Takes HEX color code value and converts to a RGB value
+     * @param  string $color Color hex value, example: #000000, #000 or 000000, 000
+     * @return string color rbd value
+     */
+    public function hex2rgb($color) {
+        $color = str_replace("#", "", $color);
+        if (strlen($color) == 3):
+            list($r, $g, $b) = array($color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2]);
+        else:
+            list($r, $g, $b) = array($color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5]);
+        endif;
+        $r = hexdec($r);
+        $g = hexdec($g);
+        $b = hexdec($b);
+        return 'rgb(' . $r . ', ' . $g . ', ' . $b . ')';
+    }
+
+    /**
+     * Takes RGB color value and converts to a HEX color code
+     * Could be used as Recipe::rgb2hex("rgb(0,0,0)") or Recipe::rgb2hex(0,0,0)
+     * @param  mixed $r Full rgb,rgba string or red color segment
+     * @param  mixed $g null or green color segment
+     * @param  mixed $b null or blue color segment
+     * @return string hex color value
+     */
+    public function rgb2hex($r, $g = null, $b = null) {
+        if (strpos($r, "rgb") !== false OR strpos($r, "rgba") !== false):
+            preg_match_all('/\(([^\)]*)\)/', $r, $matches);
+            if (isset($matches[1][0])):
+                list($r, $g, $b) = explode(",", $matches[1][0]);
+            else:
+                return false;
+            endif;
+        endif;
+
+        $result = "";
+        foreach (array($r, $g, $b) as $c):
+            $hex = base_convert($c, 10, 16);
+            $result.= ($c < 16) ? ("0" . $hex) : $hex;
+        endforeach;
+        return "#" . $result;
+    }
+
 }
