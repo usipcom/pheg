@@ -308,7 +308,7 @@ class Pheg
         return Url::invoke();
     }
 
-    public function uuidGenerator(): UuidGenerator
+    public function uuid(): UuidGenerator
     {
         return UuidGenerator::invoke();
     }

@@ -4,12 +4,12 @@ namespace Simtabi\Pheg\Toolbox;
 
 use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 use Ramsey\Uuid\Generator\CombGenerator;
-use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidInterface;
 use Simtabi\Pheg\Core\Exceptions\InvalidUuidVersionException;
 
-final class UuidGenerator
+final class Uuid
 {
 
     /**
@@ -40,10 +40,10 @@ final class UuidGenerator
         }
 
         return match ($version) {
-            1       => Uuid::uuid1()->toString(),
-            3       => Uuid::uuid3(Uuid::NAMESPACE_DNS, $uuidString)->toString(),
-            4       => Uuid::uuid4()->toString(),
-            5       => Uuid::uuid5(Uuid::NAMESPACE_DNS, $uuidString)->toString(),
+            1       => RamseyUuid::uuid1()->toString(),
+            3       => RamseyUuid::uuid3(RamseyUuid::NAMESPACE_DNS, $uuidString)->toString(),
+            4       => RamseyUuid::uuid4()->toString(),
+            5       => RamseyUuid::uuid5(RamseyUuid::NAMESPACE_DNS, $uuidString)->toString(),
             default => throw new InvalidUuidVersionException(),
         };
     }
