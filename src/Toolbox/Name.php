@@ -18,8 +18,8 @@ final class Name
     public function make(array|object $object, $substitute = false): bool|string
     {
 
-        if (!Validators::invoke()->transfigure()->isArray($object)){
-            $object = Transfigure::invoke()->toObject($object);
+        if (!pheg()->validator()->transfigure()->isArray($object)){
+            $object = pheg()->transfigure()->toObject($object);
         }
 
         $salutation = ucfirst($object->salutation);
