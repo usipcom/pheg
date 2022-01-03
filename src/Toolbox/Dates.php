@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Westsworld\TimeAgo;
 use Simtabi\Enekia\Validators;
+use DateTimeInterface;
 
 final class Dates
 {
@@ -535,6 +536,60 @@ final class Dates
     }
 
 
+
+    /**
+     * Return a timestamp as DateTime object.
+     *
+     * @param  mixed  $value
+     * @return Carbon
+     */
+    public function timestamp2DateTime($value, $datetimeFormat = 'Y-m-d H:i:s')
+    {
+        // If this value is already a Carbon instance, we shall just return it as is.
+        // This prevents us having to re-instantiate a Carbon instance when we know
+        // it already is one, which wouldn't be fulfilled by the DateTime check.
+        if ($value instanceof Carbon) {
+            return $value;
+        }
+
+        // If the value is already a DateTime instance, we will just skip the rest of
+        // these checks since they will be a waste of time, and hinder performance
+        // when checking the field. We will just return the DateTime right away.
+        if ($value instanceof DateTimeInterface) {
+            return new Carbon(
+                $value->format('Y-m-d H:i:s.u'), $value->getTimeZone()
+            );
+        }
+
+        // If this value is an integer, we will assume it is a UNIX timestamp's value
+        // and format a Carbon object from this timestamp. This allows flexibility
+        // when defining your date fields as they might be UNIX timestamps here.
+        if (is_numeric($value)) {
+            return Carbon::createFromTimestamp($value);
+        }
+
+        // If the value is in simply year, month, day format, we will instantiate the
+        // Carbon instances from that format. Again, this provides for simple date
+        // fields on the database, while still supporting Carbonized conversion.
+        if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value)) {
+            return Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+        }
+
+        // Parse ISO 8061 date
+        if (preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\\+(\d{2}):(\d{2})$/', $value)) {
+            return Carbon::createFromFormat('Y-m-d\TH:i:s+P', $value);
+        }
+        elseif (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2}T(\d{2}):(\d{2}):(\d{2})\\.(\d{1,3})Z)$/', $value)) {
+            return Carbon::createFromFormat('Y-m-d\TH:i:s.uZ', $value);
+        }
+
+        // Finally, we will just assume this date is in the format used by default on
+        // the database connection and use that format to create the Carbon object
+        // that is returned out to the developers after we convert it here.
+        return Carbon::createFromFormat($datetimeFormat, $value);
+    }
+
+
     /**
      * Convert seconds to real time
      * @param  int $seconds time in seconds
@@ -543,7 +598,7 @@ final class Dates
      */
     public function secondsToText($seconds, $returnAsWords = false) {
         $periods = array('year' => 3.156e+7, 'month' => 2.63e+6, 'week' => 604800, 'day' => 86400, 'hour' => 3600, 'minute' => 60, 'second' => 1);
-        $parts = array();
+        $parts   = [];
         foreach ($periods as $name => $dur) {
             $div = floor($seconds / $dur);
             if ($div == 0):
