@@ -12,7 +12,7 @@ use Westsworld\TimeAgo;
 use Simtabi\Enekia\Validators;
 use DateTimeInterface;
 
-final class Dates
+final class Time
 {
     public const MINUTE     = 60;
     public const HOUR       = 3600;

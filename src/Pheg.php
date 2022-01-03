@@ -16,7 +16,7 @@ use Simtabi\Pheg\Toolbox\CopyrightText;
 use Simtabi\Pheg\Toolbox\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
-use Simtabi\Pheg\Toolbox\Dates;
+use Simtabi\Pheg\Toolbox\Time;
 use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
@@ -177,11 +177,6 @@ class Pheg
         return CsvParser::invoke();
     }
 
-    public function dates(): Dates
-    {
-        return Dates::invoke();
-    }
-
     public function email(): Email
     {
         return Email::invoke();
@@ -296,6 +291,11 @@ class Pheg
     public function system(): System
     {
         return System::invoke();
+    }
+
+    public function time(): Time
+    {
+        return Time::invoke();
     }
 
     public function timer(): Timer
