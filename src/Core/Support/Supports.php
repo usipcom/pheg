@@ -10,7 +10,7 @@ use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
-class SupportData
+class Supports
 {
     use DataHelpersTrait;
     use FormHelpersTrait;
@@ -43,8 +43,8 @@ class SupportData
                 Transfigure::invoke()->toArray(
                     self::$instance->loader
                         ->setFolderName('config')
-                        ->setFileNames(['support_data'])
-                        ->toObject()->support_data
+                        ->setFileNames(['supports'])
+                        ->toObject()->supports
                 )
             );
 
