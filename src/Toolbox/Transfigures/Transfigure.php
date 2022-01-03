@@ -11,9 +11,9 @@ namespace Simtabi\Pheg\Toolbox\Transfigures;
  */
 use Exception;
 use DOMDocument;
-use stdClass;
-use Simtabi\Enekia\Validators\Transfigure as DataTransfigure;
+use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Toolbox\Serialize;
+use stdClass;
 
 final class Transfigure {
 
@@ -182,22 +182,22 @@ final class Transfigure {
         throw new Exception(self::DATA_IS_EMPTY_MSG);
     }
 
-    private function validate(): DataTransfigure
+    private function validate(): Validators
     {
-        return $this->validators->transfigure();
+        return $this->validators;
     }
 
     public function getDataType(): string
     {
         $resource = $this->resource;
         return match ($resource) {
-            $this->validate()->isArray($resource)      => 'array',
-            $this->validate()->isObject($resource)     => 'object',
-            $this->validate()->isJson($resource)       => 'json',
-            $this->validate()->isSerialized($resource) => 'serialized',
-            $this->validate()->isXml($resource)        => 'xml',
-            $this->validate()->isString($resource)     => 'string',
-            default                                    => self::UNKNOWN_DATA_TYPE_MSG,
+            $this->validate()->transfigure()->isArray($resource)      => 'array',
+            $this->validate()->transfigure()->isObject($resource)     => 'object',
+            $this->validate()->transfigure()->isJson($resource)       => 'json',
+            $this->validate()->transfigure()->isSerialized($resource) => 'serialized',
+            $this->validate()->transfigure()->isXml($resource)        => 'xml',
+            $this->validate()->transfigure()->isString($resource)     => 'string',
+            default                                                   => $this->throwUnknownDataTypeError(),
         };
     }
 
@@ -207,13 +207,13 @@ final class Transfigure {
 
         $this->resource = $resource;
         return match ($resource) {
-            $this->validate()->isArray($resource)      => $resource,
-            $this->validate()->isObject($resource)     => $this->object2Array($resource),
-            $this->validate()->isJson($resource)       => $this->json2Array($resource),
-            $this->validate()->isSerialized($resource) => $this->json2Array($resource),
-            $this->validate()->isXml($resource)        => $this->xmlToArray($resource),
-            $this->validate()->isString($resource)     => $this->stringToArray($resource),
-            default                                    => [$resource],
+            $this->validate()->transfigure()->isArray($resource)      => $resource,
+            $this->validate()->transfigure()->isObject($resource)     => $this->object2Array($resource),
+            $this->validate()->transfigure()->isJson($resource)       => $this->json2Array($resource),
+            $this->validate()->transfigure()->isSerialized($resource) => $this->json2Array($resource),
+            $this->validate()->transfigure()->isXml($resource)        => $this->xmlToArray($resource),
+            $this->validate()->transfigure()->isString($resource)     => $this->stringToArray($resource),
+            default                                                   => $this->throwUnknownDataTypeError(),
         };
     }
 
@@ -223,13 +223,13 @@ final class Transfigure {
 
         $this->resource = $resource;
         return match ($resource) {
-            $this->validate()->isJson($resource)       => $resource,
-            $this->validate()->isArray($resource)      => $this->array2Json($resource),
-            $this->validate()->isObject($resource)     => $this->object2Array($resource),
-            $this->validate()->isSerialized($resource) => $this->json2Array($resource),
-            $this->validate()->isXml($resource)        => $this->xmlToArray($resource),
-            $this->validate()->isString($resource)     => $this->string2Json($resource),
-            default                                    => $this->throwUnknownDataTypeError(),
+            $this->validate()->transfigure()->isJson($resource)       => $resource,
+            $this->validate()->transfigure()->isArray($resource)      => $this->array2Json($resource),
+            $this->validate()->transfigure()->isObject($resource)     => $this->object2Array($resource),
+            $this->validate()->transfigure()->isSerialized($resource) => $this->json2Array($resource),
+            $this->validate()->transfigure()->isXml($resource)        => $this->xmlToArray($resource),
+            $this->validate()->transfigure()->isString($resource)     => $this->string2Json($resource),
+            default                                                   => $this->throwUnknownDataTypeError(),
         };
     }
 
