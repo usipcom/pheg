@@ -12,7 +12,7 @@ namespace Simtabi\Pheg\Toolbox\Transfigures;
 use Exception;
 use DOMDocument;
 use stdClass;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Validators\Transfigure as DataTransfigure;
 use Simtabi\Pheg\Toolbox\Serialize;
 
 final class Transfigure {
@@ -182,9 +182,9 @@ final class Transfigure {
         throw new Exception(self::DATA_IS_EMPTY_MSG);
     }
 
-    private function validate(): Validators\Transfigure
+    private function validate(): DataTransfigure
     {
-        return $this->validators->dataType();
+        return $this->validators->transfigure();
     }
 
     public function getDataType(): string
