@@ -155,8 +155,7 @@ final class Transfigure {
     public function object2Array(object $resource): array
     {
 
-        $resource = get_object_vars($resource);
-        return array_map(array('self', 'object2Array'), $resource);
+        return array_map(array('self', 'object2Array'), get_object_vars($resource));
 
         $array = [];
 
@@ -240,13 +239,13 @@ final class Transfigure {
 
         $this->resource = $resource;
         return match ($resource) {
-            $this->validate()->isObject($resource)     => $resource,
-            $this->validate()->isArray($resource)      => $this->array2Object($resource),
-            $this->validate()->isJson($resource)       => $this->json2Object($resource),
-            $this->validate()->isSerialized($resource) => $this->array2Object($this->serialize($resource)),
-            $this->validate()->isXml($resource)        => $this->xmlToArray($resource),
-            $this->validate()->isString($resource)     => $this->string2Object($resource),
-            default                                    => $this->throwUnknownDataTypeError(),
+            $this->validate()->transfigure()->isObject($resource)     => $resource,
+            $this->validate()->transfigure()->isArray($resource)      => $this->array2Object($resource),
+            $this->validate()->transfigure()->isJson($resource)       => $this->json2Object($resource),
+            $this->validate()->transfigure()->isSerialized($resource) => $this->array2Object($this->serialize($resource)),
+            $this->validate()->transfigure()->isXml($resource)        => $this->xmlToArray($resource),
+            $this->validate()->transfigure()->isString($resource)     => $this->string2Object($resource),
+            default                                                   => $this->throwUnknownDataTypeError(),
         };
     }
 
