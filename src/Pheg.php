@@ -47,7 +47,7 @@ use Simtabi\Pheg\Toolbox\System;
 use Simtabi\Pheg\Toolbox\Timer;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Simtabi\Pheg\Toolbox\Url;
-use Simtabi\Pheg\Toolbox\UuidGenerator;
+use Simtabi\Pheg\Toolbox\Uuid;
 use Simtabi\Pheg\Toolbox\Vars;
 use Simtabi\Pheg\Toolbox\WebServices;
 use Simtabi\Pheg\Toolbox\Xml;
@@ -308,9 +308,9 @@ class Pheg
         return Url::invoke();
     }
 
-    public function uuid(): UuidGenerator
+    public function uuid(): Uuid
     {
-        return UuidGenerator::invoke();
+        return Uuid::invoke();
     }
 
     public function vars(): Vars
