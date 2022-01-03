@@ -2,6 +2,9 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Simtabi\Enekia\Validators;
+use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
+
 final class Name
 {
 
@@ -12,18 +15,23 @@ final class Name
         return new self();
     }
 
-    public function generateFullName($obj, $substitute = false){
+    public function make(array|object $object, $substitute = false): bool|string
+    {
 
-        $salutation = ucfirst($obj->salutation);
-        $firstName  = ucfirst($obj->first_name);
-        $lastName   = ucfirst($obj->last_name);
-        $username   = ucfirst($obj->username);
-        $email      = $obj->email;
+        if (!Validators::invoke()->transfigure()->isArray($object)){
+            $object = Transfigure::invoke()->toObject($object);
+        }
+
+        $salutation = ucfirst($object->salutation);
+        $firstName  = ucfirst($object->first_name);
+        $lastName   = ucfirst($object->last_name);
+        $username   = ucfirst($object->username);
+        $email      = $object->email;
 
         if (!empty($salutation) && !empty($firstName) && !empty($lastName)) {
-            $name = sprintf("%s. %s %s", ucwords($obj->salutation), ucwords($obj->first_name), ucwords($obj->last_name));
+            $name = sprintf("%s. %s %s", ucwords($object->salutation), ucwords($object->first_name), ucwords($object->last_name));
         }elseif (!empty($firstName) && !empty($lastName)) {
-            $name = sprintf("%s %s", ucwords($obj->first_name), ucwords($obj->last_name));
+            $name = sprintf("%s %s", ucwords($object->first_name), ucwords($object->last_name));
         }elseif (!empty($firstName)) {
             $name = $firstName;
         }elseif (!empty($lastName)) {
@@ -41,12 +49,12 @@ final class Name
         return $name;
     }
 
-    public function generateInitials(string $string): string
+    public function makeInitials(string $string): string
     {
         return Str::invoke()->generateInitials($string);
     }
 
-    public function randomUsername(string $firstName = "John", string $lastName = "Doe", int $randNo = 1000)
+    public function makeRandomUsername(string $firstName = "John", string $lastName = "Doe", int $randNo = 1000): string
     {
         $buildFullName = $firstName . " " . $lastName;
         $usernameParts = array_filter(explode(" ", strtolower($buildFullName))); //explode and lowercase name
