@@ -3,8 +3,6 @@
 namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
-use Simtabi\Enekia\Validators;
-use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use function mb_strtolower;
 use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
