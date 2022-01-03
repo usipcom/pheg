@@ -210,14 +210,18 @@ final class Vars
         return !empty($value) && (is_integer($value) || is_numeric($value) || is_float($value)) ? (float) $value : 0;
     }
 
+    public static function isAnEmptyNumber($number){
+        return !empty($number) && (is_integer($number) || is_numeric($number) || is_float($number)) ? (float) $number : 0;
+    }
+
     public function formatPrice($amount, $currency_iso = 'KES', $locale_iso = 'en_GB'): string
     {
 
         $amount   = floatval($amount);
         $currency = $currency_iso;
         $fmt      = new NumberFormatter($locale_iso,  NumberFormatter::CURRENCY);
-        $fmt->setTextAttribute(\NumberFormatter::CURRENCY_CODE, 'EUR');
-        $fmt->setAttribute(\NumberFormatter::FRACTION_DIGITS, 0);
+        $fmt->setTextAttribute(NumberFormatter::CURRENCY_CODE, 'EUR');
+        $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
         return $fmt->formatCurrency($amount, $currency) . PHP_EOL;
     }
 

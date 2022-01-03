@@ -165,7 +165,7 @@ final class Time
         return "$difference $periods[$j] $tense ";
     }
 
-    public function getTimeBasedGreetings($timezone = 'Europe/London'): string | bool
+    public function timelyGreetings($timezone = 'Europe/London'): string | bool
     {
 
         $time = (Carbon::now(new DateTimeZone($timezone)))->hour;
@@ -587,57 +587,6 @@ final class Time
         // the database connection and use that format to create the Carbon object
         // that is returned out to the developers after we convert it here.
         return Carbon::createFromFormat($datetimeFormat, $value);
-    }
-
-
-    /**
-     * Convert seconds to real time
-     * @param  int $seconds time in seconds
-     * @param  boolean $returnAsWords return time in words (example one minute and 20 seconds) if value is True or (1 minute and 20 seconds) if value is false, default false
-     * @return string
-     */
-    public function secondsToText($seconds, $returnAsWords = false) {
-        $periods = array('year' => 3.156e+7, 'month' => 2.63e+6, 'week' => 604800, 'day' => 86400, 'hour' => 3600, 'minute' => 60, 'second' => 1);
-        $parts   = [];
-        foreach ($periods as $name => $dur) {
-            $div = floor($seconds / $dur);
-            if ($div == 0):
-                continue;
-            elseif ($div == 1):
-                $parts[] = ($returnAsWords ? self::numberToWord($div) : $div) . " " . $name;
-            else:
-                $parts[] = ($returnAsWords ? self::numberToWord($div) : $div) . " " . $name . "s";
-            endif;
-            $seconds%= $dur;
-        }
-        $last = array_pop($parts);
-        if (empty($parts)):
-            return $last;
-        else:
-            return join(', ', $parts) . " and " . $last;
-        endif;
-    }
-
-    /**
-     * Convert minutes to real time
-     * @param  int $minutes time in minutes
-     * @param  boolean $returnAsWords return time in words (example one hour and 20 minutes) if value is True or (1 hour and 20 minutes) if value is false, default false
-     * @return string
-     */
-    public function minutesToText($minutes, $returnAsWords = false) {
-        $seconds = $minutes * 60;
-        return self::secondsToText($seconds, $returnAsWords);
-    }
-
-    /**
-     * Convert hours to real time
-     * @param  int $hours time in hours
-     * @param  boolean $returnAsWords return time in words (example one hour) if value is True or (1 hour) if value is false, default false
-     * @return string
-     */
-    public function hoursToText($hours, $returnAsWords = false) {
-        $seconds = $hours * 3600;
-        return self::secondsToText($seconds, $returnAsWords);
     }
 
 }
