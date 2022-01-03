@@ -39,7 +39,6 @@ use Simtabi\Pheg\Toolbox\SEO;
 use Simtabi\Pheg\Toolbox\Serialize;
 use Simtabi\Pheg\Toolbox\Server\Server;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
-use Simtabi\Pheg\Toolbox\Slug;
 use Simtabi\Pheg\Toolbox\SocialMedia;
 use Simtabi\Pheg\Toolbox\SqlHandler;
 use Simtabi\Pheg\Toolbox\Stats;
