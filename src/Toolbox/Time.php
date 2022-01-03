@@ -516,7 +516,7 @@ final class Time
         return ($showUTC === true ? "UTC " : null) . ($offset >= 0 ? '+':'-') . $initial->format('H:i');
     }
 
-    public function createCarbonObjectFromString(string $string): Carbon
+    public function string2CarbonObj(string $string): Carbon
     {
         return Carbon::parse($string);
     }
