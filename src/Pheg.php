@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg;
 
 use Simtabi\Enekia\Validators;
-use Simtabi\Pheg\Core\Support\PhegData;
+use Simtabi\Pheg\Core\Support\SupportData;
 use Simtabi\Pheg\Toolbox\Arr;
 use Simtabi\Pheg\Toolbox\Asset;
 use Simtabi\Pheg\Toolbox\Avatar;
@@ -73,9 +73,9 @@ class Pheg
     private function __construct(){}
     private function __clone() {}
 
-    public function data(): PhegData
+    public function supportData(): SupportData
     {
-        return PhegData::getInstance(self::$instance);
+        return SupportData::getInstance(self::$instance);
     }
 
     public function validator(): Validators

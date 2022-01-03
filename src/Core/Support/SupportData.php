@@ -10,7 +10,7 @@ use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
-class PhegData
+class SupportData
 {
     use DataHelpersTrait;
     use FormHelpersTrait;
