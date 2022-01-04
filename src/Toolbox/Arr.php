@@ -77,16 +77,16 @@ final class Arr
         return $out;
     }
 
-    public function fetchRandomItems(array $array, int $number = 1)
+    public function fetchRandomFromArray(array $array, int $total = 1)
     {
         // https://www.schmengler-se.de/en/2015/09/efficiently-draw-random-elements-from-large-php-array/
         $totalValues = count($array);
-        $number      = min($number, $totalValues);
-        $picked      = array_fill(0, $number, 0);
-        $backup      = array_fill(0, $number, 0);
+        $total       = min($total, $totalValues);
+        $picked      = array_fill(0, $total, 0);
+        $backup      = array_fill(0, $total, 0);
         // partially shuffle the array, and generate unbiased selection simultaneously
         // this is a variation on fisher-yates-knuth shuffle
-        for ($i = 0; $i < $number; $i++) // O(n) times
+        for ($i = 0; $i < $total; $i++) // O(n) times
         {
             $selected              = mt_rand( 0, --$totalValues ); // unbiased sampling N * N-1 * N-2 * .. * N-n+1
             $value                 = $array[ $selected ];
@@ -97,7 +97,7 @@ final class Arr
         }
         // restore partially shuffled input array from backup
         // optional step, if needed it can be ignored, e.g $a is passed by value, hence copied
-        for ($i = $number - 1; $i >= 0; $i--) // O(n) times
+        for ($i = $total - 1; $i >= 0; $i--) // O(n) times
         {
             $selected              = $backup[ $i ];
             $value                 = $array[ $totalValues ];
@@ -646,7 +646,7 @@ final class Arr
         return $random;
     }
 
-    public function randomize(array $array, $counter = 10){
+    public function randomizeArray(array $array, $counter = 10){
         $output = [];
         $count  = 0;
         $total  = count($array);
