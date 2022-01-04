@@ -4,7 +4,7 @@ namespace Simtabi\Pheg\Core\Support\Traits;
 
 trait DataHelpersTrait
 {
-
+    
     public function getUserGroups($default = null)
     {
         return $this->setKey('user_groups')->setDefault($default)->getData();

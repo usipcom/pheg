@@ -8,7 +8,6 @@ use Simtabi\Pheg\Core\Support\Traits\DataHelpersTrait;
 use Simtabi\Pheg\Core\Support\Traits\FormHelpersTrait;
 use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
-use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 
 class Supports
 {
@@ -20,8 +19,9 @@ class Supports
     private Dot    $data;
     private Dot    $colors;
     private string $key;
-    private        $default    = null;
+    private        $default = null;
     private Pheg   $pheg;
+    private bool   $asArray = true;
 
     /**
      * Create class instance
@@ -35,20 +35,15 @@ class Supports
         if (isset(self::$instance) && !is_null(self::$instance)) {
             return self::$instance;
         } else {
-            self::$instance = new static();
 
-            self::$instance->loader = new Loader();
-            self::$instance->pheg   = $pheg;
-            self::$instance->data   = new Dot(
-                Transfigure::invoke()->toArray(
-                    self::$instance->loader
-                        ->setFolderName('config')
-                        ->setFileNames(['supports'])
-                        ->toObject()->supports
-                )
-            );
+            $static         = new static();
+            $static->loader = new Loader();
+            $static->pheg   = $pheg;
 
-            return self::$instance;
+            $data           = $static->loader->setFolderName('config')->setFileNames(['supports'])->init();
+            $static->data   = new Dot($data['supports'] ?? []);
+
+            return self::$instance = $static;
         }
     }
 
@@ -91,6 +86,13 @@ class Supports
         return $this;
     }
 
+    public function isAsArray(bool $status = true): self
+    {
+        $this->asArray = $status;
+
+        return $this;
+    }
+
     public function getData()
     {
 
@@ -103,7 +105,7 @@ class Supports
             $data = $this->pheg->arr()->fetch($this->default, $data);
         }
 
-        return $data;
+        return $this->asArray ? $data : $this->pheg->transfigure()->toObject($data);
     }
 
 }

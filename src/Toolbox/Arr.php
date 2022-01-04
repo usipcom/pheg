@@ -4,6 +4,7 @@ namespace Simtabi\Pheg\Toolbox;
 
 use Closure;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
+use stdClass;
 
 /**
  * Class Arr
@@ -130,7 +131,7 @@ final class Arr
     }
 
     /**
-     * Uniques an array be a given key.
+     * Uniques an array based on a given key.
      *
      * @param array<mixed> $input The input array.
      * @param string $key         The key which must appear only once.
@@ -646,7 +647,7 @@ final class Arr
         return $random;
     }
 
-    public function randomizeArray(array $array, $counter = 10){
+    public function randomizeArray(array $array, $maximum = 10){
         $output = [];
         $count  = 0;
         $total  = count($array);
@@ -655,12 +656,11 @@ final class Arr
         $array = $this->shuffleAssoc($array);
 
         foreach ($array as $key => $item) {
-            if(($counter <= $total) && ($count < $counter)){
+            if(($maximum <= $total) && ($count < $maximum)){
                 $output[$count] = [
                     'key'   => $key,
                     'value' => $item,
                 ];
-
             }
             $count++;
         }

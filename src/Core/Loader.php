@@ -95,14 +95,14 @@ class Loader
         return __DIR__ . '/../../' . $folderName . $fileName;
     }
 
-    private function run(){
+    public function init(){
         $folderName = $this->folderName;
         $fileNames  = $this->fileNames;
         if (!is_array($fileNames)) {
             $fileNames = [$fileNames];
         }
         $this->loadFileData($fileNames, $folderName);
-        return $this;
+        return $this->getData($this->fileNames);
     }
 
     private function loadFileData(array $files, string $folderName){
@@ -120,15 +120,6 @@ class Loader
     private function reset(){
         $this->data      = [];
         $this->fileNames = null;
-    }
-
-
-    public function toArray(){
-        return $this->run()->getData($this->fileNames);
-    }
-
-    public function toObject(){
-        return Transfigure::invoke()->toObject($this->run()->getData($this->fileNames));
     }
 
 }
