@@ -22,6 +22,7 @@ class Supports
     private        $default = null;
     private Pheg   $pheg;
     private bool   $asArray = true;
+    private string $fileName;
 
     /**
      * Create class instance
@@ -40,8 +41,8 @@ class Supports
             $static->loader = new Loader();
             $static->pheg   = $pheg;
 
-            $data           = $static->loader->setFolderName('config')->setFileNames(['supports'])->init();
-            $static->data   = new Dot($data['supports'] ?? []);
+            $data           = $static->registerSupportFiles(['supports'], 'config');
+            $static->data   = new Dot($data->loader->init());
 
             return self::$instance = $static;
         }
@@ -50,12 +51,14 @@ class Supports
     private function __construct() {}
     private function __clone() {}
 
-    /**
-     * @return mixed
-     */
-    public function getKey()
+    private function registerSupportFiles(array $files, string $folder): self
     {
-        return $this->key;
+        foreach ($files as $file)
+        {
+            $this->loader->setFolderName($folder)->setFileNames($file);
+        }
+
+        return $this;
     }
 
     /**
@@ -69,11 +72,11 @@ class Supports
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getDefault(): string
+    public function getKey()
     {
-        return $this->default;
+        return $this->key;
     }
 
     /**
@@ -86,6 +89,14 @@ class Supports
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getDefault(): string
+    {
+        return $this->default;
+    }
+
     public function isAsArray(bool $status = true): self
     {
         $this->asArray = $status;
@@ -93,18 +104,39 @@ class Supports
         return $this;
     }
 
+    /**
+     * @param mixed $fileName
+     * @return self
+     */
+    public function setFileName($fileName): self
+    {
+        $this->fileName = trim($fileName);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
     public function getData()
     {
 
         $data = [];
-        if ($this->data->has($this->key)) {
-            $data = $this->data->get($this->key);
+
+        if ($this->data->has($this->fileName)) {
+            $data = $this->data->get($this->fileName);
         }
 
-        if (!empty($this->default) && (is_array($data) && count($data) > 0)) {
+        $data = $data[$this->key] ?? [];
+
+        if (!empty($this->default) && (is_array($data) && count($data) >= 1)) {
             $data = $this->pheg->arr()->fetch($this->default, $data);
         }
-
+        
         return $this->asArray ? $data : $this->pheg->transfigure()->toObject($data);
     }
 
