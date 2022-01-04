@@ -433,9 +433,7 @@ final class Filter
     public function ucFirst(string $input): string
     {
         $string = $this->str->low($input);
-        $string = ucfirst($string);
-
-        return $string;
+        return ucfirst($string);
     }
 
     /**
@@ -466,13 +464,10 @@ final class Filter
 
         $output = array_map(function ($item) {
             $item = (string)preg_replace('#[^a-z0-9]#i', '', $item);
-            $item = Filter::ucFirst($item);
-            return $item;
+            return Filter::ucFirst($item);
         }, $output);
 
-        $output = array_filter($output);
-
-        return implode('', $output);
+        return implode('', array_filter($output));
     }
 
     /**
@@ -483,14 +478,18 @@ final class Filter
      */
     public function stripQuotes(string $value): string
     {
-        if (strpos($value, '"') === 0 && substr($value, -1) === '"') {
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
             $value = trim($value, '"');
         }
 
-        if (strpos($value, "'") === 0 && substr($value, -1) === "'") {
+        if (str_starts_with($value, "'") && str_ends_with($value, "'")) {
             $value = trim($value, "'");
         }
 
         return $value;
+    }
+
+    public function trimIfString($value) {
+        return is_string($value) ? trim($value) : $value;
     }
 }

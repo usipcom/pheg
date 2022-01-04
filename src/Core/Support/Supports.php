@@ -82,12 +82,12 @@ class Supports
     }
 
     /**
-     * @param string|null $default
+     * @param mixed $value
      * @return self
      */
-    public function setDefault(?string $default): self
+    public function setDefault(mixed $value): self
     {
-        $this->default = trim($default);
+        $this->default = $this->pheg->filter()->trimIfString($value);
         return $this;
     }
 
