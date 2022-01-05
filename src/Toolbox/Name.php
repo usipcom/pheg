@@ -2,8 +2,8 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
-use Simtabi\Enekia\Validators;
-use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
+use Illuminate\Database\Eloquent\Model;
+use stdClass;
 
 final class Name
 {
@@ -15,10 +15,18 @@ final class Name
         return new self();
     }
 
-    public function make(array|object $object, $substitute = false): bool|string
+    public function make($object, $substitute = false): bool|string
     {
 
-        if (!pheg()->validator()->transfigure()->isArray($object)){
+        $validate = pheg()->validator()->transfigure();
+
+        if (!$validate->isObject($object))
+        {
+            return false;
+        }
+
+        if (!$validate->isArray($object))
+        {
             $object = pheg()->transfigure()->toObject($object);
         }
 
