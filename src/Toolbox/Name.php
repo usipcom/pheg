@@ -20,26 +20,26 @@ final class Name
 
         $validate = pheg()->validator()->transfigure();
 
+        if ($validate->isArray($object))
+        {
+            $object = pheg()->transfigure()->toObject($object);
+        }
+
         if (!$validate->isObject($object))
         {
             return false;
         }
 
-        if (!$validate->isArray($object))
-        {
-            $object = pheg()->transfigure()->toObject($object);
-        }
-
-        $salutation = ucfirst($object->salutation);
-        $firstName  = ucfirst($object->first_name);
-        $lastName   = ucfirst($object->last_name);
-        $username   = ucfirst($object->username);
+        $salutation = ucfirst($object->salutation ?? '');
+        $firstName  = ucfirst($object->first_name ?? '');
+        $lastName   = ucfirst($object->last_name ?? '');
+        $username   = ucfirst($object->username ?? '');
         $email      = $object->email;
 
         if (!empty($salutation) && !empty($firstName) && !empty($lastName)) {
-            $name = sprintf("%s. %s %s", ucwords($object->salutation), ucwords($object->first_name), ucwords($object->last_name));
+            $name = sprintf("%s. %s %s", $salutation, $firstName, $lastName);
         }elseif (!empty($firstName) && !empty($lastName)) {
-            $name = sprintf("%s %s", ucwords($object->first_name), ucwords($object->last_name));
+            $name = sprintf("%s %s", $firstName, $lastName);
         }elseif (!empty($firstName)) {
             $name = $firstName;
         }elseif (!empty($lastName)) {
