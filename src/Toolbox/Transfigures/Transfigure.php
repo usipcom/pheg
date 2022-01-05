@@ -141,16 +141,18 @@ final class Transfigure {
         return Xml2Array::invoke()->convert($resource, $fromDOM, $config);
     }
 
-    public function array2Object($resource): stdClass
+    public function array2Object($resource): object
     {
 
-        if ($this->validators->transfigure()->isObject($resource)) {
+        if ($this->validators->transfigure()->isObject($resource))
+        {
             return $resource;
         }
 
         $object = new stdClass();
 
-        foreach ($resource as $key => $value) {
+        foreach ($resource as $key => $value)
+        {
             if (is_array($value)) {
                 $object->{$key} = $this->array2Object($value);
             } else {
