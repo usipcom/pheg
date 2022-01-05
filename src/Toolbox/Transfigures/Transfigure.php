@@ -145,7 +145,6 @@ final class Transfigure {
     {
 
         if ($this->validators->transfigure()->isObject($resource)) {
-
             return $resource;
         }
 
