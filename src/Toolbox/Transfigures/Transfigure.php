@@ -250,8 +250,6 @@ final class Transfigure {
     public function toObject($resource)
     {
 
-        if (empty($resource)) $this->throwEmptyDataError();
-
         $this->resource = $resource;
         return match ($resource) {
             $this->validate()->transfigure()->isObject($resource)     => $resource,
