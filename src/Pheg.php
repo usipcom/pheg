@@ -16,6 +16,7 @@ use Simtabi\Pheg\Toolbox\CopyrightText;
 use Simtabi\Pheg\Toolbox\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
+use Simtabi\Pheg\Toolbox\Helpers;
 use Simtabi\Pheg\Toolbox\Time;
 use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
@@ -193,6 +194,11 @@ class Pheg
     public function html(): Html
     {
         return Html::invoke();
+    }
+
+    public function helpers(): Helpers
+    {
+        return Helpers::invoke();
     }
 
     public function http(): Http
