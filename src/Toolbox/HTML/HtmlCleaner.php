@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\HTML;
 
 use DOMDocument;
 use DOMDocumentFragment;

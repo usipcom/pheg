@@ -21,9 +21,7 @@ use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Filter;
-use Simtabi\Pheg\Toolbox\Html;
-use Simtabi\Pheg\Toolbox\Html2Text;
-use Simtabi\Pheg\Toolbox\HtmlCleaner;
+use Simtabi\Pheg\Toolbox\HTML\Html;
 use Simtabi\Pheg\Toolbox\Http;
 use Simtabi\Pheg\Toolbox\Humanize;
 use Simtabi\Pheg\Toolbox\Input;
@@ -195,16 +193,6 @@ class Pheg
     public function html(): Html
     {
         return Html::invoke();
-    }
-
-    public function html2Text(): Html2Text
-    {
-        return Html2Text::invoke();
-    }
-
-    public function htmlCleaner(): HtmlCleaner
-    {
-        return HtmlCleaner::invoke();
     }
 
     public function http(): Http

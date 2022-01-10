@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\HTML;
 
 use DOMDocument;
 use DOMXPath;
 use Simtabi\Enekia\Validators;
+use Simtabi\Pheg\Toolbox\Str;
 
 final class Html
 {
@@ -76,7 +77,7 @@ final class Html
     }
 
     public function oddEvenClass(int $number){
-        return strtolower(Validators::invoke()->vars()->isOddNumber($number) ? 'Even' : 'Odd');
+        return strtolower(Validators::invoke()->isNumberOdd($number) ? 'Even' : 'Odd');
     }
 
     public function progressbar($done, $total, $info = "", $width = 50) {
@@ -278,4 +279,13 @@ final class Html
         return $tags;
     }
 
+    public function html2Text(): Html2Text
+    {
+        return Html2Text::invoke();
+    }
+
+    public function htmlCleaner(): HtmlCleaner
+    {
+        return HtmlCleaner::invoke();
+    }
 }
