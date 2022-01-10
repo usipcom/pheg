@@ -884,15 +884,6 @@ final class Arr
         return $exists;
     }
 
-    public function mergeArray($newArray, $oldArray): array
-    {
-        if (is_array($oldArray) && (count($oldArray) >= 1)) {
-            return array_merge($oldArray, $newArray);
-        }
-
-        return $newArray;
-    }
-
     public function debug($array, $echo = true )
     {
         $output = '<br><pre>' . print_r( $array, true ) . '</pre><br>';
