@@ -9,10 +9,10 @@ use Simtabi\Pheg\Toolbox\Countries\Traits\WithCountriesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithCurrenciesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithISOCodesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithLanguagesTrait;
-use Simtabi\JsonDB\Services\File\Json2File;
 use Simtabi\Pheg\Core\CoreTools;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithTimezonesTrait;
 use Simtabi\Pheg\Toolbox\Countries\Traits\WithValidatorsTrait;
+use Simtabi\Pheg\Toolbox\JSON\Json2File;
 
 final class Countries
 {
@@ -84,7 +84,7 @@ final class Countries
                     ];
                     $this->setKeys($_name);
                     $this->setLoaded($id);
-                    $data[$_name]           = Json2File::fileToArray($fileInfo->getPathname());
+                    $data[$_name]           = Json2File::invoke($fileInfo->getPathname())->fileToArray();
                 }
             }
 

@@ -74,7 +74,7 @@ class JSON implements JSONInterface
     public function decodeFile($file, $associative = false, $depth = 512, $options = 0)
     {
         try {
-            return $this->decode((new File($file, 'r'))->read(), $associative, $depth, $options);
+            return $this->decode((File::invoke($file, 'r'))->read(), $associative, $depth, $options);
         } catch (Exception $exception) {
             throw new DecodeException(
                 'The JSON encoded file "%s" could not be decoded.',
@@ -150,7 +150,7 @@ class JSON implements JSONInterface
     public function encodeFile($value, $file, $options = 0, $depth = 512)
     {
         try {
-            (new File($file, 'w'))->write(
+            (File::invoke($file, 'w'))->write(
                 $this->encode($value, $options, $depth)
             );
         } catch (Exception $exception) {
@@ -181,7 +181,7 @@ class JSON implements JSONInterface
      */
     public function lintFile($file)
     {
-        $result = $this->doLint((new File($file, 'r'))->read());
+        $result = $this->doLint((File::invoke($file, 'r'))->read());
 
         if ($result instanceof ParsingException) {
             throw new LintingException(
