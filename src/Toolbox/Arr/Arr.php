@@ -33,12 +33,13 @@ final class Arr
         return new Collection($data);
     }
 
-    public function query(string|array $data): QueryEngineHandler|null|false
+    public function query(string|array $data): QueryEngineHandler|ArrayQuery|null|false
     {
 
         if (is_array($data)) {
             // from php array
-            return (new QueryEngineHandler())->collect($data);
+            $arr = ArrayQuery::getInstance();
+            return $arr->collect($data);
         }
 
         if (is_string($data)) {
