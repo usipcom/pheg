@@ -5,11 +5,8 @@ namespace Simtabi\Pheg\Toolbox\Arr;
 use Closure;
 use Simtabi\Pheg\Toolbox\Arr\Collection\Collection;
 use Simtabi\Pheg\Toolbox\Arr\Query\ArrayQuery;
-use Simtabi\Pheg\Toolbox\Arr\Query\Exceptions\InvalidJsonException;
-use Simtabi\Pheg\Toolbox\Arr\Query\JsonQuery;
 use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngineHandler;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
-use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine;
 use stdClass;
 
 /**

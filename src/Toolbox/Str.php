@@ -7,6 +7,7 @@ use function mb_strtolower;
 use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
 use Stringy\Stringy as S;
+use Simtabi\Pheg\Toolbox\Arr\Arr;
 
 /**
  * Class Str

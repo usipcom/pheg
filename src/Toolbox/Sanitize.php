@@ -2,6 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Simtabi\Pheg\Toolbox\Arr\Arr;
 
 final class Sanitize
 {
