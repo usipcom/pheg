@@ -15,3 +15,5 @@
 - https://github.com/JBZoo/Cli
 - https://github.com/alextartan/xml2array
 - https://github.com/antodippo/exif-reader
+- https://github.com/mleczek/collections
+- https://github.com/nahid/qarray

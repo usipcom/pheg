@@ -1,9 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Arr;
 
 use Closure;
+use Simtabi\Pheg\Toolbox\Arr\Collection\Collection;
+use Simtabi\Pheg\Toolbox\Arr\Query\ArrayQuery;
+use Simtabi\Pheg\Toolbox\Arr\Query\Exceptions\InvalidJsonException;
+use Simtabi\Pheg\Toolbox\Arr\Query\JsonQuery;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
+use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine;
 use stdClass;
 
 /**
@@ -20,6 +25,25 @@ final class Arr
     public static function invoke(): self
     {
         return new self();
+    }
+
+    public function collection(array $data): Collection
+    {
+        return new Collection($data);
+    }
+
+    public function query(string|array $data = []): QueryEngine|JsonQuery|null|false
+    {
+        if (is_array($data)) {
+            return ArrayQuery::getInstance()->collect($data);
+        }
+
+        if (is_string($data)) {
+            $json = new JsonQuery();
+            return $json->collect($json->parseData($data));
+        }
+
+        return false;
     }
 
     public function set($key, $value, array &$data) {

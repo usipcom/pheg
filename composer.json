@@ -23,6 +23,8 @@
         "ext-json": "*",
         "ext-exif": "*",
         "ext-ctype": "*",
+        "ext-mbstring": "*",
+        "myclabs/deep-copy": "^1.8",
         "eclipxe/xmlschemavalidator": "^3.0",
         "league/color-extractor": "^0.3.2",
         "annexare/countries-list": "^2.6.1",

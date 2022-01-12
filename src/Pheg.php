@@ -4,7 +4,7 @@ namespace Simtabi\Pheg;
 
 use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Core\Support\Supports;
-use Simtabi\Pheg\Toolbox\Arr;
+use Simtabi\Pheg\Toolbox\Arr\Arr;
 use Simtabi\Pheg\Toolbox\Asset;
 use Simtabi\Pheg\Toolbox\Avatar;
 use Simtabi\Pheg\Toolbox\Base64;
