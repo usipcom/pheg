@@ -7,6 +7,7 @@ use Simtabi\Pheg\Toolbox\Arr\Collection\Collection;
 use Simtabi\Pheg\Toolbox\Arr\Query\ArrayQuery;
 use Simtabi\Pheg\Toolbox\Arr\Query\Exceptions\InvalidJsonException;
 use Simtabi\Pheg\Toolbox\Arr\Query\JsonQuery;
+use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngineHandler;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine;
 use stdClass;
@@ -32,15 +33,17 @@ final class Arr
         return new Collection($data);
     }
 
-    public function query(string|array $data = []): QueryEngine|JsonQuery|null|false
+    public function query(string|array $data): QueryEngineHandler|null|false
     {
+
         if (is_array($data)) {
-            return ArrayQuery::getInstance()->collect($data);
+            // from php array
+            return (new QueryEngineHandler())->collect($data);
         }
 
         if (is_string($data)) {
-            $json = new JsonQuery();
-            return $json->collect($json->parseData($data));
+            // from json file
+            return new QueryEngineHandler($data);
         }
 
         return false;

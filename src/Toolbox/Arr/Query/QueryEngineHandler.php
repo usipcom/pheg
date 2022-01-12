@@ -4,9 +4,9 @@ namespace Simtabi\Pheg\Toolbox\Arr\Query;
 
 use Simtabi\Pheg\Toolbox\Arr\Query\Exceptions\InvalidJsonException;
 use Simtabi\Pheg\Toolbox\Arr\Query\Exceptions\FileNotFoundException;
-use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine;
+use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine as QE;
 
-class JsonQuery extends QueryEngine
+class QueryEngineHandler extends QE
 {
 
     /**
