@@ -44,7 +44,7 @@
         "respect/validation": "^2.2.1",
         "bjeavons/zxcvbn-php": "^1.2.0",
         "giggsey/libphonenumber-for-php": "^8.12.18",
-        "simtabi/memory-size": "dev-master",
+        "gugglegum/memory-size": "^1.0.3",
         "mattkingshott/axiom": "^3.1.1",
         "propaganistas/laravel-phone": "^4.2",
         "irfa/php-sn-generator": "dev-master",
@@ -55,8 +55,6 @@
         "fightbulc/moment": ">=1.33.0",
         "maxakawizard/json-collection-parser": "dev-master",
         "cerbero/json-objects": "^1.2.0",
-        "simtabi/json-db": "dev-master",
-        "simtabi/nyoka": "dev-master",
         "symfony/uid": "^v5.2.6",
         "jimmiw/php-time-ago": "dev-master",
         "sokil/php-isocodes": "^3.3",
@@ -64,6 +62,7 @@
         "spatie/url": "^2.0",
         "justinrainbow/json-schema": "^5.1",
         "seld/jsonlint": "^1.5",
+        "coduo/php-humanizer": "^4.0.2",
         "voku/stringy": "~6.0"
     },
     "require-dev": {
