@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox\JSON;
 
-use Simtabi\JsonDB\Exceptions\Json2FileException;
+use Exception;
 
 class Json2File {
 
@@ -180,7 +180,7 @@ class Json2File {
      * @param array  $array    → array to be converted to JSON file
      *
      * @return bool true     → if the file is created
-     *@throws Json2FileException → couldn't create file
+     *@throws Exception → couldn't create file
      */
     public function arrayToFile(array $array): bool {
 
@@ -197,7 +197,7 @@ class Json2File {
 
         if (!$file = fopen($this->file, 'w+')) {
 
-            throw new Json2FileException('Could not create file in ' . $this->file, 300);
+            throw new Exception('Could not create file in ' . $this->file, 300);
         }
 
         fwrite($file, $json);
@@ -209,7 +209,7 @@ class Json2File {
      * Save to array the JSON file content.
      *
      * @return array         → JSON format
-     *@throws Json2FileException → there is no file
+     *@throws Exception → there is no file
      */
     public function fileToArray(): array {
 
@@ -223,14 +223,14 @@ class Json2File {
             return $jsonArray;
         }
 
-        throw new Json2FileException('File not found in ' . $this->file, 300);
+        throw new Exception('File not found in ' . $this->file, 300);
     }
 
     /**
      * Check for errors.
      *
      * @return true
-     * @throws Json2FileException → JSON (encode-decode) error
+     * @throws Exception → JSON (encode-decode) error
      */
     public function jsonLastError(): bool
     {
@@ -239,17 +239,17 @@ class Json2File {
             case JSON_ERROR_NONE:
                  return true;
             case JSON_ERROR_UTF8:
-                throw new Json2FileException('Malformed UTF-8 characters', 300);
+                throw new Exception('Malformed UTF-8 characters', 300);
             case JSON_ERROR_DEPTH:
-                throw new Json2FileException('Maximum stack depth exceeded', 300);
+                throw new Exception('Maximum stack depth exceeded', 300);
             case JSON_ERROR_SYNTAX:
-                throw new Json2FileException('Syntax error, malformed JSON', 300);
+                throw new Exception('Syntax error, malformed JSON', 300);
             case JSON_ERROR_CTRL_CHAR:
-                throw new Json2FileException('Unexpected control char found', 300);
+                throw new Exception('Unexpected control char found', 300);
             case JSON_ERROR_STATE_MISMATCH:
-                throw new Json2FileException('Underflow or the modes mismatch', 300);
+                throw new Exception('Underflow or the modes mismatch', 300);
             default:
-                throw new Json2FileException('Unknown error', 300);
+                throw new Exception('Unknown error', 300);
         }
     }
 }
