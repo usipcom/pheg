@@ -202,5 +202,10 @@ trait DataHelpersTrait
         return $this->setFileName($this->dataKey)->setKey('helpdesk_options')->setDefault($default)->getData();
     }
 
+    public function getNotificationOptions($default = null)
+    {
+        return $this->setFileName($this->dataKey)->setKey('notification_options')->setDefault($default)->getData();
+    }
+
 
 }

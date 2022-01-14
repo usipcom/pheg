@@ -2,8 +2,6 @@
 
 namespace Simtabi\Pheg\Core;
 
-use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
-
 class Loader
 {
 
@@ -29,7 +27,7 @@ class Loader
      * @param null $fileNames
      * @return array|mixed
      */
-    public function getData($fileNames = null): array
+    public function getData(?string $fileNames = null): array
     {
 
         $data = [];
@@ -78,7 +76,7 @@ class Loader
     }
 
     /**
-     * @param null $folderName
+     * @param null|string $folderName
      * @return Loader
      */
     public function setFolderName($folderName)

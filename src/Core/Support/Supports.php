@@ -6,14 +6,12 @@ use Adbar\Dot;
 use Simtabi\Pheg\Core\Loader;
 use Simtabi\Pheg\Core\Support\Traits\DataHelpersTrait;
 use Simtabi\Pheg\Core\Support\Traits\FormHelpersTrait;
-use Simtabi\Pheg\Core\Support\Traits\SupportHelpersTrait;
 use Simtabi\Pheg\Pheg;
 
 class Supports
 {
     use DataHelpersTrait;
     use FormHelpersTrait;
-    use SupportHelpersTrait;
 
     private Loader $loader;
     private Dot    $data;
@@ -97,7 +95,7 @@ class Supports
         return $this->default;
     }
 
-    public function isAsArray(bool $status = true): self
+    public function asArray(bool $status = true): self
     {
         $this->asArray = $status;
 
@@ -136,7 +134,7 @@ class Supports
         if (!empty($this->default) && (is_array($data) && count($data) >= 1)) {
             $data = $this->pheg->arr()->fetch($this->default, $data);
         }
-        
+
         return $this->asArray ? $data : $this->pheg->transfigure()->toObject($data);
     }
 
