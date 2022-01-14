@@ -27,7 +27,7 @@ class Loader
      * @param null $fileNames
      * @return array|mixed
      */
-    public function getData(?string $fileNames = null): array
+    public function getData(string|array|null $fileNames = null): array
     {
 
         $data = [];
