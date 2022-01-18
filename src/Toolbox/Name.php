@@ -15,7 +15,7 @@ final class Name
         return new self();
     }
 
-    public function make($object, $substitute = false): bool|string
+    public function make($object, $substitute = false): bool|string|null
     {
 
         $validate = pheg()->validator()->transfigure();
@@ -51,7 +51,7 @@ final class Name
         }
 
         if (!$substitute && (empty($firstName) && empty($lastName))) {
-            return false;
+            return null;
         }
 
         return $name;
