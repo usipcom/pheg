@@ -184,4 +184,43 @@ trait WithCountriesTrait
 
         return $this->getIsoCodesFactory()->getCurrencies();
     }
+
+
+
+
+    /**
+     * Find a country name from the country code specified, throw an exception if the country could not
+     * be found.
+     *
+     * @param string $countryCode The country code for the required country name.
+     * @return string|bool The name of the country for the $countryCode paramete, or false if not found
+     */
+    public function countryCode2CountryName($countryCode)
+    {
+        $countryCode = strtoupper($countryCode);
+        $countries   = $this->getAllCountries();
+        if (array_key_exists($countryCode, $countries)) {
+            return $countries[$countryCode];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Find a country code from the country name specified, throw an exception if the country could not
+     * be found.
+     *
+     * @param string $countryName The country name for the required country code.
+     * @return string|bool The code of the country for the $countryName parameter or false if not found
+     */
+    public function countryName2isoCode($countryName)
+    {
+        $countryName = ucwords($countryName);
+        $countries   = $this->getAllCountries();
+        if (in_array($countryName, $countries)) {
+            return array_search($countryName, $countries);
+        } else {
+            return false;
+        }
+    }
 }
