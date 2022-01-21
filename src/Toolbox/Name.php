@@ -30,13 +30,14 @@ final class Name
             return false;
         }
 
-        $salutation = ucfirst($object->salutation ?? '');
+        $salutation = strtolower($object->salutation ?? '');
         $firstName  = ucfirst($object->first_name ?? '');
         $lastName   = ucfirst($object->last_name ?? '');
         $username   = ucfirst($object->username ?? '');
         $email      = $object->email;
 
         if (!empty($salutation) && !empty($firstName) && !empty($lastName)) {
+            $salutation = pheg()->supports()->getSalutations($salutation);
             $name = sprintf("%s. %s %s", $salutation, $firstName, $lastName);
         }elseif (!empty($firstName) && !empty($lastName)) {
             $name = sprintf("%s %s", $firstName, $lastName);
