@@ -24,6 +24,7 @@
         "ext-exif": "*",
         "ext-ctype": "*",
         "ext-mbstring": "*",
+        "guzzlehttp/guzzle": ">=7.0.1",
         "myclabs/deep-copy": "^1.8",
         "eclipxe/xmlschemavalidator": "^3.0",
         "league/color-extractor": "^0.3.2",
