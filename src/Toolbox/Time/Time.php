@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Time;
 
 use DateTime;
 use DateTimeZone;
@@ -34,6 +34,11 @@ final class Time
     public static function invoke(): self
     {
         return new self();
+    }
+
+    public function period($startDateTime = null, $endDateTime = null): Period
+    {
+        return new Period($startDateTime, $endDateTime );
     }
 
     /**

@@ -17,7 +17,7 @@ use Simtabi\Pheg\Toolbox\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
 use Simtabi\Pheg\Toolbox\Helpers;
-use Simtabi\Pheg\Toolbox\Time;
+use Simtabi\Pheg\Toolbox\Time\Time;
 use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
