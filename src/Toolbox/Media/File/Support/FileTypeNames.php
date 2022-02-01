@@ -1,6 +1,6 @@
 <?php
 
-namespace Simtabi\Pheg\Toolbox\Media\Support;
+namespace Simtabi\Pheg\Toolbox\Media\File\Support;
 
 class FileTypeNames
 {
