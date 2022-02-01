@@ -8,6 +8,9 @@ use Simtabi\Pheg\Toolbox\Time\Exceptions\InvalidPeriod;
 use DateTimeInterface;
 use Illuminate\Support\Str;
 
+/**
+ * @deprecated since 2021, plan to move it to laranail side
+ */
 class Period
 {
     /**
