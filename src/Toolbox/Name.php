@@ -85,16 +85,18 @@ final class Name
         return strtolower(trim($parts[0]));
     }
 
-    public function name2username(string $name = "Mike Tyson", int $total = 200): array|string|bool
+    public function name2username(string $firstname = "James", ?string $lastname = "Oduro", int $total = 200, bool $extended = true): array
     {
 
-        if ($total >= 1)
-        {
-            $out = [];
+        $out = [];
+
+        if (!$extended) {
+
+           $total = $total < 1 ? 1 : $total;
             for ($x = 0; $x <= $total; $x++)
             {
 
-                $parts = array_filter(explode(" ", strtolower($name))); //explode and lowercase name
+                $parts = array_filter(explode(" ", strtolower($firstname))); //explode and lowercase name
                 $parts = array_slice($parts, 0, 2); //return only first two array part
 
                 $part1 = (!empty($parts[0]))?substr($parts[0], 0,8):""; //cut first name to 8 letters
@@ -104,10 +106,41 @@ final class Name
                 $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
             }
 
-            return count($out) > 1 ? $out : $out[0];
+        }else{
+
+            $firstTwoChars = str_split($firstname, 2)[0];
+            $firstChar     = str_split($firstname, 1)[0];
+
+            /**
+             * an array of numbers that may be used as suffix for the usernames index 0 would be the year
+             * and index 1, 2 and 3 would be month, day and hour respectively.
+             */
+            $numSuffix     = explode('-', date('Y-m-d-H'));
+
+            // create an array of nice possible usernames from the first name and last name
+            array_push($out,
+                $firstname,        // james
+                $firstname.$numSuffix[0],  // james2019
+                $firstname.$numSuffix[1],  // james12 i.e the month of reg
+                $firstname.$numSuffix[2],  // james28 i.e the day of reg
+                $firstname.$numSuffix[3]   // james13 i.e the hour of day of reg
+            );
+
+            if (!empty($lastname))
+            {
+                array_push($out,
+                    $lastname,        // oduro
+                    $firstname.$lastname,     // jamesoduro
+                    $firstname.'.'.$lastname, // james.oduro
+                    $firstname.'-'.$lastname, // james-oduro
+                    $firstChar.$lastname,     // joduro
+                    $firstTwoChars.$lastname  // jaoduro,
+                );
+            }
+
         }
 
-        return false;
+        return $out;
     }
 
 }
