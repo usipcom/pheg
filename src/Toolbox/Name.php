@@ -85,28 +85,12 @@ final class Name
         return strtolower(trim($parts[0]));
     }
 
-    public function name2username(string $firstname = "James", ?string $lastname = "Oduro", int $total = 200, bool $extended = true): array
+    public function name2username(string $firstname = "James", ?string $lastname = "Oduro", bool $extended = true, int $total = 200): array
     {
 
         $out = [];
 
-        if (!$extended) {
-
-           $total = $total < 1 ? 1 : $total;
-            for ($x = 0; $x <= $total; $x++)
-            {
-
-                $parts = array_filter(explode(" ", strtolower($firstname))); //explode and lowercase name
-                $parts = array_slice($parts, 0, 2); //return only first two array part
-
-                $part1 = (!empty($parts[0]))?substr($parts[0], 0,8):""; //cut first name to 8 letters
-                $part2 = (!empty($parts[1]))?substr($parts[1], 0,5):""; //cut second name to 5 letters
-                $part3 = ($x) ? rand($x, 999+$x) : "";
-
-                $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
-            }
-
-        }else{
+        if ($extended) {
 
             $firstTwoChars = str_split($firstname, 2)[0];
             $firstChar     = str_split($firstname, 1)[0];
@@ -137,6 +121,23 @@ final class Name
                     $firstTwoChars.$lastname  // jaoduro,
                 );
             }
+
+        }else{
+
+            $total = $total < 1 ? 1 : $total;
+            for ($x = 0; $x <= $total; $x++)
+            {
+
+                $parts = array_filter(explode(" ", strtolower($firstname))); //explode and lowercase name
+                $parts = array_slice($parts, 0, 2); //return only first two array part
+
+                $part1 = (!empty($parts[0]))?substr($parts[0], 0,8):""; //cut first name to 8 letters
+                $part2 = (!empty($parts[1]))?substr($parts[1], 0,5):""; //cut second name to 5 letters
+                $part3 = ($x) ? rand($x, 999+$x) : "";
+
+                $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
+            }
+
 
         }
 
