@@ -88,7 +88,7 @@ final class Name
     public function name2username(string $firstname = "James", ?string $lastname = "Oduro", bool $extended = true, int $total = 200): array
     {
 
-        $usernames = [];
+        $out = [];
 
         if ($extended) {
 
@@ -102,7 +102,7 @@ final class Name
             $numSuffix     = explode('-', date('Y-m-d-H'));
 
             // create an array of nice possible usernames from the first name and last name
-            array_push($usernames,
+            array_push($out,
                 $firstname,        // james
                 $firstname.$numSuffix[0],  // james2019
                 $firstname.$numSuffix[1],  // james12 i.e the month of reg
@@ -112,7 +112,7 @@ final class Name
 
             if (!empty($lastname))
             {
-                array_push($usernames,
+                array_push($out,
                     $lastname,        // oduro
                     $firstname.$lastname,     // jamesoduro
                     $firstname.'_'.$lastname, // james_oduro
@@ -134,18 +134,19 @@ final class Name
                 $part2 = (!empty($parts[1]))?substr($parts[1], 0,5):""; //cut second name to 5 letters
                 $part3 = ($x) ? rand($x, 999+$x) : "";
 
-                $usernames[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
+                $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
             }
 
 
         }
 
-        foreach ($usernames as $item)
+        $suggestions = [];
+        foreach ($out as $item)
         {
-            $usernames[] = strtolower(trim($item));
+            $suggestions[] = strtolower(trim($item));
         }
 
-        return $usernames;
+        return $suggestions;
     }
 
 }
