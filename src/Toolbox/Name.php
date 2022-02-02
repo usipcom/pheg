@@ -115,8 +115,7 @@ final class Name
                 array_push($out,
                     $lastname,        // oduro
                     $firstname.$lastname,     // jamesoduro
-                    $firstname.'.'.$lastname, // james.oduro
-                    $firstname.'-'.$lastname, // james-oduro
+                    $firstname.'_'.$lastname, // james_oduro
                     $firstChar.$lastname,     // joduro
                     $firstTwoChars.$lastname  // jaoduro,
                 );
