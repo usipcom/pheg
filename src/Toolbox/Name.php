@@ -85,4 +85,29 @@ final class Name
         return strtolower(trim($parts[0]));
     }
 
+    public function name2username(string $name = "Mike Tyson", int $total = 200): array|string|bool
+    {
+
+        if ($total >= 1)
+        {
+            $out = [];
+            for ($x = 0; $x <= $total; $x++)
+            {
+
+                $parts = array_filter(explode(" ", strtolower($name))); //explode and lowercase name
+                $parts = array_slice($parts, 0, 2); //return only first two array part
+
+                $part1 = (!empty($parts[0]))?substr($parts[0], 0,8):""; //cut first name to 8 letters
+                $part2 = (!empty($parts[1]))?substr($parts[1], 0,5):""; //cut second name to 5 letters
+                $part3 = ($x) ? rand($x, 999+$x) : "";
+
+                $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
+            }
+
+            return count($out) > 1 ? $out : $out[0];
+        }
+
+        return false;
+    }
+
 }
