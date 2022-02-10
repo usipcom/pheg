@@ -583,7 +583,7 @@ final class Url
 
     public function parseBaseUrl(): SpatieUrl
     {
-        return SpatieUrl::fromString(this->getBaseUrl());
+        return SpatieUrl::fromString($this->getBaseUrl());
     }
 
     public function formatUrl($url, $formatted = true, $https = false){
