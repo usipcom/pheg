@@ -16,7 +16,7 @@ use Exception;
  */
 final class Url
 {
-    
+
     private DataFactory $dataFactory;
 
     /**
@@ -575,8 +575,9 @@ final class Url
         return $this->buildAll('', $parts, self::URL_REPLACE);
     }
 
-    public function parseUrl($url): SpatieUrl
+    public function parseUrl(?string $url = null): SpatieUrl
     {
+        $url = !empty($url) ? $url : $this->getBaseUrl();
         return SpatieUrl::fromString($url);
     }
 
