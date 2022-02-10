@@ -581,6 +581,11 @@ final class Url
         return SpatieUrl::fromString($url);
     }
 
+    public function parseBaseUrl(): SpatieUrl
+    {
+        return SpatieUrl::fromString(this->getBaseUrl());
+    }
+
     public function formatUrl($url, $formatted = true, $https = false){
 
         $url = $this->appendScheme($this->removeHttp($url), $https);
