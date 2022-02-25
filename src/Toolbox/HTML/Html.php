@@ -288,4 +288,9 @@ final class Html
     {
         return HtmlCleaner::invoke();
     }
+
+    public function form(): Form
+    {
+        return Form::invoke();
+    }
 }
