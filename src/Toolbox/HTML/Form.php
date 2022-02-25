@@ -12,20 +12,19 @@ final class Form
         return new self();
     }
 
-    public function data2selectbox(array|object $data, $placeholderText = "Select something", $nothingToSelectText = "Nothing to Select"): array
+    public function data2selectbox(array|object $data, ?string $placeholderText = "Select something", string $nothingToSelectText = "Nothing to Select"): array
     {
-
-        if (is_object($data)) {
+        if (is_object($data))
+        {
             $data = pheg()->transfigure()->toArray($data);
         }
 
-        if (is_array($data) && (count($data) >= 1)){
-            $default[0] = $placeholderText;
-        }else{
-            $default[0] = $nothingToSelectText;
+        if (empty($data)){
+            return ['' => $nothingToSelectText];
         }
 
-        return array_merge($default , $data);
+        return ['' => $placeholderText] + $data;
+
     }
 
 }
