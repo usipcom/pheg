@@ -192,9 +192,9 @@ trait DataHelpersTrait
         return $this->setFileName($this->dataKey)->setKey('search_options')->setDefault($default)->getData();
     }
 
-    public function getAddressContactTypes($default = null)
+    public function getAddressGroups($default = null)
     {
-        return $this->setFileName($this->dataKey)->setKey('address_contact_types')->setDefault($default)->getData();
+        return $this->setFileName($this->dataKey)->setKey('address_groups')->setDefault($default)->getData();
     }
 
     public function getHelpdeskOptions($default = null)

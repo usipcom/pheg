@@ -936,17 +936,16 @@ return [
      * #######################################################################
      *
      */
-    'address_contact_types' => [
-        'home'     => 'Home',
-        'work'     => 'Work',
-        'office'   => 'Office',
-        'family'   => 'Family',
-        'personal' => 'Personal',
-        'shipping' => 'Shipping',
-        'billing'  => 'Billing',
-        'location' => 'Location',
-        'service'  => 'Service',
-        'mailing'  => 'Mailing',
+    'address_groups' => [
+        'Service_location' => 'Service location',
+        'mailing'          => 'Mailing',
+        'home'             => 'Home',
+        'work'             => 'Work',
+        'office'           => 'Office',
+        'family'           => 'Family',
+        'personal'         => 'Personal',
+        'shipping'         => 'Shipping',
+        'billing'          => 'Billing',
     ],
 
     /**
