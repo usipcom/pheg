@@ -919,4 +919,14 @@ final class Arr
         }
     }
 
+    public function compareArray($arrayA, $arrayB): bool
+    {
+        return (
+            is_array($arrayA)
+            && is_array($arrayB)
+            && count($arrayA) == count($arrayB)
+            && array_diff($arrayA, $arrayB) === array_diff($arrayB, $arrayA)
+        );
+    }
+
 }
