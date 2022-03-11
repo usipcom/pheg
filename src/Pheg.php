@@ -24,7 +24,7 @@ use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Filter;
 use Simtabi\Pheg\Toolbox\HTML\Html;
 use Simtabi\Pheg\Toolbox\Http;
-use Simtabi\Pheg\Toolbox\Humanize;
+use Simtabi\Pheg\Toolbox\Readable;
 use Simtabi\Pheg\Toolbox\Input;
 use Simtabi\Pheg\Toolbox\Media\Media;
 use Simtabi\Pheg\Toolbox\JSON\JSON;
@@ -206,9 +206,9 @@ class Pheg
         return Http::invoke();
     }
 
-    public function humanize(): Humanize
+    public function readable(): Readable
     {
-        return Humanize::invoke();
+        return Readable::invoke();
     }
 
     public function input(): Input
