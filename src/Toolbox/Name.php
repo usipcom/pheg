@@ -2,6 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox;
 
+use Simtabi\Pheg\Toolbox\String\Str;
 use Illuminate\Database\Eloquent\Model;
 use stdClass;
 

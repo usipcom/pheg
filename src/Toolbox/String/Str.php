@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\String;
 
 use Exception;
+use Simtabi\Pheg\Toolbox\String\Compare\Compare;
 use function mb_strtolower;
 use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
@@ -70,6 +71,7 @@ final class Str
 
         // remove spaces
         $str = str_replace(' ', '', $str);
+
         // remove white spaces
         $str = preg_replace('/\s+/', '', $str);
 
@@ -1387,13 +1389,13 @@ final class Str
         $minutes   = floor($wordCount / 120);
         $seconds   = floor($wordCount % 120 / (120 / 60));
 
-        $minStr = $shortForm ? 'min' : 'minute';
-        $secStr = $shortForm ? 'sec' : 'second';
-        $varStr = 's';
+        $minStr    = $shortForm ? 'min' : 'minute';
+        $secStr    = $shortForm ? 'sec' : 'second';
+        $varStr    = 's';
 
-        $spacing = (!empty($spacing) ? $spacing : ' ');
-        $minVar  = (($minutes == 1) ? false : true);
-        $secVar  = (($seconds == 1) ? false : true);
+        $spacing   = (!empty($spacing) ? $spacing : ' ');
+        $minVar    = (($minutes == 1) ? false : true);
+        $secVar    = (($seconds == 1) ? false : true);
 
         if (1 <= $minutes) {
             $readingMins = $minutes . $spacing . ucwords(strtolower($minStr . ((true === $minVar ? $varStr : null))));
@@ -1493,5 +1495,10 @@ final class Str
     public function slug(string $string, $sep = '_', array $args = [])
     {
         return (new Slugify($args))->slugify($string, $sep);
+    }
+
+    public function compare(): Compare
+    {
+        return new Compare();
     }
 }

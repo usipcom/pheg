@@ -8,6 +8,7 @@ use Simtabi\Pheg\Toolbox\Arr\Arr;
 use Simtabi\Enekia\Validators;
 use Simtabi\Pheg\Toolbox\Data\Types\Factory;
 use Simtabi\Pheg\Toolbox\Data\Types\JSON;
+use Simtabi\Pheg\Toolbox\String\Str;
 
 /**
  * Class Filter

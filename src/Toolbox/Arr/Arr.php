@@ -8,6 +8,7 @@ use Simtabi\Pheg\Toolbox\Arr\Query\ArrayQuery;
 use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngineHandler;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use stdClass;
+use function Simtabi\Laranail\Providers\Extra\arrayKeyValuesAreSame;
 
 /**
  * Class Arr
@@ -927,6 +928,39 @@ final class Arr
             && count($arrayA) == count($arrayB)
             && array_diff($arrayA, $arrayB) === array_diff($arrayB, $arrayA)
         );
+    }
+
+    function compareArrayKeyValuesSimilarity(array &$a, array &$b, bool $strict): bool {
+
+
+        foreach ($a as $key => &$aValue) {
+
+            if (!array_key_exists($key, $b))
+                return false;
+
+            $bValue = &$b[$key];
+
+
+            if (is_array($aValue) && is_array($bValue)) {
+                // compare arrays recursively
+
+                if (!$this->compareArrayKeyValuesSimilarity($aValue, $bValue, $strict))
+                    return false;
+            }
+            else if ($strict ? ($aValue !== $bValue) : ($aValue != $bValue)) {
+                // use strict comparison if not comparing two arrays
+
+                return false;
+            }
+
+        }
+
+        foreach (array_keys($b) as $currKey) {
+            if (!array_key_exists($currKey, $a))
+                return false;
+        }
+
+        return true;
     }
 
 }

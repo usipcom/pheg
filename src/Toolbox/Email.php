@@ -4,6 +4,7 @@ namespace Simtabi\Pheg\Toolbox;
 
 use Exception;
 use Simtabi\Enekia\Validators;
+use Simtabi\Pheg\Toolbox\String\Str;
 
 final class Email
 {

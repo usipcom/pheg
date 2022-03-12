@@ -41,7 +41,7 @@ use Simtabi\Pheg\Toolbox\SimpleTimer;
 use Simtabi\Pheg\Toolbox\SocialMedia;
 use Simtabi\Pheg\Toolbox\SqlHandler;
 use Simtabi\Pheg\Toolbox\Stats;
-use Simtabi\Pheg\Toolbox\Str;
+use Simtabi\Pheg\Toolbox\String\Str;
 use Simtabi\Pheg\Toolbox\System;
 use Simtabi\Pheg\Toolbox\Timer;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
