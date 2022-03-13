@@ -18,7 +18,11 @@ final class Form
             return ['' => $nothingToSelectText];
         }
 
-        return ['' => $placeholderText] + $data;
+        if (!empty($placeholderText)) {
+            return ['' => $placeholderText] + $data;
+        }
+
+        return $data;
 
     }
 
