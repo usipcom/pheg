@@ -15,97 +15,71 @@ final class DataFactory
     public function __construct() {}
 
     /**
-     * @param mixed $data
+     * @param mixed|null $data
      * @return Json
      */
-    public function json($data = null): JSON
+    public function json(mixed $data = null): JSON
     {
-        if ($data instanceof JSON) {
+        if ($data instanceof JSON)
+        {
             return $data;
         }
 
-        if (is_string($data)) {
-            $result = JSON::invoke($data);
-        } else {
-            $result = JSON::invoke((array)$data);
-        }
-
-        return $result;
+        return new JSON($data);
     }
 
     /**
-     * @param mixed $data
+     * @param mixed|null $data
      * @return Factory
      */
-    public function data($data = null): Factory
+    public function data(mixed $data = null): Factory
     {
-        if ($data instanceof Factory) {
+        if ($data instanceof Factory)
+        {
             return $data;
         }
 
-        if (is_string($data)) {
-            $result = Factory::invoke($data);
-        } else {
-            $result = Factory::invoke((array)$data);
-        }
-
-        return $result;
+        return new Factory($data);
     }
 
     /**
-     * @param mixed $data
-     * @return PhpArray
+     * @param mixed|null $data
+     * @return Factory
      */
-    public function phpArray($data = null): PhpArray
+    public function phpArray(mixed $data = null): Factory
     {
-        if ($data instanceof PhpArray) {
+        if ($data instanceof PhpArray)
+        {
             return $data;
         }
 
-        if (is_string($data)) {
-            $result = PhpArray::invoke($data);
-        } else {
-            $result = PhpArray::invoke((array)$data);
-        }
-
-        return $result;
+        return new PhpArray($data);
     }
 
     /**
-     * @param mixed $data
-     * @return Ini
+     * @param mixed|null $data
+     * @return Factory
      */
-    public function ini($data = null): Ini
+    public function ini(mixed $data = null): Factory
     {
         if ($data instanceof Ini) {
             return $data;
         }
 
-        if (is_string($data)) {
-            $result = Ini::invoke($data);
-        } else {
-            $result = Ini::invoke((array)$data);
-        }
-
-        return $result;
+        return new Ini($data);
     }
 
     /**
-     * @param mixed $data
-     * @return Yml
+     * @param mixed|null $data
+     * @return Factory
      */
-    public function yml($data = null): Yml
+    public function yml(mixed $data = null): Factory
     {
-        if ($data instanceof Yml) {
+        if ($data instanceof Yml)
+        {
             return $data;
         }
 
-        if (is_string($data)) {
-            $result = Yml::invoke($data);
-        } else {
-            $result = Yml::invoke((array)$data);
-        }
-
-        return $result;
+        return new Yml($data);
     }
 }

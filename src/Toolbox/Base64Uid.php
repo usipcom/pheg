@@ -139,7 +139,7 @@ final class Base64Uid
         $charset = $charset ?? $this->charset;
         $prefix  = $prefix && strlen($prefix) > 0 ? $prefix . '_' : '';
 
-        return $prefix . self::invoke()->setCharset($charset)->setLength($length)->getUID();
+        return $prefix . (new self())->setCharset($charset)->setLength($length)->getUID();
     }
 
 

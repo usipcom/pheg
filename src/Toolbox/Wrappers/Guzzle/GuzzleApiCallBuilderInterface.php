@@ -2,53 +2,55 @@
 
 namespace Simtabi\Pheg\Toolbox\Wrappers\Guzzle;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface GuzzleApiCallBuilderInterface
 {
     /**
      * @param string $method
-     * @return mixed
+     * @return static
      */
-    public function method(string $method);
+    public function method(string $method): static;
 
     /**
      * @param string $uri
-     * @return mixed
+     * @return static
      */
-    public function uri(string $uri);
+    public function uri(string $uri): static;
 
     /**
      * @param array $body
-     * @return mixed
+     * @return static
      */
-    public function body(array $body);
+    public function body(array $body): static;
 
     /**
      * @param array $formParams
-     * @return mixed
+     * @return static
      */
-    public function formParams(array $formParams);
+    public function formParams(array $formParams): static;
 
     /**
      * @param array $multipart
-     * @return mixed
+     * @return static
      */
-    public function multipart(array $multipart);
+    public function multipart(array $multipart): static;
 
     /**
      * @param array $header
-     * @return mixed
+     * @return static
      */
-    public function header(array $header);
+    public function header(array $header): static;
 
     /**
      * @param string $token
-     * @return mixed
+     * @return static
      */
-    public function bearerToken(string $token);
+    public function bearerToken(string $token): static;
 
     /**
      * @return mixed
      */
-    public function call();
+    public function call(): ResponseInterface;
 
 }

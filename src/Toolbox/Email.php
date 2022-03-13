@@ -144,12 +144,12 @@ final class Email
         $hash  = md5(strtolower(trim($email)));
         $parts = ['scheme' => 'http', 'host' => 'www.gravatar.com'];
 
-        if (new Url->isHttps()) {
+        if ((new Url())->isHttps()) {
             $parts = ['scheme' => 'https', 'host' => 'secure.gravatar.com'];
         }
 
         // Get size
-        $size = Numbers::invoke()->limit((new Filter())->int($size), 32, 2048);
+        $size = (new Vars())->limit((new Filter())->int($size), 32, 2048);
 
         // Prepare default images
         $defaultImage = trim($defaultImage);
@@ -157,19 +157,20 @@ final class Email
             $defaultImage = urldecode($defaultImage);
         } else {
             $defaultImage = strtolower($defaultImage);
-            if (!Validators::invoke()->arr()->isInArray($defaultImage, $this->getGravatarBuiltInImages())) {
+            if (!(new Validators())->transfigure()->isInArray($defaultImage, $this->getGravatarBuiltInImages()))
+            {
                 $defaultImage = $this->getGravatarBuiltInImages()[2];
             }
         }
 
         // Build full url
-        $parts['path'] = '/avatar/' . $hash . '/';
+        $parts['path']  = '/avatar/' . $hash . '/';
         $parts['query'] = [
             's' => $size,
             'd' => $defaultImage,
         ];
 
-        return new Url->create($parts);
+        return (new Url())->create($parts);
     }
 
     /**
@@ -216,7 +217,7 @@ final class Email
         $parts = explode('@', $email);
         $domain = array_pop($parts);
 
-        if (new System->isFunc('idn_to_utf8')) {
+        if ((new System())->isFunc('idn_to_utf8')) {
             return (string)idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
 

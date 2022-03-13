@@ -10,6 +10,6 @@ final class Wrappers
 
     public static function guzzle(string $url, string $uri, string $method = GuzzleApiCallBuilder::HTTP_POST): GuzzleApiCallBuilder
     {
-        return GuzzleApiCallBuilder::invoke($url, $uri, $method);
+        return new GuzzleApiCallBuilder($url, $uri, $method);
     }
 }

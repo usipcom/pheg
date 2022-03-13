@@ -26,34 +26,34 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
     const HTTP_DELETE = 'DELETE';
 
     /** @var string $apiUrl */
-    protected $apiUrl;
+    protected string $apiUrl;
 
     /** @var string $method */
-    protected $method;
+    protected string $method;
 
     /** @var string $uri */
-    protected $uri = '/';
+    protected string $uri = '/';
 
     /** @var array $body */
-    protected $body = [];
+    protected array $body = [];
 
     /** @var array $formParams */
-    protected $formParams = [];
+    protected array $formParams = [];
 
     /** @var array $multipart */
-    protected $multipart = [];
+    protected array $multipart = [];
 
     /** @var array $headers */
-    protected $headers = [];
+    protected array $headers = [];
 
     /** @var array $queryString */
-    protected $queryString = [];
+    protected array $queryString = [];
 
     /** @var Request $request */
-    protected $request;
+    protected Request $request;
 
     /** @var Client $httpClient */
-    protected $httpClient;
+    protected Client $httpClient;
 
     /**
      * ApiCallBuilder constructor.
@@ -61,7 +61,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param string $uri
      * @param string $method
      */
-    private function __construct($url, $uri, $method)
+    public function __construct(string $url, string $uri, string $method = self::HTTP_POST)
     {
         $this->apiUrl     = $url;
         $this->method     = $method;
@@ -69,16 +69,11 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
         $this->uri        = $uri;
     }
 
-    public static function invoke(string $url, string $uri, string $method = self::HTTP_POST): self
-    {
-        return new self($url, $uri, $method);
-    }
-
     /**
      * @param string $method
      * @return $this
      */
-    public function method(string $method)
+    public function method(string $method): static
     {
         $this->method = $method;
         return $this;
@@ -88,7 +83,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param string $uri
      * @return $this
      */
-    public function uri(string $uri)
+    public function uri(string $uri): static
     {
         $this->uri = $uri;
         return $this;
@@ -98,7 +93,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param array $body
      * @return $this
      */
-    public function body(array $body)
+    public function body(array $body): static
     {
         $this->body = $body;
         return $this;
@@ -108,7 +103,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param array $formParams
      * @return $this
      */
-    public function formParams(array $formParams)
+    public function formParams(array $formParams): static
     {
         $this->formParams = $formParams;
         return $this;
@@ -118,7 +113,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param array $multipart
      * @return $this
      */
-    public function multipart(array $multipart)
+    public function multipart(array $multipart): static
     {
         $this->multipart = $multipart;
         return $this;
@@ -128,7 +123,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param array $header
      * @return $this
      */
-    public function header(array $header)
+    public function header(array $header): static
     {
         $this->headers = array_merge($this->headers, $header);
         return $this;
@@ -138,7 +133,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param string $token
      * @return $this
      */
-    public function bearerToken(string $token)
+    public function bearerToken(string $token): static
     {
         $this->headers['Authorization'] = 'Bearer ' . $token;
         return $this;
@@ -148,7 +143,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param string $token
      * @return $this
      */
-    public function basicAuthentication(string $token)
+    public function basicAuthentication(string $token): static
     {
         $this->headers['Authorization'] = 'Basic '. $token;
         return $this;
@@ -157,7 +152,7 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
      * @param array $queryString
      * @return $this
      */
-    public function queryString(array $queryString)
+    public function queryString(array $queryString): static
     {
         $this->queryString = $queryString;
         return $this;
@@ -166,24 +161,32 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
     /**
      * @return ResponseInterface
      */
-    public function call()
+    public function call(): ResponseInterface
     {
         try {
+
             $data = ['headers' => $this->headers];
 
-            if (!empty($this->body)) {
+            if (!empty($this->body))
+            {
                 $data["json"] = $this->body;
 
             }
-            if (!empty($this->formParams)) {
+
+            if (!empty($this->formParams))
+            {
                 $data["form_params"] = $this->formParams;
 
             }
-            if (!empty($this->multipart)) {
+
+            if (!empty($this->multipart))
+            {
                 $data["multipart"] = $this->multipart;
 
             }
-            if (!empty($this->queryString)) {
+
+            if (!empty($this->queryString))
+            {
                 $data["query"] = $this->queryString;
             }
 
@@ -196,6 +199,5 @@ class GuzzleApiCallBuilder implements GuzzleApiCallBuilderInterface
         }
 
     }
-
 
 }

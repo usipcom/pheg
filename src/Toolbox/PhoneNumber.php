@@ -19,7 +19,7 @@ final class PhoneNumber
 
     public function __construct()
     {
-        $this->validators = Validators::invoke();
+        $this->validators = new Validators;
     }
 
     /**

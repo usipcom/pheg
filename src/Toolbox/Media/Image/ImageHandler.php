@@ -36,7 +36,7 @@ final class ImageHandler
 
     public function __construct()
     {
-        $this->validators = Validators::invoke();
+        $this->validators = new Validators();
         $this->vars       = new Vars;
     }
 
@@ -271,7 +271,7 @@ final class ImageHandler
      */
     public function color(float $color): int
     {
-        return $this->vars->numberEnsureRange($color, 0, 255);
+        return $this->vars->range($color, 0, 255);
     }
 
     /**
@@ -282,7 +282,7 @@ final class ImageHandler
      */
     public function alpha(float $color): int
     {
-        return $this->vars->numberEnsureRange($color, 0, 127);
+        return $this->vars->range($color, 0, 127);
     }
 
     /**
@@ -293,7 +293,7 @@ final class ImageHandler
      */
     public function rotate(float $color): int
     {
-        return $this->vars->numberEnsureRange($color, -360, 360);
+        return $this->vars->range($color, -360, 360);
     }
 
     /**
@@ -304,7 +304,7 @@ final class ImageHandler
      */
     public function brightness(float $brightness): int
     {
-        return $this->vars->numberEnsureRange($brightness, -255, 255);
+        return $this->vars->range($brightness, -255, 255);
     }
 
     /**
@@ -315,7 +315,7 @@ final class ImageHandler
      */
     public function contrast(float $contrast): int
     {
-        return $this->vars->numberEnsureRange($contrast, -100, 100);
+        return $this->vars->range($contrast, -100, 100);
     }
 
     /**
@@ -326,7 +326,7 @@ final class ImageHandler
      */
     public function colorize(float $colorize): int
     {
-        return $this->vars->numberEnsureRange($colorize, -255, 255);
+        return $this->vars->range($colorize, -255, 255);
     }
 
     /**
@@ -337,7 +337,7 @@ final class ImageHandler
      */
     public function smooth(float $smooth): int
     {
-        return $this->vars->numberEnsureRange($smooth, 1, 10);
+        return $this->vars->range($smooth, 1, 10);
     }
 
     /**
@@ -365,7 +365,7 @@ final class ImageHandler
      */
     public function blur(float $blur): int
     {
-        return $this->vars->numberEnsureRange($blur, 1, 10);
+        return $this->vars->range($blur, 1, 10);
     }
 
     /**
@@ -376,7 +376,7 @@ final class ImageHandler
      */
     public function percent(float $percent): int
     {
-        return $this->vars->numberEnsureRange($percent, 0, 100);
+        return $this->vars->range($percent, 0, 100);
     }
 
     /**
@@ -387,7 +387,7 @@ final class ImageHandler
      */
     public function quality(float $percent): int
     {
-        return $this->vars->numberEnsureRange($percent, 0, 100);
+        return $this->vars->range($percent, 0, 100);
     }
 
     /**

@@ -329,7 +329,7 @@ final class FileSystem
         }
 
         // We're on Windows
-        if (new System->isWin()) {
+        if ((new System())->isWin()) {
             return true;
         }
 
@@ -522,7 +522,7 @@ final class FileSystem
         $cleanedPath = $this->clean((string)$this->real($path), $forceDS);
 
         // Cleanup root path
-        $rootPath = $rootPath ?: new System->getDocRoot();
+        $rootPath = $rootPath ?: (new System())->getDocRoot();
         $rootPath = $this->clean((string)$this->real((string)$rootPath), $forceDS);
 
         // Remove root part

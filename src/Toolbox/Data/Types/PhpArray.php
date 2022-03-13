@@ -12,11 +12,12 @@ final class PhpArray extends Factory
     /**
      * Class constructor
      *
-     * @param array|string $data The data array
+     * @param array|string|false|null $data The data array
      */
-    private function __construct($data = [])
+    public function __construct(array|string|false|null $data = [])
     {
-        if ($data && \is_string($data) && \file_exists($data)) {
+        if ($data && \is_string($data) && \file_exists($data))
+        {
             $data = $this->decode($data);
         }
 

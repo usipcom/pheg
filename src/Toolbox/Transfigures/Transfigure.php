@@ -26,7 +26,7 @@ final class Transfigure {
 
     public function __construct()
     {
-        $this->validators = Validators::invoke();
+        $this->validators = new Validators();
         $this->serialize  = new Serialize;
     }
     
@@ -42,7 +42,7 @@ final class Transfigure {
 
     public function xmlResponse(array $array): XmlResponse
     {
-        return XmlResponse::invoke($array);
+        return new XmlResponse($array);
     }
 
     public function utf8Encode(string|array|object $resource): object|array|string

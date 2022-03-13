@@ -77,7 +77,7 @@ class Pheg
 
     public function validator(): Validators
     {
-        return Validators::invoke();
+        return new Validators;
     }
 
     ///

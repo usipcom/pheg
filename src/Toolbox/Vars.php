@@ -11,7 +11,7 @@ final class Vars
 
     public function __construct() {}
 
-    public function numberFormat($number, $decimals = 0): string
+    public function formatNumber($number, $decimals = 0): string
     {
         return number_format($number, $decimals);
     }
@@ -25,7 +25,7 @@ final class Vars
      * @param string $thouSep          The character to separate thousands.
      * @return string
      */
-    public function numberFormatTo($number, int $decPlaces = 2, string $decSep = '.', string $thouSep = ''): string
+    public function convertNumber($number, int $decPlaces = 2, string $decSep = '.', string $thouSep = ''): string
     {
         $number         = preg_replace('/\s+/', '', (string) $number);
         $numberArr      = str_split((string) $number);
@@ -55,17 +55,17 @@ final class Vars
         return number_format($numberClean, $decPlaces, $decSep, $thouSep);
     }
 
-    public function numberZeroFill ($num, $zerofill = '1')
+    public function zeroFill ($num, $zerofill = '1'): string
     {
         return str_pad($num, $zerofill, '0', STR_PAD_LEFT);
     }
 
-    public function numberRandomize($minimum, $maximum)
+    public function randomizeNumber($minimum, $maximum)
     {
         return mt_rand($minimum, $maximum);
     }
 
-    public function numberBreakdown($number, $getUnsigned = false)
+    public function breakdownNumber($number, $getUnsigned = false)
     {
         $negative = 1;
         if ($number < 0)
@@ -91,12 +91,12 @@ final class Vars
         return $data;
     }
 
-    public function numberToPercentage(int $value, bool $inverse = false): int
+    public function percentile(int $value, bool $inverse = false): int
     {
         return  ($inverse ? 1 - $value : $value) * 100;
     }
 
-    public function numberPercentage($number, $total, $precision = 2)
+    public function percentage($number, $total, $precision = 2)
     {
 
         //  variables
@@ -123,7 +123,7 @@ final class Vars
         return $out;
     }
 
-    public function numberAddOrdinalSuffix($number)
+    public function addOrdinalSuffix($number)
     {
 
         $ord = null;
@@ -144,13 +144,15 @@ final class Vars
         ]);
     }
 
-    public function numberGeneratePercentages($number, $total, $precision = 2){
+    public function numberPercentages($number, $total, $precision = 2): float|bool
+    {
 
         //  variables
         $total = (float) $total;
 
         // if number is greater than total
-        if ($number > $total){
+        if ($number > $total)
+        {
             return false;
         }
 
@@ -169,7 +171,7 @@ final class Vars
         return $out;
     }
 
-    public function generateRandomNumber(int $length = 12, $power = null){
+    public function randomNumber(int $length = 12, $power = null){
         $output  = null;
         $pattern = "0123456789";
 
@@ -185,7 +187,7 @@ final class Vars
         return $output;
     }
 
-    public function generateRandomNumberRange($end, $start = 0, $step = 10){
+    public function randomNumberRange($end, $start = 0, $step = 10){
         // http://php.net/manual/en/function.range.php
         $ranges = [];
         foreach ( range($start, $end, $step) as $item ) {
@@ -194,13 +196,13 @@ final class Vars
         return $ranges;
     }
 
-    public function numberRoundOffToNearest ( $value, $precision = 2 ): float|int
+    public function roundOffToNearest ($value, $precision = 2 ): float|int
     {
         $pow = pow ( 10, $precision );
         return ( ceil ( $pow * $value ) + ceil ( $pow * $value - ceil ( $pow * $value ) ) ) / $pow;
     }
 
-    public function numberEnsureIsFloat(int $value): float|int
+    public function number2float(int $value): float|int
     {
         return !empty($value) && (is_integer($value) || is_numeric($value) || is_float($value)) ? (float) $value : 0;
     }
@@ -209,12 +211,12 @@ final class Vars
         return !empty($number) && (is_integer($number) || is_numeric($number) || is_float($number)) ? (float) $number : 0;
     }
 
-    public function formatPrice($amount, $currency_iso = 'KES', $locale_iso = 'en_GB'): string
+    public function formatPrice($amount, string $currencyIso = 'KES', $localeIso = 'en_GB'): string
     {
 
         $amount   = floatval($amount);
-        $currency = $currency_iso;
-        $fmt      = new NumberFormatter($locale_iso,  NumberFormatter::CURRENCY);
+        $currency = $currencyIso;
+        $fmt      = new NumberFormatter($localeIso,  NumberFormatter::CURRENCY);
         $fmt->setTextAttribute(NumberFormatter::CURRENCY_CODE, 'EUR');
         $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
         return $fmt->formatCurrency($amount, $currency) . PHP_EOL;
@@ -228,9 +230,9 @@ final class Vars
      * @param float $max
      * @return int
      */
-    public function numberLimitToMinMax(float $number, float $min, float $max): int
+    public function limit(float $number, float $min, float $max): int
     {
-        return $this->numberMax($this->numberMin($number, $min), $max);
+        return $this->max($this->min($number, $min), $max);
     }
 
     /**
@@ -240,7 +242,7 @@ final class Vars
      * @param float $min
      * @return int
      */
-    public function numberMin(float $number, float $min): int
+    public function min(float $number, float $min): int
     {
         return (int)max($number, $min); // Not a typo
     }
@@ -252,7 +254,7 @@ final class Vars
      * @param float $max
      * @return int
      */
-    public function numberMax(float $number, float $max): int
+    public function max(float $number, float $max): int
     {
         return (int) min($number, $max); // Not a typo
     }
@@ -277,9 +279,10 @@ final class Vars
      * @param float $current
      * @return string
      */
-    public function numberRelativePercent(float $normal, float $current): string
+    public function relativePercent(float $normal, float $current): string
     {
-        if (!$normal || $normal === $current) {
+        if (!$normal || $normal === $current)
+        {
             return '100';
         }
 
@@ -298,12 +301,11 @@ final class Vars
      *
      * @return int
      */
-    public function numberEnsureRange(float $value, float $min, float $max): int
+    public function range(float $value, float $min, float $max): int
     {
         $filter = new Filter();
-        return $this->numberLimitToMinMax($filter->int($value), $filter->int($min), $filter->int($max));
+        return $this->limit($filter->int($value), $filter->int($min), $filter->int($max));
     }
-
 
     /** Absolute value
      *
@@ -327,6 +329,5 @@ final class Vars
     {
         return $number >= $from && $number <= $to;
     }
-
 
 }

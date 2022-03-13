@@ -28,7 +28,7 @@ final class Time
 
     public function __construct()
     {
-        $this->validators = Validators::invoke();
+        $this->validators = new Validators();
     }
 
     public function period($startDateTime = null, $endDateTime = null): Period

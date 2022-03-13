@@ -99,7 +99,7 @@ final class ImageManipulator
         $this->filter     = new VarFilter;
         $this->system     = new System;
         $this->url        = new Url;
-        $this->validators = Validators::invoke();
+        $this->validators = new Validators();
 
         $this->handler->checkGD();
 

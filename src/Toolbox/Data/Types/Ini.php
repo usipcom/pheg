@@ -37,6 +37,7 @@ final class Ini extends Factory
     protected function render(array $data = [], array $parent = []): string
     {
         $result = [];
+
         foreach ($data as $dataKey => $dataValue) {
             if (\is_array($dataValue)) {
                 if (self::isMulti($dataValue)) {
@@ -45,7 +46,8 @@ final class Ini extends Factory
                     $result[] = '[' . \implode('.', $sections) . ']';
                     $result[] = $this->render($dataValue, $sections);
                 } else {
-                    foreach ($dataValue as $key => $value) {
+                    foreach ($dataValue as $key => $value)
+                    {
                         $result[] = $dataKey . '[' . $key . '] = "' . \str_replace('"', '\"', $value) . '"';
                     }
                 }
@@ -54,6 +56,6 @@ final class Ini extends Factory
             }
         }
 
-        return \implode(DataTypeFactory::LE, $result);
+        return \implode(Factory::LE, $result);
     }
 }

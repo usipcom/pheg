@@ -370,7 +370,7 @@ final class Filter
             'size'  => 1,
         ], $params);
 
-        $size   = $this->vars->numberEnsureRange((int)$params['size'], 1, 1000);
+        $size   = $this->vars->range((int)$params['size'], 1, 1000);
         $rgba   = $this->imageHandler->normalizeColor((string)$params['color']);
         $width  = (int)\imagesx($image);
         $height = (int)\imagesy($image);

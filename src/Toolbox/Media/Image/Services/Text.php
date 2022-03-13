@@ -195,7 +195,7 @@ final class Text
         // Determine textbox size
         $fontPath   = (new FileSystem())->clean($fontFile);
 
-        if (!Validators::invoke()->file()->isFile($fontPath)) {
+        if (!(new Validators())->file()->isFile($fontPath)) {
             throw new ImageException("Unable to load font: {$fontFile}");
         }
 

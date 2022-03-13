@@ -29,7 +29,8 @@ final class Uuid
      */
     public function generate(int $version = 4, ?string $uuidString = '')
     {
-        if ($this->uuidFactory) {
+        if ($this->uuidFactory)
+        {
             return call_user_func($this->uuidFactory);
         }
 
@@ -111,11 +112,10 @@ final class Uuid
      */
     public function validateVersion(int $value)
     {
-        if (! in_array($value, [1, 3, 4, 5])) {
+        if (! in_array($value, [1, 3, 4, 5]))
+        {
             throw new InvalidUuidVersionException();
         }
     }
-
-
 
 }

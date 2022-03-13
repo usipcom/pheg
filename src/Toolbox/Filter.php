@@ -22,8 +22,9 @@ final class Filter
     private Arr        $arr;
     private Str        $str;
 
-    public function __construct() {
-        $this->validators = Validators::invoke();
+    public function __construct()
+    {
+        $this->validators = new Validators;
         $this->arr        = new Arr;
         $this->str        = new Str;
     }
@@ -132,11 +133,11 @@ final class Filter
 
         $variable = $this->str->low($variable);
 
-        if ($this->validators->arr()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
+        if ($this->validators->transfigure()->isInArray($variable, $yesList) || $this->float($variable) !== 0.0) {
             return true;
         }
 
-        if ($this->validators->arr()->isInArray($variable, $noList)) {
+        if ($this->validators->transfigure()->isInArray($variable, $noList)) {
             return false;
         }
 
@@ -407,7 +408,7 @@ final class Filter
             return $data;
         }
 
-        return JSON::invoke($data);
+        return new JSON($data);
     }
 
     /**

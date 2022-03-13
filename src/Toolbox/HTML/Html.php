@@ -19,7 +19,7 @@ final class Html
     public function parseHTMLTags($tags, $enclose = true, $trim = false) {
 
         // if empty
-        if (Validators::invoke()->isEmpty($tags)){
+        if ((new Validators())->transfigure()->isEmpty($tags)){
             return '';
         }
 
@@ -72,7 +72,7 @@ final class Html
     }
 
     public function oddEvenClass(int $number){
-        return strtolower(Validators::invoke()->isNumberOdd($number) ? 'Even' : 'Odd');
+        return strtolower((new Validators())->transfigure()->isNumberOdd($number) ? 'Even' : 'Odd');
     }
 
     public function progressbar($done, $total, $info = "", $width = 50) {
@@ -276,16 +276,16 @@ final class Html
 
     public function html2Text(): Html2Text
     {
-        return Html2Text::invoke();
+        return new Html2Text;
     }
 
     public function htmlCleaner(): HtmlCleaner
     {
-        return HtmlCleaner::invoke();
+        return new HtmlCleaner;
     }
 
     public function form(): Form
     {
-        return Form::invoke();
+        return new Form;
     }
 }

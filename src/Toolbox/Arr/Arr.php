@@ -252,7 +252,8 @@ final class Arr
         return $flattened;
     }
 
-    public function filter(array $data){
+    public function filter(array $data)
+    {
         if (!is_array($data)){
             return null;
         }

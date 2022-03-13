@@ -86,7 +86,7 @@ final class Xml2Array
             $array = $init->buildArrayFromString($xmlString);
         }
 
-        return XmlResponse::invoke($array);
+        return new XmlResponse($array);
     }
 
     /**

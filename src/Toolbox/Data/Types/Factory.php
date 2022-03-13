@@ -26,20 +26,17 @@ class Factory extends ArrayObject
 
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
 
-        if ($data && \is_string($data) && \file_exists($data)) {
+        if ($data && \is_string($data) && \file_exists($data))
+        {
             $data = self::readFile($data);
         }
 
-        if (\is_string($data)) {
+        if (\is_string($data))
+        {
             $data = $this->decode($data);
         }
 
         parent::__construct($data ? (array)$data : []);
-    }
-
-    public static function invoke(array $data = []): self
-    {
-        return new self($data);
     }
 
     /**
@@ -214,7 +211,7 @@ class Factory extends ArrayObject
     public function search($needle)
     {
         $aIterator = new \RecursiveArrayIterator($this->getArrayCopy());
-        $iterator = new \RecursiveIteratorIterator($aIterator);
+        $iterator  = new \RecursiveIteratorIterator($aIterator);
 
         while ($iterator->valid()) {
             $iterator->current();
