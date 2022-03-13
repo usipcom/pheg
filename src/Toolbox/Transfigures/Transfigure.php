@@ -19,7 +19,6 @@ final class Transfigure {
 
     private Validators $validators;
     private Serialize  $serialize;
-    private Xml2Array  $xml2Array;
     private            $resource;
 
     private const      UNKNOWN_DATA_TYPE_MSG = 'Unknown data type';
@@ -29,17 +28,16 @@ final class Transfigure {
     {
         $this->validators = Validators::invoke();
         $this->serialize  = new Serialize;
-        $this->xml2Array  = new Xml2Array;
     }
     
-    public function arrayToXml(): ArrayToXml
+    public function arrayToXml(array $config = ArrayToXmlConfig::DEFAULTS): ArrayToXml
     {
-        return new ArrayToXml;
+        return new ArrayToXml($config);
     }
 
-    public function xml2Array(): Xml2Array
+    public function xml2Array(array $config = XmlToArrayConfig::DEFAULTS): Xml2Array
     {
-        return new Xml2Array;
+        return new Xml2Array($config);
     }
 
     public function xmlResponse(array $array): XmlResponse
