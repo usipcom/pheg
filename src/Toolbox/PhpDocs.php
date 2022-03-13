@@ -9,12 +9,7 @@ namespace Simtabi\Pheg\Toolbox;
 final class PhpDocs
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Simple parse of PHPDocs.

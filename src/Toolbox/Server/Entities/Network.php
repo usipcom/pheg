@@ -1,16 +1,11 @@
 <?php
 
-namespace Simtabi\Pheg\Toolbox\Server;
+namespace Simtabi\Pheg\Toolbox\Server\Entities;
 
 final class Network
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function isConnected($host = 'www.google.com')
     {

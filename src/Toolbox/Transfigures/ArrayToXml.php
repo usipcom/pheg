@@ -32,17 +32,12 @@ final class ArrayToXml
 
     private ArrayToXmlConfig $config;
 
-    private function __construct(array $config)
+    public function __construct(array $config)
     {
         // string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false
         $this->config            = ArrayToXmlConfig::fromArray($config);
         $this->xml               = new DomDocument($this->config->getVersion(), $this->config->getEncoding());
         $this->xml->formatOutput = $this->config->isFormatOutput();
-    }
-
-    public static function invoke(array $config = []): self
-    {
-        return new self($config);
     }
 
     public function buildXml(array $data): DOMDocument

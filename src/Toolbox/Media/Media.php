@@ -10,29 +10,24 @@ use Simtabi\Pheg\Toolbox\Media\File\File;
 use Simtabi\Pheg\Toolbox\Media\Image\ImageHandler;
 use Simtabi\Pheg\Toolbox\Media\Image\ImageManipulator;
 
-class Media
+final class Media
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function file(string $path, string $mode): File
     {
-        return File::invoke($path, $mode);
+        return new File($path, $mode);
     }
 
     public function imageHandler(): ImageHandler
     {
-        return ImageHandler::invoke();
+        return new ImageHandler;
     }
 
     public function imageManipulator($filename = null, bool $strict = false): ImageManipulator
     {
-        return ImageManipulator::invoke($filename, $strict);
+        return new ImageManipulator($filename, $strict);
     }
 
     public function exifInfo($imagePath): bool|ExifData
@@ -46,6 +41,6 @@ class Media
 
     public function mediaEmbed(): Embed
     {
-        return Embed::invoke();
+        return new Embed;
     }
 }

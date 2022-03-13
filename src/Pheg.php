@@ -16,6 +16,7 @@ use Simtabi\Pheg\Toolbox\CopyrightText;
 use Simtabi\Pheg\Toolbox\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
+use Simtabi\Pheg\Toolbox\Distance\Calculate;
 use Simtabi\Pheg\Toolbox\Helpers;
 use Simtabi\Pheg\Toolbox\Time\Time;
 use Simtabi\Pheg\Toolbox\Email;
@@ -34,11 +35,9 @@ use Simtabi\Pheg\Toolbox\PhoneNumber;
 use Simtabi\Pheg\Toolbox\PhpDocs;
 use Simtabi\Pheg\Toolbox\Request;
 use Simtabi\Pheg\Toolbox\Sanitize;
-use Simtabi\Pheg\Toolbox\SEO;
 use Simtabi\Pheg\Toolbox\Serialize;
 use Simtabi\Pheg\Toolbox\Server\Server;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
-use Simtabi\Pheg\Toolbox\SocialMedia;
 use Simtabi\Pheg\Toolbox\SqlHandler;
 use Simtabi\Pheg\Toolbox\Stats;
 use Simtabi\Pheg\Toolbox\String\Str;
@@ -48,7 +47,6 @@ use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Simtabi\Pheg\Toolbox\Url;
 use Simtabi\Pheg\Toolbox\Uuid;
 use Simtabi\Pheg\Toolbox\Vars;
-use Simtabi\Pheg\Toolbox\WebServices;
 use Simtabi\Pheg\Toolbox\Xml;
 
 class Pheg
@@ -88,37 +86,42 @@ class Pheg
 
     public function colors(): Colors
     {
-        return Colors::invoke();
+        return new Colors();
     }
 
-    public function countries(): Countries
+    public function countries(?string $basePath = null): Countries
     {
-        return Countries::invoke();
+        return new Countries($basePath);
     }
 
     public function dataFactory(): DataFactory
     {
-        return DataFactory::invoke();
+        return new DataFactory();
+    }
+
+    public function calculator(): Calculate
+    {
+        return new Calculate();
     }
 
     public function json(): JSON
     {
-        return JSON::invoke();
+        return new JSON();
     }
 
     public function media(): Media
     {
-        return Media::invoke();
+        return new Media();
     }
 
     public function server(): Server
     {
-        return Server::invoke();
+        return new Server();
     }
 
     public function transfigure(): Transfigure
     {
-        return Transfigure::invoke();
+        return new Transfigure();
     }
 
 
@@ -126,200 +129,185 @@ class Pheg
 
     public function fileSystem(): FileSystem
     {
-        return FileSystem::invoke();
+        return new FileSystem;
     }
 
 
 
     public function arr(): Arr
     {
-        return Arr::invoke();
+        return new Arr;
     }
 
     public function asset(): Asset
     {
-        return Asset::invoke();
+        return new Asset;
     }
 
     public function avatar(): Avatar
     {
-        return Avatar::invoke();
+        return new Avatar;
     }
 
     public function base64(): Base64
     {
-        return Base64::invoke();
+        return new Base64;
     }
 
     public function base64Uid(): Base64Uid
     {
-        return Base64Uid::invoke();
+        return new Base64Uid;
     }
 
-    public function breadcrumbs(): Breadcrumbs
+    public function breadcrumbs(?string $separator = '>'): Breadcrumbs
     {
-        return Breadcrumbs::invoke();
+        return new Breadcrumbs($separator);
     }
 
     public function cli(): Cli
     {
-        return Cli::invoke();
+        return new Cli;
     }
 
     public function copyrightText(): CopyrightText
     {
-        return CopyrightText::invoke();
+        return new CopyrightText;
     }
 
     public function csvParser(): CsvParser
     {
-        return CsvParser::invoke();
+        return new CsvParser;
     }
 
     public function email(): Email
     {
-        return Email::invoke();
+        return new Email;
     }
 
     public function env(): Env
     {
-        return Env::invoke();
+        return new Env;
     }
 
     public function filter(): Filter
     {
-        return Filter::invoke();
+        return new Filter();
     }
 
     public function html(): Html
     {
-        return Html::invoke();
+        return new Html;
     }
 
     public function helpers(): Helpers
     {
-        return Helpers::invoke();
+        return new Helpers;
     }
 
     public function http(): Http
     {
-        return Http::invoke();
+        return new Http;
     }
 
     public function readable(): Readable
     {
-        return Readable::invoke();
+        return new Readable;
     }
 
     public function input(): Input
     {
-        return Input::invoke();
+        return new Input;
     }
 
 
     public function name(): Name
     {
-        return Name::invoke();
+        return new Name;
     }
 
     public function password(): Password
     {
-        return Password::invoke();
+        return new Password;
     }
 
     public function phoneNumber(): PhoneNumber
     {
-        return PhoneNumber::invoke();
+        return new PhoneNumber;
     }
 
     public function phpDocs(): PhpDocs
     {
-        return PhpDocs::invoke();
+        return new PhpDocs;
     }
 
     public function request(): Request
     {
-        return Request::invoke();
+        return new Request;
     }
 
     public function sanitize(): Sanitize
     {
-        return Sanitize::invoke();
-    }
-
-    public function seo(): SEO
-    {
-        return SEO::invoke();
+        return new Sanitize;
     }
 
     public function serialize(): Serialize
     {
-        return Serialize::invoke();
+        return new Serialize;
     }
 
     public function simpleTimer(): SimpleTimer
     {
-        return SimpleTimer::invoke();
-    }
-
-    public function socialMedia(): SocialMedia
-    {
-        return SocialMedia::invoke();
+        return new SimpleTimer;
     }
 
     public function sqlHandler(): SqlHandler
     {
-        return SqlHandler::invoke();
+        return new SqlHandler;
     }
 
     public function stats(): Stats
     {
-        return Stats::invoke();
+        return new Stats;
     }
 
     public function str(): Str
     {
-        return Str::invoke();
+        return new Str;
     }
 
     public function system(): System
     {
-        return System::invoke();
+        return new System;
     }
 
     public function time(): Time
     {
-        return Time::invoke();
+        return new Time;
     }
 
     public function timer(): Timer
     {
-        return Timer::invoke();
+        return new Timer;
     }
 
     public function url(): Url
     {
-        return Url::invoke();
+        return new Url;
     }
 
     public function uuid(): Uuid
     {
-        return Uuid::invoke();
+        return new Uuid;
     }
 
     public function vars(): Vars
     {
-        return Vars::invoke();
-    }
-
-    public function webServices(): WebServices
-    {
-        return WebServices::invoke();
+        return new Vars;
     }
 
     public function xml(): Xml
     {
-        return Xml::invoke();
+        return (new Xml());
     }
 
 }

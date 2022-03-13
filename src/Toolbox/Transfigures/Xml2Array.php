@@ -56,14 +56,9 @@ final class Xml2Array
     /** @var array<string, string|int> The working list of XML namespaces */
     private array             $namespaces = [];
 
-    private function __construct(array $config)
+    public function __construct(array $config)
     {
         $this->config = XmlToArrayConfig::fromArray($config);
-    }
-
-    public static function invoke(array $config = []): self
-    {
-        return new self($config);
     }
 
     /**

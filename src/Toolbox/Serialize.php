@@ -9,12 +9,7 @@ namespace Simtabi\Pheg\Toolbox;
 final class Serialize
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Check value to find if it was serialized.

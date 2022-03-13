@@ -94,11 +94,11 @@ final class ImageManipulator
     public function __construct($filename = null, bool $strict = false)
     {
 
-        $this->handler    = ImageHandler::invoke();
-        $this->fileSystem = FileSystem::invoke();
-        $this->filter     = VarFilter::invoke();
-        $this->system     = System::invoke();
-        $this->url        = Url::invoke();
+        $this->handler    = new ImageHandler;
+        $this->fileSystem = new FileSystem;
+        $this->filter     = new VarFilter;
+        $this->system     = new System;
+        $this->url        = new Url;
         $this->validators = Validators::invoke();
 
         $this->handler->checkGD();

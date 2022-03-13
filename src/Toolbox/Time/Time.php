@@ -26,14 +26,9 @@ final class Time
     
     private Validators $validators;
 
-    private function __construct()
+    public function __construct()
     {
         $this->validators = Validators::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
     }
 
     public function period($startDateTime = null, $endDateTime = null): Period
@@ -259,7 +254,7 @@ final class Time
             $string = $diff->format("%y years %a months %d days %h hours %i minutes %s seconds");
         }
 
-        return Transfigure::invoke()->toObject(array(
+        return (new Transfigure())->toObject(array(
             'years' => [
                 'digits' => $_y,
                 'string' => $y_s,

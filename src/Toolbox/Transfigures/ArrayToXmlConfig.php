@@ -25,7 +25,7 @@ final class ArrayToXmlConfig
 
     private bool $formatOutput;
 
-    private function __construct(string $version, string $encoding, string $attributesKey, string $cdataKey, string $valueKey, bool $formatOutput)
+    public function __construct(string $version, string $encoding, string $attributesKey, string $cdataKey, string $valueKey, bool $formatOutput)
     {
         $this->version       = $version;
         $this->encoding      = $encoding;
@@ -33,11 +33,6 @@ final class ArrayToXmlConfig
         $this->cdataKey      = $cdataKey;
         $this->valueKey      = $valueKey;
         $this->formatOutput  = $formatOutput;
-    }
-
-    public function invoke(string $version, string $encoding, string $attributesKey, string $cdataKey, string $valueKey, bool $formatOutput)
-    {
-        return new self($version, $encoding, $attributesKey, $cdataKey, $valueKey, $formatOutput);
     }
 
     public static function fromArray(array $configData = []): self

@@ -19,12 +19,7 @@ final class Readable
     private static $fileSizeParser;
     private static $errors = [];
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * @throws BaseException

@@ -6,10 +6,6 @@ use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngine;
 
 class ArrayQuery extends QueryEngine
 {
-    /**
-     * @var null|QueryEngine
-     */
-    protected static $instance = null;
 
     public function __construct($data = [])
     {
@@ -18,15 +14,6 @@ class ArrayQuery extends QueryEngine
         } else {
             parent::__construct($data);
         }
-    }
-
-    public static function getInstance()
-    {
-        if (is_null(static::$instance)) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
     }
 
     public function readPath($file)

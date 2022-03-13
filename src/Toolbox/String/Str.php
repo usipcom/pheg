@@ -3,7 +3,10 @@
 namespace Simtabi\Pheg\Toolbox\String;
 
 use Exception;
+use Simtabi\Pheg\Toolbox\Filter;
+use Simtabi\Pheg\Toolbox\Sanitize;
 use Simtabi\Pheg\Toolbox\String\Compare\Compare;
+use Simtabi\Pheg\Toolbox\System;
 use function mb_strtolower;
 use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
@@ -30,14 +33,9 @@ final class Str
 
     private Arr $arr;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->arr = Arr::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->arr = new Arr;
     }
 
     public function wordCountUtf8($sentence)
@@ -422,7 +420,7 @@ final class Str
     private function isOverload(): bool
     {
         if (defined('MB_OVERLOAD_STRING') && $this->isMBString()) {
-            return (bool)(Filter::invoke()->int(System::invoke()->iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
+            return (bool)((new Filter())->int((new System())->iniGet('mbstring.func_overload')) & MB_OVERLOAD_STRING);
         }
 
         return false;
@@ -680,7 +678,7 @@ final class Str
     public function kebabCase($string): string
     {
         // Replace invalid characters with a space.
-        $string = Sanitize::invoke()->filterString($string);
+        $string = (new Sanitize())->filterString($string);
         $string = trim($string);
         $string = strtolower($string);
         return str_replace(' ', '-', $string);
@@ -804,7 +802,7 @@ final class Str
      */
     public function escXml(string $string): string
     {
-        return Xml::invoke()->escape($string);
+        return (new Xml())->escape($string);
     }
 
     /**

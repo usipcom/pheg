@@ -8,7 +8,6 @@ use Simtabi\Pheg\Toolbox\Arr\Query\ArrayQuery;
 use Simtabi\Pheg\Toolbox\Arr\Query\QueryEngineHandler;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use stdClass;
-use function Simtabi\Laranail\Providers\Extra\arrayKeyValuesAreSame;
 
 /**
  * Class Arr
@@ -19,24 +18,20 @@ use function Simtabi\Laranail\Providers\Extra\arrayKeyValuesAreSame;
 final class Arr
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function collection(array $data): Collection
     {
         return new Collection($data);
     }
 
-    public function query(string|array $data): QueryEngineHandler|ArrayQuery|null|false
+    public function query(string|array $data): Query\QueryEngine|bool
     {
 
         if (is_array($data)) {
             // from php array
             $arr = ArrayQuery::getInstance();
+
             return $arr->collect($data);
         }
 
@@ -547,7 +542,7 @@ final class Arr
     public function implode(string $glue, array $array): string
     {
         $result = '';
-        $str    = Str::invoke();
+        $str    = new Str;
 
         foreach ($array as $item) {
             if (is_array($item)) {
@@ -883,7 +878,7 @@ final class Arr
 
     public function count($data, $associative = false): int
     {
-        return count(Transfigure::invoke()->toArray($data));
+        return count((new Transfigure())->toArray($data));
     }
 
 

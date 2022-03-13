@@ -19,13 +19,7 @@ final class Uuid
      */
     protected  $uuidFactory;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
-
+    public function __construct() {}
 
     /**
      * Generate a UUID (version 1,3,4 & 5).

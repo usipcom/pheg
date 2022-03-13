@@ -9,12 +9,7 @@ use stdClass;
 final class Name
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function make($object, $substitute = false): bool|string|null
     {
@@ -61,7 +56,7 @@ final class Name
 
     public function makeInitials(string $string): string
     {
-        return Str::invoke()->generateInitials($string);
+        return (new Str)->generateInitials($string);
     }
 
     public function makeRandomUsername(string $firstName = "John", string $lastName = "Doe", int $randNo = 1000): string

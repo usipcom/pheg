@@ -6,12 +6,7 @@ final class CsvParser
 {
     public const LENGTH_LIMIT = 10000000;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Simple parser for CSV files

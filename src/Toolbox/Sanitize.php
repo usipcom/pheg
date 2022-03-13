@@ -9,14 +9,9 @@ final class Sanitize
 
     private Arr $arr;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->arr = Arr::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->arr = new Arr;
     }
 
     /**

@@ -9,12 +9,7 @@ use Simtabi\Pheg\Toolbox\String\Str;
 final class Email
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Create random email
@@ -25,7 +20,7 @@ final class Email
      */
     public function random(int $userNameLength = 10): string
     {
-        return Str::invoke()->random($userNameLength) . '@' . Str::invoke()->random(5) . '.com';
+        return (new Str)->random($userNameLength) . '@' . (new Str)->random(5) . '.com';
     }
 
     /**
@@ -149,12 +144,12 @@ final class Email
         $hash  = md5(strtolower(trim($email)));
         $parts = ['scheme' => 'http', 'host' => 'www.gravatar.com'];
 
-        if (Url::invoke()->isHttps()) {
+        if (new Url->isHttps()) {
             $parts = ['scheme' => 'https', 'host' => 'secure.gravatar.com'];
         }
 
         // Get size
-        $size = Numbers::invoke()->limit(Filter::invoke()->int($size), 32, 2048);
+        $size = Numbers::invoke()->limit((new Filter())->int($size), 32, 2048);
 
         // Prepare default images
         $defaultImage = trim($defaultImage);
@@ -174,7 +169,7 @@ final class Email
             'd' => $defaultImage,
         ];
 
-        return Url::invoke()->create($parts);
+        return new Url->create($parts);
     }
 
     /**
@@ -221,7 +216,7 @@ final class Email
         $parts = explode('@', $email);
         $domain = array_pop($parts);
 
-        if (System::invoke()->isFunc('idn_to_utf8')) {
+        if (new System->isFunc('idn_to_utf8')) {
             return (string)idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
 

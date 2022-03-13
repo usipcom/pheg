@@ -3,6 +3,11 @@
 namespace Simtabi\Pheg\Toolbox\Colors\Helpers;
 
 use Exception;
+use Simtabi\Pheg\Toolbox\Colors\Types\Hex;
+use Simtabi\Pheg\Toolbox\Colors\Types\Hexa;
+use Simtabi\Pheg\Toolbox\Colors\Types\Rgb;
+use Simtabi\Pheg\Toolbox\Colors\Types\Rgba;
+use Simtabi\Pheg\Toolbox\Colors\Types\Hsla;
 
 class Factory
 {

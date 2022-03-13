@@ -34,15 +34,10 @@ final class ImageHandler
     private Validators $validators;
     private Vars       $vars;
 
-    private function __construct()
+    public function __construct()
     {
         $this->validators = Validators::invoke();
-        $this->vars       = Vars::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->vars       = new Vars;
     }
 
     /**
@@ -247,7 +242,7 @@ final class ImageHandler
             $opacity *= 100;
         }
 
-        $opacity = Filter::invoke()->int($opacity);
+        $opacity = (new Filter())->int($opacity);
         $opacity = Numbers::limit($opacity, 0, 100);
 
         return $opacity;

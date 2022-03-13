@@ -34,11 +34,6 @@ class Color
         }
     }
 
-    public static function invoke($intColor = null): self
-    {
-        return new self($intColor);
-    }
-
     /**
      * Init color from hex value
      *

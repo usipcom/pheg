@@ -12,12 +12,7 @@ use Simtabi\Pheg\Toolbox\Data\Types\Yml;
 final class DataFactory
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * @param mixed $data

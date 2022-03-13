@@ -14,14 +14,9 @@ final class Http
 
     private System $system;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->system = System::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->system = new System;
     }
 
     /**
@@ -31,6 +26,7 @@ final class Http
      * @param string $filename The name of the filename to display to browsers
      * @return bool
      * @codeCoverageIgnore
+     * @throws Exception
      */
     public function download(string $filename): bool
     {

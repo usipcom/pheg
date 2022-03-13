@@ -5,12 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 final class Request
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Sorts all uploaded images to a nice array, sorted by their names.

@@ -18,30 +18,29 @@ use Simtabi\Pheg\Toolbox\Colors\Helpers\Picker;
 class Colors
 {
 
-    public static function invoke(): self
+    public function __construct()
     {
-        return new self();
     }
 
     public function getInterpreter(): Interpreter
     {
-        return Interpreter::invoke();
+        return new Interpreter;
     }
 
     public function getPalettes(): Palettes
     {
-        return Palettes::invoke();
+        return new Palettes;
     }
 
     public function getPicker(array $palette = []): Picker
     {
-        return Picker::invoke($palette);
+        return new Picker($palette);
     }
 
     public function getColor($intColor = null): Color
     {
         // @todo refactor this, and replace with the below
-        return Color::invoke($intColor);
+        return new Color($intColor);
     }
 
 

@@ -33,7 +33,7 @@ final class Text
 
     private function __construct()
     {
-        $this->imageHandler = ImageHandler::invoke();
+        $this->imageHandler = new ImageHandler;
     }
 
     public static function invoke(): self
@@ -193,7 +193,7 @@ final class Text
     {
 
         // Determine textbox size
-        $fontPath   = FileSystem::invoke()->clean($fontFile);
+        $fontPath   = (new FileSystem())->clean($fontFile);
 
         if (!Validators::invoke()->file()->isFile($fontPath)) {
             throw new ImageException("Unable to load font: {$fontFile}");

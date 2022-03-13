@@ -18,15 +18,10 @@ final class Cli
     private System $system;
     private Env    $env;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->system = System::invoke();
-        $this->env    = Env::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->system = new System;
+        $this->env    = new Env;
     }
 
     /**

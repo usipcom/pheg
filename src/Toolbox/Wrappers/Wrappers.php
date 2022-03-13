@@ -4,14 +4,9 @@ namespace Simtabi\Pheg\Toolbox\Wrappers;
 
 use Simtabi\Pheg\Toolbox\Wrappers\Guzzle\GuzzleApiCallBuilder;
 
-class Wrappers
+final class Wrappers
 {
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public static function guzzle(string $url, string $uri, string $method = GuzzleApiCallBuilder::HTTP_POST): GuzzleApiCallBuilder
     {

@@ -10,12 +10,7 @@ final class Env
     public const VAR_FLOAT  = 8;
     public const VAR_STRING = 16;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Returns an environment variable.
@@ -51,7 +46,7 @@ final class Env
      */
     public function convert(?string $value, int $options = self::VAR_STRING)
     {
-        $filter       = Filter::invoke();
+        $filter       = new Filter();
         $cleanedValue = trim($filter->stripQuotes((string)$value));
 
         if ($options & self::VAR_NULL) {

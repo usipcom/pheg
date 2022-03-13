@@ -5,12 +5,7 @@ namespace Simtabi\Pheg\Toolbox\HTML;
 final class Form
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function data2selectbox(array|object $data, ?string $placeholderText = "Select something", string $nothingToSelectText = "Nothing to Select"): array
     {

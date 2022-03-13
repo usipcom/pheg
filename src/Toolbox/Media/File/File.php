@@ -36,7 +36,7 @@ class File extends FileStream
      *
      * @throws ResourceException If the file could not be opened.
      */
-    private function __construct($path, $mode)
+    public function __construct($path, string $mode)
     {
         $stream = fopen($path, $mode);
 
@@ -48,11 +48,6 @@ class File extends FileStream
 
         $this->mode = $mode;
         $this->path = $path;
-    }
-
-    public static function invoke(string $path, string $mode): self
-    {
-        return new self($path, $mode);
     }
 
     /**

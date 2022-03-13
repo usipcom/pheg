@@ -15,14 +15,9 @@ final class System
 
     private FileSystem $fileSystem;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->fileSystem = FileSystem::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->fileSystem = new FileSystem;
     }
 
     /**
@@ -94,7 +89,7 @@ final class System
     public function iniSet(string $phpIniKey, string $newValue): bool
     {
         if ($this->isFunc('ini_set')) {
-            return Filter::invoke()->bool(ini_set($phpIniKey, $newValue));
+            return (new Filter())->bool(ini_set($phpIniKey, $newValue));
         }
 
         return false;
@@ -222,7 +217,7 @@ final class System
      */
     public function getBinary(): string
     {
-        if ($customPath = Env::invoke()->string('PHP_BINARY_CUSTOM')) {
+        if ($customPath = (new Env)->string('PHP_BINARY_CUSTOM')) {
             return $customPath;
         }
 

@@ -56,12 +56,7 @@ final class HtmlCleaner
      */
     protected $ownerDocument;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Gets the owner document for current node

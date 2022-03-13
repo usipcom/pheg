@@ -44,7 +44,7 @@ final class Countries
     private array  $loaded    = [];
     private array  $loadFrom  = [];
 
-    private function __construct(?string $basePath) {
+    public function __construct(?string $basePath = null) {
         if (!empty($basePath) && is_string($basePath)) {
             $this->basePath = $basePath;
         }else{
@@ -57,11 +57,6 @@ final class Countries
                 CoreTools::PHEG_DIR_PATH.'/data/currency'
             ],
         ])->initialize();
-    }
-
-    public static function invoke(string $basePath = ''): self
-    {
-        return new self($basePath);
     }
 
     private function initialize(){
@@ -84,7 +79,7 @@ final class Countries
                     ];
                     $this->setKeys($_name);
                     $this->setLoaded($id);
-                    $data[$_name]           = Json2File::invoke($fileInfo->getPathname())->fileToArray();
+                    $data[$_name]           = (new Json2File($fileInfo->getPathname()))->fileToArray();
                 }
             }
 

@@ -5,12 +5,8 @@ namespace Simtabi\Pheg\Toolbox;
 final class Avatar
 {
 
-    private function __construct() {}
+    public function __construct() {}
 
-    public static function invoke(): self
-    {
-        return new self();
-    }
 
     /**
      * Get Gravatar image by email.

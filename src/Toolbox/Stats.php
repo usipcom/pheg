@@ -13,12 +13,8 @@ use Exception;
 final class Stats
 {
 
-    private function __construct() {}
+    public function __construct() {}
 
-    public static function invoke(): self
-    {
-        return new self();
-    }
 
     /**
      * Returns the standard deviation of a given population.

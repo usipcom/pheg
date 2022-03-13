@@ -18,11 +18,8 @@ class GeoLocation
     /** @var Altitude */
     private $altitude;
 
-    private function __construct(
-        Latitude $latitude,
-        Longitude $longitude,
-        Altitude $altitude
-    ) {
+    public function __construct(Latitude $latitude, Longitude $longitude, Altitude $altitude)
+    {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
         $this->altitude = $altitude;

@@ -8,14 +8,9 @@ class Json2File {
 
     protected ?string $file = null;
 
-    private function __construct(string $file)
+    public function __construct(string $file)
     {
         $this->file = $file;
-    }
-
-    public static function invoke(string $file): self
-    {
-        return new self($file);
     }
 
     // write array data to file by appending to previous contents

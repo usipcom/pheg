@@ -7,12 +7,7 @@ use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 final class SqlHandler
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Splits a string of multiple queries into an array of individual queries.
@@ -143,7 +138,7 @@ final class SqlHandler
             $code       = $matchTwo[1];
         }
 
-        return Transfigure::invoke()->toObject([
+        return (new Transfigure())->toObject([
             'message' => $pdoMessage,
             'state'   => $sqlState,
             'code'    => !empty($code) ? $code : 0,

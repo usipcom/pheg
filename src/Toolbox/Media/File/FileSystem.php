@@ -44,12 +44,7 @@ final class FileSystem
     public const PERM_ALL_EXEC          = 0x0001;
     public const PERM_ALL_EXEC_STICKY   = 0x0200;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Returns the file permissions as a nice string, like -rw-r--r-- or false if the file is not found.
@@ -334,7 +329,7 @@ final class FileSystem
         }
 
         // We're on Windows
-        if (System::invoke()->isWin()) {
+        if (new System->isWin()) {
             return true;
         }
 
@@ -527,7 +522,7 @@ final class FileSystem
         $cleanedPath = $this->clean((string)$this->real($path), $forceDS);
 
         // Cleanup root path
-        $rootPath = $rootPath ?: System::invoke()->getDocRoot();
+        $rootPath = $rootPath ?: new System->getDocRoot();
         $rootPath = $this->clean((string)$this->real((string)$rootPath), $forceDS);
 
         // Remove root part
@@ -657,7 +652,7 @@ final class FileSystem
             }
         }
 
-        return Transfigure::invoke()->toObject([
+        return (new Transfigure())->toObject([
             'list'  => $files,
             'one'   => $files[array_rand($files)], // randomize file output
         ]);

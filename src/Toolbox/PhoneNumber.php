@@ -17,14 +17,9 @@ final class PhoneNumber
 
     private Validators $validators;
 
-    private function __construct()
+    public function __construct()
     {
         $this->validators = Validators::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
     }
 
     /**

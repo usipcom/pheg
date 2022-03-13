@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Server;
+namespace Simtabi\Pheg\Toolbox\Server\Entities;
 
 use DateTime;
 use DateTimeZone;
@@ -27,7 +27,7 @@ final class SSLToolkit
      * @param float $timeOut
      * @throws Exception
      */
-    private function __construct(array $url, string $dateFormat, string $formatString, ?string $timeZone, float $timeOut)
+    public function __construct(array $url, string $dateFormat, string $formatString, ?string $timeZone, float $timeOut)
     {
         ! empty($url) ? $this->add($url) : $this->urls = $url;
         $this->dateFormat = $dateFormat;
@@ -35,14 +35,6 @@ final class SSLToolkit
         $this->formatString = $formatString;
         $this->timeOut = $timeOut;
         $this->result = [];
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function invoke(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): self
-    {
-        return new self($url, $dateFormat, $formatString, $timeZone, $timeOut);
     }
 
     /**

@@ -40,12 +40,7 @@ class JSON implements JSONInterface
      */
     private $linter;
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * {@inheritdoc}
@@ -74,7 +69,7 @@ class JSON implements JSONInterface
     public function decodeFile($file, $associative = false, $depth = 512, $options = 0)
     {
         try {
-            return $this->decode((File::invoke($file, 'r'))->read(), $associative, $depth, $options);
+            return $this->decode((new File($file, 'r'))->read(), $associative, $depth, $options);
         } catch (Exception $exception) {
             throw new DecodeException(
                 'The JSON encoded file "%s" could not be decoded.',
@@ -94,50 +89,37 @@ class JSON implements JSONInterface
         if ($this->hasError()) {
             switch (json_last_error()) {
                 case JSON_ERROR_DEPTH:
-                    throw new EncodeDepthException(
-                        'The maximum stack depth of %d was exceeded.',
-                        $depth
-                    );
+                    throw new EncodeDepthException('The maximum stack depth of %d was exceeded.', $depth);
 
                 case JSON_ERROR_RECURSION:
-                    if (0 === ($options & JSON_PARTIAL_OUTPUT_ON_ERROR)) {
-                        throw new RecursionException(
-                            'A recursive object was found and partial output is not enabled.'
-                        );
+                    if (0 === ($options & JSON_PARTIAL_OUTPUT_ON_ERROR))
+                    {
+                        throw new RecursionException('A recursive object was found and partial output is not enabled.');
                     }
 
                     break;
 
                 case JSON_ERROR_INF_OR_NAN:
                     if (0 === ($options & JSON_PARTIAL_OUTPUT_ON_ERROR)) {
-                        throw new InfiniteOrNotANumberException(
-                            'An INF or NAN value was found an partial output is not enabled.'
-                        );
+                        throw new InfiniteOrNotANumberException('An INF or NAN value was found an partial output is not enabled.');
                     }
 
                     break;
 
                 case JSON_ERROR_UNSUPPORTED_TYPE:
                     if (0 === ($options & JSON_PARTIAL_OUTPUT_ON_ERROR)) {
-                        throw new UnsupportedTypeException(
-                            'An unsupported value type was found an partial output is not enabled.'
-                        );
+                        throw new UnsupportedTypeException('An unsupported value type was found an partial output is not enabled.');
                     }
 
                     break;
 
                 case JSON_ERROR_INVALID_PROPERTY_NAME:
-                    throw new InvalidPropertyNameException(
-                        'The value contained a property with an invalid JSON key name.'
-                    );
+                    throw new InvalidPropertyNameException('The value contained a property with an invalid JSON key name.');
 
                     break;
 
                 default:
-                    throw new UnknownException(
-                        'An unrecognized encoding error was encountered: %s',
-                        json_last_error_msg()
-                    );
+                    throw new UnknownException('An unrecognized encoding error was encountered: %s', json_last_error_msg());
             }
         }
 
@@ -150,7 +132,7 @@ class JSON implements JSONInterface
     public function encodeFile($value, $file, $options = 0, $depth = 512)
     {
         try {
-            (File::invoke($file, 'w'))->write(
+            (new File($file, 'w'))->write(
                 $this->encode($value, $options, $depth)
             );
         } catch (Exception $exception) {
@@ -181,7 +163,7 @@ class JSON implements JSONInterface
      */
     public function lintFile($file)
     {
-        $result = $this->doLint((File::invoke($file, 'r'))->read());
+        $result = $this->doLint((new File($file, 'r'))->read());
 
         if ($result instanceof ParsingException) {
             throw new LintingException(

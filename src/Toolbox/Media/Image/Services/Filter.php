@@ -25,8 +25,8 @@ final class Filter
 
     private function __construct()
     {
-        $this->imageHandler = ImageHandler::invoke();
-        $this->vars         = Vars::invoke();
+        $this->imageHandler = new ImageHandler;
+        $this->vars         = new Vars;
     }
 
     public function invoke(): self
@@ -63,7 +63,7 @@ final class Filter
      */
     public function pixelate($image, int $blockSize = 10): void
     {
-        \imagefilter($image, \IMG_FILTER_PIXELATE, VarFilter::invoke()->int($blockSize));
+        \imagefilter($image, \IMG_FILTER_PIXELATE, (new VarFilter)->int($blockSize));
     }
 
     /**

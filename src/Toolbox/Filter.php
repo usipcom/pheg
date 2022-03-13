@@ -22,15 +22,10 @@ final class Filter
     private Arr        $arr;
     private Str        $str;
 
-    private function __construct() {
+    public function __construct() {
         $this->validators = Validators::invoke();
-        $this->arr        = Arr::invoke();
-        $this->str        = Str::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+        $this->arr        = new Arr;
+        $this->str        = new Str;
     }
 
     /**
@@ -386,7 +381,7 @@ final class Filter
      */
     public function xml(string $string): string
     {
-        return Xml::invoke()->escape($string);
+        return (new Xml())->escape($string);
     }
 
     /**

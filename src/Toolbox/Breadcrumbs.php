@@ -59,7 +59,7 @@ final class Breadcrumbs
      * Breadcrumb constructor.
      * @param null|string $separator
      */
-    private function __construct(?string $separator)
+    public function __construct(?string $separator = '>')
     {
 
         $this->separator     = $separator;
@@ -71,11 +71,6 @@ final class Breadcrumbs
         $this->linkClass     = '';
         $this->links         = [];
 
-    }
-
-    public static function invoke(?string $separator = null): self
-    {
-        return new self($separator);
     }
 
     /**

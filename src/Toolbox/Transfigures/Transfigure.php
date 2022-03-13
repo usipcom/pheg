@@ -25,26 +25,21 @@ final class Transfigure {
     private const      UNKNOWN_DATA_TYPE_MSG = 'Unknown data type';
     private const      DATA_IS_EMPTY_MSG     = 'Data to be converted can not be empty';
 
-    private function __construct()
+    public function __construct()
     {
         $this->validators = Validators::invoke();
-        $this->serialize  = Serialize::invoke();
-        $this->xml2Array  = Xml2Array::invoke();
+        $this->serialize  = new Serialize;
+        $this->xml2Array  = new Xml2Array;
     }
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
-
+    
     public function arrayToXml(): ArrayToXml
     {
-        return ArrayToXml::invoke();
+        return new ArrayToXml;
     }
 
     public function xml2Array(): Xml2Array
     {
-        return Xml2Array::invoke();
+        return new Xml2Array;
     }
 
     public function xmlResponse(array $array): XmlResponse
@@ -133,12 +128,12 @@ final class Transfigure {
 
     public function arrayObject2Xml(array|object $resource, array $config = ArrayToXmlConfig::DEFAULTS): DOMDocument
     {
-        return ArrayToXml::invoke($config)->buildXml($resource);
+        return (new ArrayToXml($config))->buildXml($resource);
     }
 
     public function xmlToArray(mixed $resource, bool $fromDOM = false, array $config = XmlToArrayConfig::DEFAULTS): array|XmlResponse|string
     {
-        return Xml2Array::invoke()->convert($resource, $fromDOM, $config);
+        return (new Xml2Array($config))->convert($resource, $fromDOM, $config);
     }
 
     public function array2Object($resource): object
@@ -260,6 +255,30 @@ final class Transfigure {
             $this->validate()->transfigure()->isString($resource)     => $this->string2Object($resource),
             default                                                   => $this->array2Object($resource),
         };
+    }
+
+    public function toBool($value): bool
+    {
+        if (
+            strcasecmp($value,"false") == 0 ||
+            strcasecmp($value,"no")    == 0 ||
+            $value === '0' ||
+            $value === 0
+        ) {
+            return false;
+        }
+
+        return (bool) $value;
+    }
+
+    public function toFloat($value): float
+    {
+        return (float) str_replace(',','', $value.'');
+    }
+
+    public function toInteger($value): int
+    {
+        return (int) str_replace(',','', $value.'');
     }
 
 }

@@ -24,13 +24,7 @@ use DOMDocument;
 final class Html2Text
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
-
+    public function __construct() {}
 
     /**
      * Converts text to html

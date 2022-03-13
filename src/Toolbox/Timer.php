@@ -11,12 +11,7 @@ namespace Simtabi\Pheg\Toolbox;
 final class Timer
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Formats the elapsed time as a string.

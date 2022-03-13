@@ -9,12 +9,7 @@ use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 final class Vars
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function numberFormat($number, $decimals = 0): string
     {
@@ -142,7 +137,7 @@ final class Vars
             };
         }
 
-        return Transfigure::invoke()->toObject([
+        return (new Transfigure())->toObject([
             'string'  => !empty($ord) ? $number . $ord : null,
             'ordinal' => $ord,
             'number'  => $number,
@@ -305,7 +300,7 @@ final class Vars
      */
     public function numberEnsureRange(float $value, float $min, float $max): int
     {
-        $filter = Filter::invoke();
+        $filter = new Filter();
         return $this->numberLimitToMinMax($filter->int($value), $filter->int($min), $filter->int($max));
     }
 
@@ -332,5 +327,6 @@ final class Vars
     {
         return $number >= $from && $number <= $to;
     }
-    
+
+
 }

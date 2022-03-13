@@ -5,19 +5,10 @@ namespace Simtabi\Pheg\Toolbox\Colors\Helpers;
 class Palettes
 {
 
-    private static $instance = null;
-    private static function getInstance(): ?self
+    public function __construct()
     {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 
-    public static function invoke(): self
-    {
-        return self::getInstance();
-    }
 
     /**
      * Returns an array with the color information if the color is found
@@ -29,7 +20,7 @@ class Palettes
      */
     public function findByNameFromPalette($name, $index = null)
     {
-        $palettes = self::invoke()->getColorPalettes();
+        $palettes = (new self)->getColorPalettes();
         if ($index === null) {
             foreach ($palettes as $colorFamily => $colors) {
                 foreach ($colors as $colorName => $colorData) {

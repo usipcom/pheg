@@ -6,7 +6,6 @@ use ArrayAccess;
 use ArrayIterator;
 use Exception;
 use IteratorAggregate;
-use Exception;
 use RecursiveIterator;
 use Traversable;
 
@@ -19,14 +18,9 @@ final class XmlResponse implements IteratorAggregate, ArrayAccess
      *
      * @param array $array
      */
-    private function __construct(array $array)
+    public function __construct(array $array)
     {
         $this->array = $array;
-    }
-
-    public static function invoke(array $array): self
-    {
-        return new self($array);
     }
 
     /**

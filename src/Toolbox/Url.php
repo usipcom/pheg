@@ -41,13 +41,8 @@ final class Url
     public const PORT_HTTP          = 80;
     public const PORT_HTTPS         = 443;
 
-    private function __construct() {
-        $this->dataFactory = DataFactory::invoke();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
+    public function __construct() {
+        $this->dataFactory = new DataFactory();
     }
 
     /**
@@ -517,7 +512,7 @@ final class Url
      */
     public function pathToRel(string $path): string
     {
-        $fs       = FileSystem::invoke();
+        $fs       = new FileSystem;
         $root     = $fs->clean($_SERVER['DOCUMENT_ROOT'] ?? null);
         $path     = $fs->clean($path);
 

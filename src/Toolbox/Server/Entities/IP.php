@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Server;
+namespace Simtabi\Pheg\Toolbox\Server\Entities;
 
 /**
  * Class IP
@@ -11,12 +11,7 @@ namespace Simtabi\Pheg\Toolbox\Server;
 final class IP
 {
 
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     /**
      * Returns the IP address of the client.

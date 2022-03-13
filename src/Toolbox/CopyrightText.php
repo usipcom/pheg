@@ -28,14 +28,9 @@ final class CopyrightText
     private $type              = 'combined';
     private $build             = null;
 
-    private function __construct()
+    public function __construct()
     {
         $this->dateTime = new DateTime();
-    }
-
-    public static function invoke(): self
-    {
-        return new self();
     }
 
     /**
@@ -359,7 +354,7 @@ final class CopyrightText
 
         // construct
         $htmlText    = $symbol . '&nbsp;' . $year . '&nbsp;' . $companyName . '&nbsp;&centerdot;&nbsp;' . $declaration;
-        return Transfigure::invoke()->toObject([
+        return (new Transfigure())->toObject([
             'html' => html_entity_decode($htmlText),
             'text' => [
                 'declaration' => $declaration,

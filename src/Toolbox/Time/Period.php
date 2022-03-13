@@ -59,7 +59,7 @@ class Period
         }
 
         $this->startDateTime = $startDateTime;
-        $this->endDateTime = $endDateTime;
+        $this->endDateTime   = $endDateTime;
     }
 
     /**

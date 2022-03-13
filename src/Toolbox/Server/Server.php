@@ -2,33 +2,33 @@
 
 namespace Simtabi\Pheg\Toolbox\Server;
 
+use Simtabi\Pheg\Toolbox\Server\Entities\Intel;
+use Simtabi\Pheg\Toolbox\Server\Entities\IP;
+use Simtabi\Pheg\Toolbox\Server\Entities\Network;
+use Simtabi\Pheg\Toolbox\Server\Entities\SSLToolkit;
+
 class Server
 {
-    private function __construct() {}
-
-    public static function invoke(): self
-    {
-        return new self();
-    }
+    public function __construct() {}
 
     public function intel(): Intel
     {
-        return Intel::invoke();
+        return new Intel();
     }
 
     public function ip(): IP
     {
-        return IP::invoke();
+        return new IP;
     }
 
     public function network(): Network
     {
-        return Network::invoke();
+        return new Network;
     }
 
     public function sslToolkit(array $url = [], string $dateFormat = 'U', string $formatString = 'Y-m-d\TH:i:s\Z', ?string $timeZone = null, float $timeOut = 30): SSLToolkit
     {
-        return SSLToolkit::invoke($url, $dateFormat, $formatString, $timeZone, $timeOut);
+        return new SSLToolkit($url, $dateFormat, $formatString, $timeZone, $timeOut);
     }
 
 }

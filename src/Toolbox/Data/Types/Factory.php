@@ -20,9 +20,9 @@ class Factory extends ArrayObject
      * Class constructor
      * @param array|string|false $data The data array
      */
-    protected function __construct(array|string|false|null $data = [])
+    public function __construct(array|string|false|null $data = [])
     {
-        $this->filter = Filter::invoke();
+        $this->filter = new Filter();
 
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
 
