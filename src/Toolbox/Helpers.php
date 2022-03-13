@@ -19,8 +19,15 @@ class Helpers
         $format  = !$format ? '' : '<br>';
         $object  = $addressObject;
 
+        if (isset($object->address_line_i))
+        {
+            $address = $object->address_line_i;
+        }else{
+            $address = $object->address;
+        }
+
         // build address strings
-        $address = !empty($object->address)  ? $object->address . ", $format"                               : '';
+        $address = !empty($address)          ? $address . ", $format"                               : '';
         $street  = !empty($object->street)   ? $object->street . ", $format"                                : '';
         $city    = !empty($object->city)     ? ucwords(strtolower($object->city)) . ", $format"             : '';
         $state   = !empty($object->state)    ? ucwords(strtolower($object->state)) . " "                    : '';
