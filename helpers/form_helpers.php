@@ -2,8 +2,8 @@
 
 use Simtabi\Pheg\Pheg;
 
-if (!function_exists('create_selectable_array')) {
-    function create_selectable_array($array, $name_column = 'name', $withNull = false, $select_data_text = 'Select something', $empty_data_text = 'Select something')
+if (!function_exists('array2selectable')) {
+    function array2selectable($array, $name_column = 'name', $withNull = false, $select_data_text = 'Select something', $empty_data_text = 'Select something')
     {
         if (! $array) {
             return ['' =>  $empty_data_text];

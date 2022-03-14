@@ -23,7 +23,7 @@ final class Time
 
     public const SQL_FORMAT = 'Y-m-d H:i:s';
     public const SQL_NULL   = '0000-00-00 00:00:00';
-    
+
     private Validators $validators;
 
     public function __construct()
@@ -398,7 +398,7 @@ final class Time
     public function convertToTimestamp($time = null, bool $currentIsDefault = true): int
     {
         if ($time instanceof DateTime) {
-            return (int)$time->format('U');
+            return (int) $time->format('U');
         }
 
         if (null !== $time) {
@@ -475,13 +475,19 @@ final class Time
     public function convertToSqlFormat(string $time, $forSql = true, $readFormat = self::SQL_FORMAT, $storeFormat = self::SQL_FORMAT): string
     {
 
-        $time = str_replace( "/", "-", trim($time));
-        $time = str_replace( ",", "-", $time);
-        $time = str_replace( ".", "-", $time);
-        $time = strtotime( $time );
+        $strReplace = function ($char, $time) {
+
+            $time = str_replace( "/", $char, trim($time));
+            $time = str_replace( ",", $char, $time);
+            $time = str_replace( ".", $char, $time);
+
+            return $time;
+        };
+
+        $time = Carbon::parse($strReplace('/', $time))->format($readFormat);
 
         if ($forSql) {
-            return $this->factory($time)->format($storeFormat);
+            return $this->factory($strReplace('-', $time))->format($storeFormat);
         }
 
         return $this->factory($time)->format($readFormat);
