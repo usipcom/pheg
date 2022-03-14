@@ -472,8 +472,13 @@ final class Time
         return ($date instanceof DateTime) ? $date->format($toFormat) : '';
     }
 
-    public function convertToSqlFormat(string $time, $forSql = true, $readFormat = self::SQL_FORMAT, $storeFormat = self::SQL_FORMAT): string
+    public function convertToSqlFormat(?string $time, $forSql = true, $readFormat = self::SQL_FORMAT, $storeFormat = self::SQL_FORMAT): string|null
     {
+
+        if (empty($time))
+        {
+            return  null;
+        }
 
         $strReplace = function ($char, $time) {
 
