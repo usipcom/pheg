@@ -64,7 +64,18 @@
         "voku/stringy": "^6.5.2"
     },
     "require-dev": {
+        "ext-bcmath": "*",
+        "symfony/translation": "^6.0.6",
+        "symfony/yaml": "^6.0.3",
+        "aeon-php/calendar": "^1.0.4",
+        "thunderer/shortcode": "^0.7.5",
+        "phpunit/phpunit": "9.5.19"
     },
+
+    "suggest": {
+        "ext-bcmath": "Compare time units with high precision"
+    },
+
     "autoload": {
         "psr-4": {
             "Simtabi\\Pheg\\": "src/"

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Humanizer;
 
 use gugglegum\MemorySize\Exception;
 use gugglegum\MemorySize\Formatter;
@@ -12,7 +12,7 @@ use NumberFormatter;
 use TypeError;
 use Exception as BaseException;
 
-final class Readable
+final class Humanizer
 {
 
     private static $fileSizeFormatter;
@@ -20,6 +20,26 @@ final class Readable
     private static $errors = [];
 
     public function __construct() {}
+
+    public function collection(): CollectionHumanizer
+    {
+        return new CollectionHumanizer();
+    }
+
+    public function datetime(): DateTimeHumanizer
+    {
+        return new DateTimeHumanizer();
+    }
+
+    public function number(): NumberHumanizer
+    {
+        return new NumberHumanizer();
+    }
+
+    public function string(): StringHumanizer
+    {
+        return new StringHumanizer();
+    }
 
     /**
      * @throws BaseException
@@ -202,7 +222,7 @@ final class Readable
             }
         }
 
-        return !empty($getFloor . $suffix) ? number_format($getFloor, $decimals) . $suffix : 0;
+        return (string) !empty($getFloor . $suffix) ? number_format($getFloor, $decimals) . $suffix : '0';
     }
 
     /**

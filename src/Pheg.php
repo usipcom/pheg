@@ -25,7 +25,7 @@ use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Filter;
 use Simtabi\Pheg\Toolbox\HTML\Html;
 use Simtabi\Pheg\Toolbox\Http;
-use Simtabi\Pheg\Toolbox\Readable;
+use Simtabi\Pheg\Toolbox\Humanizer\Humanizer;
 use Simtabi\Pheg\Toolbox\Input;
 use Simtabi\Pheg\Toolbox\Media\Media;
 use Simtabi\Pheg\Toolbox\JSON\JSON;
@@ -209,9 +209,9 @@ class Pheg
         return new Http;
     }
 
-    public function readable(): Readable
+    public function readable(): Humanizer
     {
-        return new Readable;
+        return new Humanizer;
     }
 
     public function input(): Input
