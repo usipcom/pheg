@@ -49,7 +49,7 @@
         "html2text/html2text": "^4.3.1",
         "phlak/strgen": "^3.0.0",
         "gpslab/base64uid": "dev-master",
-        "ezyang/htmlpurifier": "^v4.14.0",
+        "ezyang/htmlpurifier": "^v4.13.0",
         "fightbulc/moment": "^1.33.0",
         "maxakawizard/json-collection-parser": "dev-master",
         "cerbero/json-objects": "^v1.2.0",
