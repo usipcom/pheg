@@ -61,7 +61,8 @@
         "justinrainbow/json-schema": "^5.2.11",
         "seld/jsonlint": "^1.8.9",
         "coduo/php-humanizer": "^4.0.2",
-        "voku/stringy": "^6.5.3"
+        "voku/stringy": "^6.5.3",
+        "rinvex/countries": "^v8.1.0"
     },
     "require-dev": {
         "ext-bcmath": "*",
