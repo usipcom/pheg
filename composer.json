@@ -84,8 +84,7 @@
         "files": [
             "helpers/classes.php",
             "helpers/constants.php",
-            "helpers/form_helpers.php",
-            "helpers/functions.php"
+            "helpers/form_helpers.php"
         ]
     },
     "extra": {
