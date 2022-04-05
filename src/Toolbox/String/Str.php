@@ -10,6 +10,7 @@ use Simtabi\Pheg\Toolbox\System;
 use function mb_strtolower;
 use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
+use Cocur\Slugify\RuleProvider\RuleProviderInterface;
 use Stringy\Stringy as S;
 use Simtabi\Pheg\Toolbox\Arr\Arr;
 
@@ -1490,13 +1491,14 @@ final class Str
         return (S::create($string))->toTransliterate();
     }
 
-    public function slug(string $string, $sep = '_', array $args = [])
+    public function slugify($string, string|array|null $options = '-', $config = [], RuleProviderInterface $provider = null): ?string
     {
-        return (new Slugify($args))->slugify($string, $sep);
+        return (new Slugify($config, $provider))->slugify($string, $options);
     }
 
     public function compare(): Compare
     {
         return new Compare();
     }
+
 }
