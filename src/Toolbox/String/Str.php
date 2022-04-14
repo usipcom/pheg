@@ -1493,11 +1493,11 @@ final class Str
     }
 
 
-    public function buildSearchTerms(string $searchTerm, int $strLength = 10)
+    public function buildSearchTerms(string $searchTerm, int $strLength = 10): array
     {
 
         // return false if we don't have a usable word
-        if (empty($searchTerm)) {return false;}
+        if (empty($searchTerm)) {return [];}
 
         // split given word into multiple terms
         $terms = [];
