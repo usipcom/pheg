@@ -12,6 +12,7 @@ use Html2Text\Html2Text;
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\RuleProvider\RuleProviderInterface;
 use Stringy\Stringy as S;
+use Illuminate\Support\Str as LStr;
 use Simtabi\Pheg\Toolbox\Arr\Arr;
 
 /**
@@ -1489,6 +1490,106 @@ final class Str
     public function removeAccents(string $string): string
     {
         return (S::create($string))->toTransliterate();
+    }
+
+
+    function ty(string $word, int $strLength = 10)
+    {
+
+        // return false if we don't have a usable word
+        if (empty($word)) {return false;}
+
+        // split given word into multiple words
+        $words = [];
+        foreach (explode(' ', $word) as $item)
+        {
+            $item = trim($item);
+            if (!empty($item))
+            {
+                $words[] = $item;
+            }
+        }
+
+        // merge split words with the original word
+        $words = array_merge($words, [$word]);
+
+        // callback function to build a search criteria of words
+        $build = function ($word, $strLength)
+        {
+            $firstChar = LStr::substr($word, 0, 1);
+            $lastChar  = LStr::substr($word, -1);
+
+            // any value based on length
+
+            // generate character length pattern
+            $alphaPattern = function ($n)
+            {
+                $pattern = [];
+                $char    = '';
+
+                // initializing value
+                // corresponding to 'A'
+                // ASCII value
+                $num = 65;
+
+                // outer loop to handle
+                // number of rows
+                // n in this case
+                for ($i = 0; $i < $n; $i++)
+                {
+
+                    // inner loop to handle
+                    // number of columns
+                    // values changing acc.
+                    // to outer loop
+                    for ($j = 0; $j <= $i; $j++ )
+                    {
+                        // printing char value
+                        $char .= "_";
+                    }
+
+                    // incrementing number
+                    $num         = $num + 1;
+
+                    // store generated pattern
+                    $pattern[$i] = $char;
+                }
+
+                return $pattern;
+            };
+            $patterns     = [];
+
+            if ($strLength >= 1)
+            {
+                foreach ($alphaPattern($strLength) as $pattern)
+                {
+                    $patterns[] = trim($pattern)."$word%";    // WHERE column LIKE '_$word%'	Finds any values that have "$word" in the second position
+
+                    $patterns[] = "$word".trim($pattern)."%"; // WHERE column LIKE '$word_%'	Finds any values that start with "$word" and are at least X characters in length
+
+                }
+            }
+
+            return array_merge([
+                "$firstChar%", // WHERE column LIKE '$firstChar%'	Finds any values that start with "$firstChar"
+                "%$lastChar",  // WHERE column LIKE '%$lastChar'	Finds any values that end with "$lastChar"
+                "%$word%",     // WHERE column LIKE '%$word%'	Finds any values that have "$word" in any position
+
+                // WHERE column LIKE '$firstChar%$lastChar'	Finds any values that start with "$firstChar" and ends with "$lastChar"
+                "%$firstChar%",
+                "%$lastChar%",
+            ], $patterns);
+        };
+
+        // build list of words
+        $ready = [];
+        foreach ($words as $word)
+        {
+            $ready[] = $build($word, $strLength);
+        }
+
+        // flatten given array of arrays
+        return array_merge(...array_values($ready));
     }
 
     public function slugify($string, string|array|null $options = '-', $config = [], RuleProviderInterface $provider = null): ?string
