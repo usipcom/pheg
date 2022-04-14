@@ -1493,31 +1493,31 @@ final class Str
     }
 
 
-    function ty(string $word, int $strLength = 10)
+    public function buildSearchTerms(string $searchTerm, int $strLength = 10)
     {
 
         // return false if we don't have a usable word
-        if (empty($word)) {return false;}
+        if (empty($searchTerm)) {return false;}
 
-        // split given word into multiple words
-        $words = [];
-        foreach (explode(' ', $word) as $item)
+        // split given word into multiple terms
+        $terms = [];
+        foreach (explode(' ', $searchTerm) as $term)
         {
-            $item = trim($item);
-            if (!empty($item))
+            $term = trim($term);
+            if (!empty($term))
             {
-                $words[] = $item;
+                $terms[] = $term;
             }
         }
 
-        // merge split words with the original word
-        $words = array_merge($words, [$word]);
+        // merge split terms with the original word
+        $terms = array_merge($terms, [$searchTerm]);
 
-        // callback function to build a search criteria of words
-        $build = function ($word, $strLength)
+        // callback function to build a search criteria of terms
+        $build = function ($term, $strLength)
         {
-            $firstChar = LStr::substr($word, 0, 1);
-            $lastChar  = LStr::substr($word, -1);
+            $firstChar = LStr::substr($term, 0, 1);
+            $lastChar  = LStr::substr($term, -1);
 
             // any value based on length
 
@@ -1563,9 +1563,9 @@ final class Str
             {
                 foreach ($alphaPattern($strLength) as $pattern)
                 {
-                    $patterns[] = trim($pattern)."$word%";    // WHERE column LIKE '_$word%'	Finds any values that have "$word" in the second position
+                    $patterns[] = trim($pattern)."$term%";    // WHERE column LIKE '_$word%'	Finds any values that have "$word" in the second position
 
-                    $patterns[] = "$word".trim($pattern)."%"; // WHERE column LIKE '$word_%'	Finds any values that start with "$word" and are at least X characters in length
+                    $patterns[] = "$term".trim($pattern)."%"; // WHERE column LIKE '$word_%'	Finds any values that start with "$word" and are at least X characters in length
 
                 }
             }
@@ -1573,7 +1573,7 @@ final class Str
             return array_merge([
                 "$firstChar%", // WHERE column LIKE '$firstChar%'	Finds any values that start with "$firstChar"
                 "%$lastChar",  // WHERE column LIKE '%$lastChar'	Finds any values that end with "$lastChar"
-                "%$word%",     // WHERE column LIKE '%$word%'	Finds any values that have "$word" in any position
+                "%$term%",     // WHERE column LIKE '%$word%'	Finds any values that have "$word" in any position
 
                 // WHERE column LIKE '$firstChar%$lastChar'	Finds any values that start with "$firstChar" and ends with "$lastChar"
                 "%$firstChar%",
@@ -1581,15 +1581,15 @@ final class Str
             ], $patterns);
         };
 
-        // build list of words
-        $ready = [];
-        foreach ($words as $word)
+        // build list of terms
+        $output = [];
+        foreach ($terms as $searchTerm)
         {
-            $ready[] = $build($word, $strLength);
+            $output[] = $build($searchTerm, $strLength);
         }
 
         // flatten given array of arrays
-        return array_merge(...array_values($ready));
+        return array_merge(...array_values($output));
     }
 
     public function slugify($string, string|array|null $options = '-', $config = [], RuleProviderInterface $provider = null): ?string
