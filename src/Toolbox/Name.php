@@ -11,7 +11,7 @@ final class Name
 
     public function __construct() {}
 
-    public function make($object, $substitute = false): bool|string|null
+    public function make($object, $substitute = true): bool|string|null
     {
 
         $validate = pheg()->validator()->transfigure();
@@ -27,9 +27,9 @@ final class Name
         }
 
         $salutation = strtolower($object->salutation ?? '');
-        $firstName  = ucfirst($object->first_name ?? '');
-        $lastName   = ucfirst($object->last_name ?? '');
-        $username   = ucfirst($object->username ?? '');
+        $firstName  = ucfirst($object->first_name    ?? '');
+        $lastName   = ucfirst($object->last_name     ?? '');
+        $username   = ucfirst($object->username      ?? '');
         $email      = $object->email;
 
         if (!empty($salutation) && !empty($firstName) && !empty($lastName)) {
@@ -47,8 +47,8 @@ final class Name
             $name = $email;
         }
 
-        if (!$substitute && (empty($firstName) && empty($lastName))) {
-            return null;
+        if ($substitute && (empty($firstName) && empty($lastName))) {
+            return $email;
         }
 
         return $name;
