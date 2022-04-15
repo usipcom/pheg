@@ -33,8 +33,7 @@ final class Name
         $email      = $object->email;
 
         if (!empty($salutation) && !empty($firstName) && !empty($lastName)) {
-            $salutation = pheg()->supports()->getSalutations($salutation);
-            $name = sprintf("%s. %s %s", $salutation, $firstName, $lastName);
+            $name = sprintf("%s. %s %s", pheg()->supports()->getSalutations($salutation), $firstName, $lastName);
         }elseif (!empty($firstName) && !empty($lastName)) {
             $name = sprintf("%s %s", $firstName, $lastName);
         }elseif (!empty($firstName)) {
@@ -47,8 +46,15 @@ final class Name
             $name = $email;
         }
 
-        if ($substitute && (empty($firstName) && empty($lastName))) {
-            return $email;
+        if ($substitute)
+        {
+            if (empty(!$firstName) && empty($lastName)) {
+                $name = sprintf("%s (%s)", $firstName, $email);
+            }elseif (empty(!$lastName) && empty($firstName)) {
+                $name = sprintf("%s (%s)", $lastName, $email);
+            }elseif (empty($firstName) && empty($lastName)){
+                $name = $email;
+            }
         }
 
         return $name;
@@ -132,7 +138,6 @@ final class Name
 
                 $out[] = $part1. str_shuffle($part2). $part3; //str_shuffle to randomly shuffle all characters
             }
-
 
         }
 
