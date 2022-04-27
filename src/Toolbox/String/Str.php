@@ -83,6 +83,14 @@ final class Str
         return preg_replace("/[^A-Za-z0-9 -]/", '', $text);
     }
 
+    public function stripSpecialCharactersAndSpaces(string $string, string $replacer = '_'):string
+    {
+        return preg_replace('/[^A-Za-z0-9\-]/', $replacer,
+            str_replace(' ', $replacer,
+                preg_replace('/\s+/', $replacer, $string)
+            ));
+    }
+
     public function stripSEONeat($str, $total = 5, $delimiter = '...')
     {
         // http://monchito.com/blog/regex-php-snippets-for-seo-purposes
