@@ -153,7 +153,8 @@ class Json2File {
                         implode('</th><th>', array_keys($value)) .
                         '</th>';
                 }
-                array_keys($value);
+
+                $value = array_keys($value);
                 $out .= '<tr>';
                 $out .= $this->array2Html($value, false);
                 $out .= '</tr>';

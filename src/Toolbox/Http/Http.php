@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox;
+namespace Simtabi\Pheg\Toolbox\Http;
 
 use Exception;
+use Simtabi\Pheg\Toolbox\System;
 
 /**
  * Class Http

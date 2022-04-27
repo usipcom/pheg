@@ -306,4 +306,9 @@ class JSON implements JSONInterface
         return $out;
     }
 
+    public function json2file(string $file): Json2File
+    {
+        return new Json2File($file);
+    }
+
 }

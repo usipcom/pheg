@@ -24,7 +24,7 @@ use Simtabi\Pheg\Toolbox\Env;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Filter;
 use Simtabi\Pheg\Toolbox\HTML\Html;
-use Simtabi\Pheg\Toolbox\Http;
+use Simtabi\Pheg\Toolbox\Http\Http;
 use Simtabi\Pheg\Toolbox\Humanizer\Humanizer;
 use Simtabi\Pheg\Toolbox\Input;
 use Simtabi\Pheg\Toolbox\Media\Media;
