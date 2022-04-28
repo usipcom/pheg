@@ -187,7 +187,7 @@ class Json2File {
             mkdir($path, 0755, true);
         }
 
-        $json = json_encode($array, JSON_PRETTY_PRINT);
+        $json = $prettyPrint ? json_encode($array, JSON_PRETTY_PRINT) : json_encode($array);
 
         $this->jsonLastError();
 
@@ -233,7 +233,7 @@ class Json2File {
 
         switch (json_last_error()) {
             case JSON_ERROR_NONE:
-                 return true;
+                return true;
             case JSON_ERROR_UTF8:
                 throw new Exception('Malformed UTF-8 characters', 300);
             case JSON_ERROR_DEPTH:
