@@ -83,7 +83,7 @@ final class Str
         return preg_replace("/[^A-Za-z0-9 -]/", '', $text);
     }
 
-    public function stripSpecialCharactersAndSpaces(string $string, string $replacer = '_'):string
+    public function stripSpecialCharactersAndSpaces(string $string, string $replacer = '-'):string
     {
         return preg_replace('/[^A-Za-z0-9\-]/', $replacer,
             str_replace(' ', $replacer,

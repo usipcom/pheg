@@ -101,7 +101,7 @@ class Json2File {
         return false;
     }
 
-    // converts array to human readable plain table
+    // converts array to human-readable plain table
     protected function toTable($data, $echo = true)
     {
         $keys = array_keys(end($data));
@@ -178,7 +178,7 @@ class Json2File {
      * @return bool true     → if the file is created
      *@throws Exception → couldn't create file
      */
-    public function arrayToFile(array $array): bool {
+    public function arrayToFile(array $array, bool $prettyPrint = true): bool {
 
         $path = str_replace(basename($this->file), '', $this->file);
 
@@ -187,7 +187,7 @@ class Json2File {
             mkdir($path, 0755, true);
         }
 
-        $json = json_encode($array);
+        $json = json_encode($array, JSON_PRETTY_PRINT);
 
         $this->jsonLastError();
 
