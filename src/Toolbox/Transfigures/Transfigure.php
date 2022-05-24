@@ -156,17 +156,9 @@ final class Transfigure {
         return $object;
     }
 
-    public function object2Array($resource): array
+    public function object2Array(object $resource): array
     {
-        if (is_object($resource)) {
-            $resource = get_object_vars($resource);
-        }
-
-        if (is_array($resource)) {
-            return array_map(array($this, 'object2Array'), $resource);
-        } else {
-            return $resource;
-        }
+        return json_decode(json_encode($resource), true);
     }
 
     private function throwUnknownDataTypeError()
