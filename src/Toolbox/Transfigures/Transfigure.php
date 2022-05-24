@@ -29,7 +29,7 @@ final class Transfigure {
         $this->validators = new Validators();
         $this->serialize  = new Serialize;
     }
-    
+
     public function arrayToXml(array $config = ArrayToXmlConfig::DEFAULTS): ArrayToXml
     {
         return new ArrayToXml($config);
@@ -158,25 +158,14 @@ final class Transfigure {
 
     public function object2Array($resource): array
     {
-
-        if ($this->validators->transfigure()->isArray($resource)) {
+        if (is_object($resource)) {
+            $resource = get_object_vars($resource);
+        }
+        if (is_array($resource)) {
+            return array_map(array($this, 'object2Array'), $resource);
+        } else {
             return $resource;
         }
-
-        return array_map(array('self', 'object2Array'), get_object_vars($resource));
-
-        $array = [];
-
-        foreach ($resource as $key => $value)
-        {
-            if (is_object($value)) {
-                $array[$key] = $this->object2Array($value);
-            } else {
-                $array[$key] = $value;
-            }
-        }
-
-        return $array;
     }
 
     private function throwUnknownDataTypeError()
