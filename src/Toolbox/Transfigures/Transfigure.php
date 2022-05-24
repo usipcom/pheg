@@ -161,6 +161,7 @@ final class Transfigure {
         if (is_object($resource)) {
             $resource = get_object_vars($resource);
         }
+
         if (is_array($resource)) {
             return array_map(array($this, 'object2Array'), $resource);
         } else {
