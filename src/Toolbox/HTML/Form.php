@@ -11,7 +11,7 @@ final class Form
     {
         if (is_object($data))
         {
-            $data = pheg()->transfigure()->toArray($data);
+            $data = pheg()->transfigure()->object2Array($data);
         }
 
         if (empty($data)){
