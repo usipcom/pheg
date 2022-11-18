@@ -11,13 +11,13 @@ namespace Simtabi\Pheg\Toolbox\Transfigures;
  */
 use Exception;
 use DOMDocument;
-use Simtabi\Enekia\Helpers;
+// use Simtabi\Enekia\Helpers as Validators;
 use Simtabi\Pheg\Toolbox\Serialize;
 use stdClass;
 
 final class Transfigure {
 
-    private Validators $validators;
+    // private Validators $validators;
     private Serialize  $serialize;
     private            $resource;
 
@@ -26,7 +26,7 @@ final class Transfigure {
 
     public function __construct()
     {
-        $this->validators = new Validators();
+       //  $this->validators = new Validators();
         $this->serialize  = new Serialize;
     }
 
