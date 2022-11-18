@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg;
 
-use Simtabi\Enekia\Vanilla\Validators as Enekia;
+use Simtabi\Enekia\Vanilla\Validators;
 use Simtabi\Pheg\Core\Support\Supports;
 use Simtabi\Pheg\Toolbox\Arr\Arr;
 use Simtabi\Pheg\Toolbox\Asset;
