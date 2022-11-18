@@ -3,7 +3,7 @@
 namespace Simtabi\Pheg\Toolbox\Media\Image\Services;
 
 use Exception;
-use Simtabi\Enekia\Helpers;
+use Simtabi\Enekia\Vanilla\Validators;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\Media\Image\ImageHandler;
 use Simtabi\Pheg\Core\Exceptions\ImageException;

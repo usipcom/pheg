@@ -9,7 +9,7 @@ use Moment\Moment;
 use Carbon\Carbon;
 use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Westsworld\TimeAgo;
-use Simtabi\Enekia\Helpers;
+use Simtabi\Enekia\Vanilla\Validators;
 use DateTimeInterface;
 
 final class Time

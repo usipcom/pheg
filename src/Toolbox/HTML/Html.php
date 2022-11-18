@@ -4,7 +4,7 @@ namespace Simtabi\Pheg\Toolbox\HTML;
 
 use DOMDocument;
 use DOMXPath;
-use Simtabi\Enekia\Helpers;
+use Simtabi\Enekia\Vanilla\Validators;
 use Simtabi\Pheg\Toolbox\String\Str;
 
 final class Html
