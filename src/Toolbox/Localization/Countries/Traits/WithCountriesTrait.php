@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Countries\Traits;
+namespace Simtabi\Pheg\Toolbox\Localization\Countries\Traits;
 
 trait WithCountriesTrait
 {

@@ -13,12 +13,13 @@ final class Avatar
      *
      * @param string $email
      * @param int $size
+     * @param bool $isHttps
      * @param string $rating [g|pg|r|x]
      * @param string $default
-     * @return string
+     * @return string|null
      */
 
-    public function getGravatar($email, $size = 200, $isHttps = false, $rating = 'g', $default = 'monsterid' ): ?string
+    public function getGravatar(string $email, int $size = 200, bool $isHttps = false, string $rating = 'g', string $default = 'monsterid' ): ?string
     {
         if ( $isHttps ) {
             $url = 'https://secure.gravatar.com/';

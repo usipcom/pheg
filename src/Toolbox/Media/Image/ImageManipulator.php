@@ -6,7 +6,7 @@ use Simtabi\Pheg\Toolbox\Filter as VarFilter;
 use Simtabi\Pheg\Toolbox\Media\File\FileSystem;
 use Simtabi\Pheg\Toolbox\System;
 use Simtabi\Pheg\Toolbox\Url;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers;
 use Simtabi\Pheg\Core\Exceptions\ImageException;
 
 /**

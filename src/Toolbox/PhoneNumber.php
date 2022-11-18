@@ -9,7 +9,7 @@ use libphonenumber\PhoneNumberToCarrierMapper;
 use libphonenumber\PhoneNumberToTimeZonesMapper;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\ShortNumberInfo;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers;
 use Simtabi\Pheg\Core\CoreTools;
 
 final class PhoneNumber

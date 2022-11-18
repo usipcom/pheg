@@ -5,7 +5,7 @@ namespace Simtabi\Pheg\Toolbox;
 use Closure;
 use Exception;
 use Simtabi\Pheg\Toolbox\Arr\Arr;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers;
 use Simtabi\Pheg\Toolbox\Data\Types\Factory;
 use Simtabi\Pheg\Toolbox\Data\Types\JSON;
 use Simtabi\Pheg\Toolbox\String\Str;

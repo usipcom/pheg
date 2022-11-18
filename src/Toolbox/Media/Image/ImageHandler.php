@@ -5,7 +5,7 @@ namespace Simtabi\Pheg\Toolbox\Media\Image;
 use Exception;
 use Simtabi\Pheg\Toolbox\Filter;
 use Simtabi\Pheg\Toolbox\Vars;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers;
 
 /**
  * Class Image

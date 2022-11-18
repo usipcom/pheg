@@ -30,7 +30,7 @@ final class Arr
 
         if (is_array($data)) {
             // from php array
-            $arr = ArrayQuery::getInstance();
+            $arr = new ArrayQuery();
 
             return $arr->collect($data);
         }

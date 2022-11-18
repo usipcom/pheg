@@ -11,7 +11,7 @@ namespace Simtabi\Pheg\Toolbox\Transfigures;
  */
 use Exception;
 use DOMDocument;
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers;
 use Simtabi\Pheg\Toolbox\Serialize;
 use stdClass;
 

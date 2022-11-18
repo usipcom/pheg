@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg;
 
-use Simtabi\Enekia\Validators;
+use Simtabi\Enekia\Helpers as Enekia;
 use Simtabi\Pheg\Core\Support\Supports;
 use Simtabi\Pheg\Toolbox\Arr\Arr;
 use Simtabi\Pheg\Toolbox\Asset;
@@ -13,7 +13,7 @@ use Simtabi\Pheg\Toolbox\Breadcrumbs;
 use Simtabi\Pheg\Toolbox\Cli;
 use Simtabi\Pheg\Toolbox\Colors\Colors;
 use Simtabi\Pheg\Toolbox\CopyrightText;
-use Simtabi\Pheg\Toolbox\Countries\Countries;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
 use Simtabi\Pheg\Toolbox\Distance\Calculate;

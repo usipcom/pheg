@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Countries;
+namespace Simtabi\Pheg\Toolbox\Localization\Countries;
 
 use Adbar\Dot;
 use DirectoryIterator;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithContinentsTrait;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithCountriesTrait;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithCurrenciesTrait;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithISOCodesTrait;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithLanguagesTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithContinentsTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithCountriesTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithCurrenciesTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithISOCodesTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithLanguagesTrait;
 use Simtabi\Pheg\Core\CoreTools;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithTimezonesTrait;
-use Simtabi\Pheg\Toolbox\Countries\Traits\WithValidatorsTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithTimezonesTrait;
+use Simtabi\Pheg\Toolbox\Localization\Countries\Traits\WithValidatorsTrait;
 use Simtabi\Pheg\Toolbox\JSON\Json2File;
 
 final class Countries
@@ -59,7 +59,8 @@ final class Countries
         ])->initialize();
     }
 
-    private function initialize(){
+    private function initialize(): static
+    {
 
         $autoloadJSONFiles = function (string $directory, $id) {
 
