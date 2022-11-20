@@ -5,8 +5,8 @@ namespace Simtabi\Pheg\Toolbox\HTML;
 use DOMDocument;
 use DOMXPath;
 use Simtabi\Enekia\Vanilla\Validators;
+use Simtabi\Pheg\Toolbox\HTML\Exceptions\Html2TextException;
 use Simtabi\Pheg\Toolbox\String\Str;
-use Soundasleep\Html2Text;
 
 final class Html
 {
@@ -275,7 +275,10 @@ final class Html
         return $tags;
     }
 
-    public function html2Text($html, $config): Html2Text
+    /**
+     * @throws Html2TextException
+     */
+    public function html2Text($html, $config): string
     {
         return Html2Text::convert($html, $config);
     }
