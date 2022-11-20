@@ -3,22 +3,11 @@
 namespace Simtabi\Pheg\Toolbox\HTML;
 
 /**
- * OriginPHP Framework
- * Copyright 2018 - 2021 Jamiel Sharief.
- *
- * Licensed under The MIT License
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * @copyright   Copyright (c) Jamiel Sharief
- * @link        https://www.originphp.com
- * @license     https://opensource.org/licenses/mit-license.php MIT License
+ * https://github.com/soundasleep/html2text
  */
 
-use DOMException;
-use DOMNode;
-use DOMXPath;
 use DOMDocument;
+use InvalidArgumentException;
 use Simtabi\Pheg\Toolbox\HTML\Exceptions\Html2TextException;
 
 final class Html2Text
@@ -26,10 +15,12 @@ final class Html2Text
     public static function defaultOptions(): array
     {
         return [
-            'keep_empty_lines' => false,
-            'ignore_errors'    => false,
-            'drop_links'       => false,
-            'drop_images'      => false,
+            'is_office_document' => null, // auto-detect
+            'one_newline_tags'   => [],
+            'keep_empty_lines'   => false,
+            'ignore_errors'      => false,
+            'drop_links'         => false,
+            'drop_images'        => false,
         ];
     }
 
@@ -44,31 +35,56 @@ final class Html2Text
      * </ul>
      *
      * @param string $html the input HTML
-     * @param array $options
+     * @param array $options Parsing options
      * @return string the HTML converted, as good as possible, to text
-     * @throws Html2TextException if the HTML could not be loaded as a <a href="psi_element://\DOMDocument">\DOMDocument</a>
+     * @throws Html2TextException if the HTML could not be loaded as a {@link \DOMDocument}
      */
     public static function convert($html, array $options = []) {
+        $options = static::processOptions($options);
 
-        if ($options === false || $options === true) {
-            // Using old style (< 1.0) of passing in options
-            $options = array('ignore_errors' => $options);
+        if (!isset($options['is_office_document'])) {
+            $options['is_office_document'] = static::isOfficeDocument($html);
         }
 
-        $options = array_merge(static::defaultOptions(), $options);
+        $html = static::cleanHtml($html, $options);
+        $doc  = static::getDocument($html, $options);
+        
+        return static::convertDocument($doc, $options);
+    }
 
-        // check all options are valid
-        foreach ($options as $key => $value) {
-            if (!in_array($key, array_keys(static::defaultOptions()))) {
-                throw new \InvalidArgumentException("Unknown html2text option '$key'");
-            }
-        }
+    /**
+     * Tries to convert the given DOMDocument into a plain text format - best suited for
+     * e-mail display, etc.
+     *
+     * <p>In particular, it tries to maintain the following features:
+     * <ul>
+     *   <li>Links are maintained, with the 'href' copied over
+     *   <li>Information in the &lt;head&gt; is lost
+     * </ul>
+     *
+     * @param DOMDocument $doc the input DOMDocument
+     * @param array $options Parsing options
+     * @return string the HTML converted, as good as possible, to text
+     */
+    public static function convertDocument(DOMDocument $doc, array $options = []): string
+    {
 
-        $is_office_document = static::isOfficeDocument($html);
+        $options = static::processOptions($options);
 
-        if ($is_office_document) {
+        $output  = static::iterateOverNode($doc, $options, null, false);
+
+        // process output for whitespace/newlines
+        return static::processWhitespaceNewlines($output);
+    }
+
+    public static function cleanHtml($html, $options = []): array|bool|string|null
+    {
+
+        $options = static::processOptions($options);
+
+        if ($options['is_office_document']) {
             // remove office namespace
-            $html = str_replace(array("<o:p>", "</o:p>"), "", $html);
+            $html = str_replace(["<o:p>", "</o:p>"], "", $html);
         }
 
         $html = static::fixNewlines($html);
@@ -76,14 +92,34 @@ final class Html2Text
             $html = mb_convert_encoding($html, "HTML-ENTITIES", "UTF-8");
         }
 
-        $doc = static::getDocument($html, $options['ignore_errors']);
+        return $html;
+    }
 
-        $output = static::iterateOverNode($doc, null, false, $is_office_document, $options);
+    /**
+     * Options pre-processing
+     *
+     * @param array|bool $options
+     * @return array processed options array with defaults applied
+     */
+    public static function processOptions(array|bool $options): array
+    {
+        if ($options === false || $options === true) {
+            // Using old style (< 1.0) of passing in options
+            $options = [
+                'ignore_errors' => $options
+            ];
+        }
 
-        // process output for whitespace/newlines
-        $output = static::processWhitespaceNewlines($output, $options['keep_empty_lines']);
+        $options = array_merge(static::defaultOptions(), $options);
 
-        return $output;
+        // check all options are valid
+        foreach ($options as $key => $value) {
+            if (!in_array($key, array_keys(static::defaultOptions()))) {
+                throw new InvalidArgumentException("Unknown html2text option '$key'");
+            }
+        }
+
+        return $options;
     }
 
     /**
@@ -94,7 +130,8 @@ final class Html2Text
      * @param string $text text with any number of \r, \r\n and \n combinations
      * @return string the fixed text
      */
-    static function fixNewlines($text) {
+    public static function fixNewlines(string $text): string
+    {
         // replace \r\n to \n
         $text = str_replace("\r\n", "\n", $text);
 
@@ -102,14 +139,16 @@ final class Html2Text
         return str_replace("\r", "\n", $text);
     }
 
-    static function nbspCodes() {
+    public static function nbspCodes(): array
+    {
         return [
             "\xc2\xa0",
             "\u00a0",
         ];
     }
 
-    static function zwnjCodes() {
+    public static function zwnjCodes(): array
+    {
         return [
             "\xe2\x80\x8c",
             "\u200c",
@@ -122,8 +161,8 @@ final class Html2Text
      * @param string $text multiline text any number of leading or trailing spaces or excess lines
      * @return string the fixed text
      */
-    static function processWhitespaceNewlines($text, $keep_empty_lines = false) {
-
+    public static function processWhitespaceNewlines(string $text, bool $keep_empty_lines = false): string
+    {
         // remove excess spaces around tabs
         $text = preg_replace("/ *\t */im", "\t", $text);
 
@@ -159,21 +198,22 @@ final class Html2Text
      * Parse HTML into a DOMDocument
      *
      * @param string $html the input HTML
-     * @param boolean $ignore_error Ignore xml parsing errors
+     * @param array $options Parsing options
      * @return DOMDocument the parsed document tree
+     * @throws Html2TextException
      */
-    static function getDocument($html, bool $ignore_error = false) {
+    public static function getDocument(string $html, array $options = []): DOMDocument
+    {
 
-        $doc = new DOMDocument();
-
-        $html = trim($html);
+        $options = static::processOptions($options);
+        $doc     = new DOMDocument();
+        $html    = trim($html);
 
         if (!$html) {
             // DOMDocument doesn't support empty value and throws an error
             // Return empty document instead
             return $doc;
         }
-
         if ($html[0] !== '<') {
             // If HTML does not begin with a tag, we put a body tag around it.
             // If we do not do this, PHP will insert a paragraph tag around
@@ -182,7 +222,7 @@ final class Html2Text
             $html = '<body>' . $html . '</body>';
         }
 
-        if ($ignore_error) {
+        if ($options['ignore_errors']) {
             $doc->strictErrorChecking = false;
             $doc->recover = true;
             $doc->xmlStandalone = true;
@@ -193,18 +233,17 @@ final class Html2Text
         else {
             $load_result = $doc->loadHTML($html);
         }
-
         if (!$load_result) {
             throw new Html2TextException("Could not load HTML - badly formed?", $html);
         }
-
         return $doc;
     }
 
     /**
      * Can we guess that this HTML is generated by Microsoft Office?
      */
-    static function isOfficeDocument($html) {
+    public static function isOfficeDocument(string $html): bool
+    {
         return strpos($html, "urn:schemas-microsoft-com:office") !== false;
     }
 
@@ -216,17 +255,20 @@ final class Html2Text
      * This is to match our goal of rendering documents as they would be rendered
      * by a browser.
      */
-    static function renderText($text) {
+    public static function renderText($text): array|string
+    {
         $text = str_replace(static::nbspCodes(), " ", $text);
 
         return str_replace(static::zwnjCodes(), "", $text);
     }
 
-    static function isWhitespace($text) {
-        return strlen(trim(static::renderText($text), "\n\r\t")) === 0;
+    public static function isWhitespace($text): bool
+    {
+        return strlen(trim(static::renderText($text), "\n\r\t ")) === 0;
     }
 
-    static function nextChildName($node) {
+    public static function nextChildName($node): ?string
+    {
         // get the next child
         $nextNode = $node->nextSibling;
         while ($nextNode != null) {
@@ -251,7 +293,7 @@ final class Html2Text
         return $nextName;
     }
 
-    static function iterateOverNode($node, $prevName, $in_pre, $is_office_document, $options) {
+    public static function iterateOverNode($node, $options, $prevName = null, $in_pre = false) {
         if ($node instanceof \DOMText) {
             // Replace whitespace characters with a space (equivilant to \s)
             if ($in_pre) {
@@ -279,7 +321,7 @@ final class Html2Text
             return "";
         }
 
-        $name = strtolower($node->nodeName);
+        $name     = strtolower($node->nodeName);
         $nextName = static::nextChildName($node);
 
         // start whitespace
@@ -309,8 +351,12 @@ final class Html2Text
             case "ul":
             case "pre":
             case "table":
+            if(in_array($name, $options['one_newline_tags'])){
+                $output = "\n";
+            }else{
                 // add two newlines
                 $output = "\n\n";
+            }
                 break;
 
             case "td":
@@ -326,7 +372,7 @@ final class Html2Text
                 // To fix this, for any p element with a className of `MsoNormal` (the standard
                 // classname in any Microsoft export or outlook for a paragraph that behaves
                 // like a line return) we skip the first line returns and set the name to br.
-                if ($is_office_document && $node->getAttribute('class') == 'MsoNormal') {
+                if ($options['is_office_document'] && $node->getAttribute('class') == 'MsoNormal') {
                     $output = "";
                     $name = 'br';
                     break;
@@ -365,16 +411,15 @@ final class Html2Text
         if (isset($node->childNodes)) {
 
             $n = $node->childNodes->item(0);
-            $previousSiblingNames = array();
+            $previousSiblingNames = [];
             $previousSiblingName = null;
 
-            $parts = array();
+            $parts = [];
             $trailing_whitespace = 0;
 
             while ($n != null) {
 
-                $text = static::iterateOverNode($n, $previousSiblingName, $in_pre || $name == 'pre', $is_office_document, $options);
-
+                $text = static::iterateOverNode($n, $options, $previousSiblingName, $in_pre || $name == 'pre');
                 // Pass current node name to next child, as previousSibling does not appear to get populated
                 if ($n instanceof \DOMDocumentType
                     || $n instanceof \DOMProcessingInstruction
@@ -529,4 +574,5 @@ final class Html2Text
 
         return $output;
     }
+
 }
