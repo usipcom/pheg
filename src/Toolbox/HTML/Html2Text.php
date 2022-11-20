@@ -2,7 +2,6 @@
 
 namespace Simtabi\Pheg\Toolbox\HTML;
 
-
 /**
  * OriginPHP Framework
  * Copyright 2018 - 2021 Jamiel Sharief.
@@ -20,613 +19,514 @@ use DOMException;
 use DOMNode;
 use DOMXPath;
 use DOMDocument;
+use Simtabi\Pheg\Toolbox\HTML\Exceptions\Html2TextException;
 
 final class Html2Text
 {
-
-    public function __construct() {}
-
-    /**
-     * Converts text to html
-     *
-     * @param string $text
-     * @param array $options (tag)
-     *   -tag: default:p tag to wrap lines ines e.g. ['tag'=>'div']
-     *   -escape: default is true. Escapes text before converting it to html.
-     * @return string
-     */
-    public function fromText(string $text, array $options = []): string
+    public static function defaultOptions(): array
     {
-        $options += ['tag' => 'p','escape' => true];
-        if ($options['escape']) {
-            $text = $this->escape($text);
-        }
-
-        $out   = [];
-        $text  = str_replace("\r\n", "\n", $text); // Standardize line endings
-        $lines = explode("\n\n", $text);
-        foreach ($lines as $line) {
-            $line = str_replace("\n", '<br>', $line);
-            $out[] = sprintf('<%s>%s</%s>', $options['tag'], $line, $options['tag']);
-        }
-
-        return implode("\n", $out);
+        return [
+            'keep_empty_lines' => false,
+            'ignore_errors'    => false,
+            'drop_links'       => false,
+            'drop_images'      => false,
+        ];
     }
 
     /**
-     * When saving HTML from the DomDocument it adds a wrapper and
-     * LIBXML_HTML_NOIMPLIED is not stable
+     * Tries to convert the given HTML into a plain text format - best suited for
+     * e-mail display, etc.
      *
-     * @internal This is only suppose to remove wrapper added by DOMDocument
+     * <p>In particular, it tries to maintain the following features:
+     * <ul>
+     *   <li>Links are maintained, with the 'href' copied over
+     *   <li>Information in the &lt;head&gt; is lost
+     * </ul>
      *
-     * @param string $original
-     * @param string $html
-     * @return string
+     * @param string $html the input HTML
+     * @param array $options
+     * @return string the HTML converted, as good as possible, to text
+     * @throws Html2TextException if the HTML could not be loaded as a <a href="psi_element://\DOMDocument">\DOMDocument</a>
      */
-    private function removeWrapper(string $original, string $html): string
-    {
+    public static function convert($html, array $options = []) {
+
+        if ($options === false || $options === true) {
+            // Using old style (< 1.0) of passing in options
+            $options = array('ignore_errors' => $options);
+        }
+
+        $options = array_merge(static::defaultOptions(), $options);
+
+        // check all options are valid
+        foreach ($options as $key => $value) {
+            if (!in_array($key, array_keys(static::defaultOptions()))) {
+                throw new \InvalidArgumentException("Unknown html2text option '$key'");
+            }
+        }
+
+        $is_office_document = static::isOfficeDocument($html);
+
+        if ($is_office_document) {
+            // remove office namespace
+            $html = str_replace(array("<o:p>", "</o:p>"), "", $html);
+        }
+
+        $html = static::fixNewlines($html);
+        if (mb_detect_encoding($html, "UTF-8", true)) {
+            $html = mb_convert_encoding($html, "HTML-ENTITIES", "UTF-8");
+        }
+
+        $doc = static::getDocument($html, $options['ignore_errors']);
+
+        $output = static::iterateOverNode($doc, null, false, $is_office_document, $options);
+
+        // process output for whitespace/newlines
+        $output = static::processWhitespaceNewlines($output, $options['keep_empty_lines']);
+
+        return $output;
+    }
+
+    /**
+     * Unify newlines; in particular, \r\n becomes \n, and
+     * then \r becomes \n. This means that all newlines (Unix, Windows, Mac)
+     * all become \ns.
+     *
+     * @param string $text text with any number of \r, \r\n and \n combinations
+     * @return string the fixed text
+     */
+    static function fixNewlines($text) {
+        // replace \r\n to \n
+        $text = str_replace("\r\n", "\n", $text);
+
+        // remove \rs
+        return str_replace("\r", "\n", $text);
+    }
+
+    static function nbspCodes() {
+        return [
+            "\xc2\xa0",
+            "\u00a0",
+        ];
+    }
+
+    static function zwnjCodes() {
+        return [
+            "\xe2\x80\x8c",
+            "\u200c",
+        ];
+    }
+
+    /**
+     * Remove leading or trailing spaces and excess empty lines from provided multiline text
+     *
+     * @param string $text multiline text any number of leading or trailing spaces or excess lines
+     * @return string the fixed text
+     */
+    static function processWhitespaceNewlines($text, $keep_empty_lines = false) {
+
+        // remove excess spaces around tabs
+        $text = preg_replace("/ *\t */im", "\t", $text);
+
+        // remove leading whitespace
+        $text = ltrim($text);
+
+        // remove leading spaces on each line
+        $text = preg_replace("/\n[ \t]*/im", "\n", $text);
+
+        // convert non-breaking spaces to regular spaces to prevent output issues,
+        // do it here so they do NOT get removed with other leading spaces, as they
+        // are sometimes used for indentation
+        $text = static::renderText($text);
+
+        // remove trailing whitespace
+        $text = rtrim($text);
+
+        // remove trailing spaces on each line
+        $text = preg_replace("/[ \t]*\n/im", "\n", $text);
+
+        // unarmor pre blocks
+        $text = static::fixNewLines($text);
+
+        // remove unnecessary empty lines
+        if (!$keep_empty_lines) {
+            $text = preg_replace("/\n\n\n*/im", "\n\n", $text);
+        }
+
+        return $text;
+    }
+
+    /**
+     * Parse HTML into a DOMDocument
+     *
+     * @param string $html the input HTML
+     * @param boolean $ignore_error Ignore xml parsing errors
+     * @return DOMDocument the parsed document tree
+     */
+    static function getDocument($html, bool $ignore_error = false) {
+
+        $doc = new DOMDocument();
+
         $html = trim($html);
 
-        if (! preg_match('/<html[^>]*>/i', $original) && substr($html, 0, 6) === '<html>' && substr($html, -7) === '</html>') {
-            $html = substr($html, 6, -7);
-        }
-        if (! preg_match('/<body[^>]*>/i', $original) && substr($html, 0, 6) === '<body>' && substr($html, -7) === '</body>') {
-            $html = substr($html, 6, -7);
+        if (!$html) {
+            // DOMDocument doesn't support empty value and throws an error
+            // Return empty document instead
+            return $doc;
         }
 
-        return $html;
+        if ($html[0] !== '<') {
+            // If HTML does not begin with a tag, we put a body tag around it.
+            // If we do not do this, PHP will insert a paragraph tag around
+            // the first block of text for some reason which can mess up
+            // the newlines. See pre.html test for an example.
+            $html = '<body>' . $html . '</body>';
+        }
+
+        if ($ignore_error) {
+            $doc->strictErrorChecking = false;
+            $doc->recover = true;
+            $doc->xmlStandalone = true;
+            $old_internal_errors = libxml_use_internal_errors(true);
+            $load_result = $doc->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_NONET | LIBXML_PARSEHUGE);
+            libxml_use_internal_errors($old_internal_errors);
+        }
+        else {
+            $load_result = $doc->loadHTML($html);
+        }
+
+        if (!$load_result) {
+            throw new Html2TextException("Could not load HTML - badly formed?", $html);
+        }
+
+        return $doc;
     }
 
     /**
-     * Minifies HTML
-     *
-     * @see https://www.w3.org/TR/REC-html40/struct/text.html#h-9.1
-     *
-     * @param string $html
-     * @param array $options The following options keys are supported:
-     *  - collapseWhitespace: default:true. Collapse whitespace in the text nodes
-     *  - conservativeCollapse: default:false. Always collapse whitespace to at least 1 space
-     *  - collapseInlineTagWhitespace: default:false. Don't leave any spaces between inline elements.
-     *  - minifyJs: default:false minifies inline Javascript (beta)
-     *  - minifyCss: default:false minifies inline CSS (beta)
-     *  into problems.
-     * @return string
+     * Can we guess that this HTML is generated by Microsoft Office?
      */
-    public function minify(string $html, array $options = []): string
-    {
-        $options += [
-            'collapseWhitespace'          => true,
-            'conservativeCollapse'        => false,
-            'collapseInlineTagWhitespace' => false,
-            'minifyJs'                    => false,
-            'minifyCss'                   => false
-
-        ];
-
-        $keepWhitespace = ['address', 'pre', 'script', 'style'];
-
-        /**
-         * Many lists are incomplete, this list is merge from multiple
-         * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Inline_elements
-         */
-        $inlineElements = [
-            'a','abbr','acronym','audio','b','bdi','bdo','big','br','button','canvas','cite','code','data','datalist','del','dfn','em','embed','i','iframe','img','input','ins','kbd','label','map','mark','meter','noscript','object','output','picture','progress','q','ruby','s','samp','script','select','small','span','strong','sub','sup','textarea','time','tt','var'
-        ];
-
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->formatOutput = false;
-        @$doc->loadHTML($html, LIBXML_HTML_NODEFDTD);
-        $doc->normalizeDocument();
-
-        // remove comments respecting pre
-        foreach ((new DOMXPath($doc))->query('//comment()') as $comment) {
-            $comment->parentNode->removeChild($comment);
-        }
-
-        foreach ((new DOMXPath($doc))->query('//text()') as $node) {
-            if (($options['minifyJs'] && $node->parentNode->nodeName === 'script') || $options['minifyCss'] && $node->parentNode->nodeName === 'style') {
-                // remove multiline comments
-                $node->nodeValue = preg_replace('/\/\*[\s\S]*?\*\//', '', $node->nodeValue);
-                // single line comment (safe) there must be a space after the //
-                $node->nodeValue = preg_replace('/\/\/ .*/', '', $node->nodeValue);
-                $node->nodeValue = preg_replace('/[^\S ]+/s', $options['conservativeCollapse'] ? ' ' : '', $node->nodeValue);
-                // convert multiple spaces into single space
-                $node->nodeValue = preg_replace('/(\s)+/s', '\\1', $node->nodeValue);
-            }
-
-            // check parent and parent plus 1
-            if (in_array($node->parentNode->nodeName, $keepWhitespace) || in_array($node->parentNode->parentNode->nodeName, $keepWhitespace)) {
-                continue;
-            }
-
-            $previousIsInline = $node->previousSibling && in_array($node->previousSibling->nodeName, $inlineElements);
-            $nextIsInline     = $node->nextSibling && in_array($node->nextSibling->nodeName, $inlineElements);
-            $betweenInline    = $previousIsInline && $nextIsInline;
-
-            /**
-             * Whitespace between block elements are ignored and whitespace between inline elements
-             * are transformed into a space
-             */
-            $replace = ($options['conservativeCollapse'] || $betweenInline) ? ' '  : '';
-
-            // replace whitespace characters
-            $node->nodeValue = preg_replace('/[^\S ]+/s', $replace, $node->nodeValue);
-            // convert multiple spaces into single space
-            $node->nodeValue = preg_replace('/(\s)+/s', '\\1', $node->nodeValue);
-
-            /**
-             * conservativeCollapse always leaves at least one space, so no trimming here
-             */
-            if ($options['conservativeCollapse']) {
-                continue;
-            }
-
-            /**
-             * Clean up in tag values, this needs to be done carefully hence the ltrim & rtrim
-             * cleans up things like <h1> heading </h1>.
-             */
-            if ($options['collapseWhitespace'] && $node->nodeValue !== ' ') {
-                if ($node->previousSibling && ! $previousIsInline) {
-                    $node->nodeValue = ltrim($node->nodeValue);
-                }
-
-                if ($node->nextSibling && ! $nextIsInline) {
-                    $node->nodeValue = rtrim($node->nodeValue);
-                }
-
-                /**
-                 * I have added this for when there are no siblings and its not in an inline element.
-                 */
-                if (! $node->previousSibling && ! $node->nextSibling && ! in_array($node->parentNode->nodeName, $inlineElements)) {
-                    $node->nodeValue = trim($node->nodeValue);
-                }
-
-                continue;
-            }
-
-            /**
-             * How to handle empty text nodes (can be spaces between tags)
-             */
-            if ($node->nodeValue === ' ' && ($options['collapseInlineTagWhitespace'] || (! $options['conservativeCollapse'] && ! $betweenInline))) {
-                $node->nodeValue = '';
-            }
-        }
-
-        return $this->removeWrapper($html, $doc->saveHTML() ?: 'An error occured');
+    static function isOfficeDocument($html) {
+        return strpos($html, "urn:schemas-microsoft-com:office") !== false;
     }
 
     /**
-     * A Simple Html To Text Function.
+     * Replace any special characters with simple text versions, to prevent output issues:
+     * - Convert non-breaking spaces to regular spaces; and
+     * - Convert zero-width non-joiners to '' (nothing).
      *
-     * @param string $html
-     * @param array $options The options keys are
-     *  - format: default:true formats output. If false then it will provide a cleaner
-     * @return string
+     * This is to match our goal of rendering documents as they would be rendered
+     * by a browser.
      */
+    static function renderText($text) {
+        $text = str_replace(static::nbspCodes(), " ", $text);
 
-    public function toText(string $html, array $options = []): string
-    {
-        $options += ['format' => true];
-        $html = $this->stripTags($html, ['script', 'style', 'iframe']);
-        $html = $this->minify($html);
+        return str_replace(static::zwnjCodes(), "", $text);
+    }
 
-        $doc  = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->formatOutput       = false;
+    static function isWhitespace($text) {
+        return strlen(trim(static::renderText($text), "\n\r\t")) === 0;
+    }
 
-        $html = str_replace(["\r\n", "\n"], PHP_EOL, $html); // Standardize line endings
-
-        /**
-         * Create a text version without formatting, just adds new lines, indents for lists, and list type, e.g number
-         * or *
-         */
-        if ($options['format'] === false) {
-            // ul/li needs to be formatted to work with sub-lists
-            $html = preg_replace('/^ +/m', '', $html); // remove whitespaces from start of each line
-            $html = preg_replace('/(<\/(h1|h2|h3|h4|h5|h6|tr|blockquote|dt|dd|table|p)>)/', '$1' . PHP_EOL, $html);
-            $html = preg_replace('/(<(h1|h2|h3|h4|h5|h6|table|blockquote|p[^re])[^>]*>)/', PHP_EOL . '$1', $html);
-            $html = str_replace("</tr>\n</table>", '</tr></table>', $html);
-            $html = preg_replace('/(<br>)/', '$1' . PHP_EOL, $html);
-            $html = preg_replace('/(<\/(th|td)>)/', '$1 ', $html); //Add space
-        }
-
-        @$doc->loadHTML($html, LIBXML_HTML_NODEFDTD);
-        $process = ['a', 'img', 'br', 'code', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table','li','ul', 'ol', 'blockquote'];
-
-        if ($options['format'] === false) {
-            $process = ['img','a','ul', 'ol']; // li?
-        }
-
-        /**
-         * Do not sort. The order is important. Certain elements need to be adjusted first including links, images
-         */
-        foreach ($process as $needle) {
-            $nodes = $doc->getElementsByTagName($needle);
-            foreach ($nodes as $node) {
-                $this->processTag($node, $doc);
+    static function nextChildName($node) {
+        // get the next child
+        $nextNode = $node->nextSibling;
+        while ($nextNode != null) {
+            if ($nextNode instanceof \DOMText) {
+                if (!static::isWhitespace($nextNode->wholeText)) {
+                    break;
+                }
             }
+
+            if ($nextNode instanceof \DOMElement) {
+                break;
+            }
+
+            $nextNode = $nextNode->nextSibling;
         }
 
-        return trim($doc->textContent);
+        $nextName = null;
+        if (($nextNode instanceof \DOMElement || $nextNode instanceof \DOMText) && $nextNode != null) {
+            $nextName = strtolower($nextNode->nodeName);
+        }
+
+        return $nextName;
     }
 
-    /**
-     * Check if value needs converting and convert
-     *
-     * @param string $value
-     * @return mixed
-     */
-    private function htmlspecialchars(string $value)
-    {
-        if (strpos($value, '&') !== false) {
-            $value = htmlspecialchars($value);
-        }
+    static function iterateOverNode($node, $prevName, $in_pre, $is_office_document, $options) {
+        if ($node instanceof \DOMText) {
+            // Replace whitespace characters with a space (equivilant to \s)
+            if ($in_pre) {
+                $text = "\n" . trim(static::renderText($node->wholeText), "\n\r\t ") . "\n";
 
-        return $value;
-    }
+                // Remove trailing whitespace only
+                $text = preg_replace("/[ \t]*\n/im", "\n", $text);
 
-    /**
-     * Processes a tag from a DOMDocument
-     *
-     * @param DOMNode $tag
-     * @param DOMDocument $doc
-     * @return void
-     * @throws DOMException
-     * @internal Attempting to modify the dom causes strange issues and even recursion
-     */
+                // armor newlines with \r.
+                return str_replace("\n", "\r", $text);
 
-    private function processTag(DOMNode $tag, DOMDocument $doc): void
-    {
-        $value = $this->htmlspecialchars($tag->nodeValue);
-
-        switch ($tag->tagName) {
-            case 'a':
-                $tag->nodeValue = "{$value} [" . $this->htmlspecialchars($tag->getAttribute('href'))  . ']';
-                break;
-            case 'br':
-                $tag->nodeValue = PHP_EOL;
-                break;
-            case 'code':
-                // indent multi line
-                if (strpos($tag->nodeValue, PHP_EOL) !== false) {
-                    $tag->nodeValue = PHP_EOL . '   ' . str_replace(PHP_EOL, PHP_EOL . '   ', $value) . PHP_EOL;
-                }
-                break;
-            case 'blockquote':
-                $tag->nodeValue = PHP_EOL . '"' . $value . '"' . PHP_EOL;
-                break;
-            case 'h1':
-            case 'h2':
-            case 'h3':
-            case 'h4':
-            case 'h5':
-            case 'h6':
-
-                $repeat = '=';
-                if ($tag->tagName !== 'h1') {
-                    $repeat = '-';
-                }
-                /**
-                 * Use insertBefore instead of replace which causes issues even if you
-                 * use array to loop
-                 */
-                $u   = str_repeat($repeat, mb_strlen($tag->nodeValue));
-                $div = $doc->createElement('div', "\n{$value}\n{$u}\n");
-                $tag->parentNode->insertBefore($div, $tag);
-                $tag->nodeValue = null;
-
-                break;
-            case 'li':
-                if ($tag->hasChildNodes()) {
-                    foreach ($tag->childNodes as $child) {
-                        if (in_array($child->nodeName, ['ul','ol'])) {
-                            $this->processTag($child, $doc);
-                        }
-                    }
-                }
-                break;
-
-            case 'img':
-
-                $alt = '';
-                if ($tag->hasAttribute('alt')) {
-                    $alt = $tag->getAttribute('alt') . ' ';
-                }
-
-                $alt = htmlspecialchars($alt);
-                $tag->nodeValue = "[image: {$alt}" . $this->htmlspecialchars($tag->getAttribute('src')) . ']';
-                break;
-            case 'ol':
-                $count = 1;
-                $lineBreak = PHP_EOL;
-                $indent = $this->getIndentLevel($tag);
-                $pre = str_repeat(' ', $indent);
-                foreach ($tag->childNodes as $child) {
-                    if (isset($child->tagName) && $child->tagName === 'li') {
-                        $child->nodeValue = $lineBreak . $pre .  $count . '. ' . $this->htmlspecialchars($child->nodeValue);
-                        $child->nodeValue = rtrim($child->nodeValue) . PHP_EOL; // friendly with nested lists
-                        $count++;
-                        $lineBreak = null;
-                    }
-                }
-                break;
-            case 'p':
-                $tag->nodeValue = PHP_EOL . $value . PHP_EOL;
-                break;
-
-            case 'table':
-                $data = [];
-                $headers = false;
-                foreach ($tag->getElementsByTagName('tr') as $node) {
-                    $row = [];
-                    foreach ($node->childNodes as $child) {
-                        if (isset($child->tagName) && ($child->tagName === 'td' || $child->tagName === 'th')) {
-                            if ($child->tagName === 'th') {
-                                $headers = true;
-                            }
-                            $row[] = $child->nodeValue;
-                        }
-                    }
-                    $data[] = $row;
-                }
-                if ($data) {
-                    $data = $this->arrayToTable($data, $headers);
-                }
-
-                // Replacing can cause issues
-                $div = $doc->createElement('div', PHP_EOL . implode(PHP_EOL, $data) . PHP_EOL);
-                $tag->parentNode->insertBefore($div, $tag);
-                $tag->nodeValue = null;
-
-                break;
-            case 'ul':
-
-                $lineBreak = PHP_EOL;
-                $indent    = $this->getIndentLevel($tag);
-                $pre       = str_repeat(' ', $indent);
-
-                foreach ($tag->childNodes as $child) {
-                    if (isset($child->tagName) && $child->tagName === 'li') {
-                        $child->nodeValue = $lineBreak . $pre . '* ' .   $this->htmlspecialchars($child->nodeValue);
-                        $child->nodeValue = rtrim($child->nodeValue) . PHP_EOL; // friendly with nested lists
-                        $lineBreak = null;
-                    }
-                }
-                break;
-        }
-
-        // Remove all attributes
-        foreach ($tag->attributes as $attr) {
-            $tag->removeAttribute($attr->nodeName);
-        }
-    }
-
-    /**
-     * Gets the indent level for ul/ol
-     *
-     * @param DOMNode $node
-     * @return integer
-     */
-    private function getIndentLevel(DOMNode $node): int
-    {
-        $indent       = 0;
-        $checkLevelUp = true;
-        $current      = $node;
-
-        while ($checkLevelUp) {
-            if ($current->parentNode->nodeName === 'li') {
-                $current = $current->parentNode;
-                $indent  = $indent + 3;
             } else {
-                $checkLevelUp = false;
-            }
-        }
+                $text = static::renderText($node->wholeText);
+                $text = preg_replace("/[\\t\\n\\f\\r ]+/im", " ", $text);
 
-        return $indent;
-    }
-
-    /**
-     * Internal for creating table
-     *
-     * @param array $array
-     * @param boolean $headers
-     * @return array
-     */
-    private function arrayToTable(array $array, bool $headers = true): array
-    {
-        // Calculate width of each column
-        $widths = [];
-        foreach ($array as $row) {
-            foreach ($row as $columnIndex => $cell) {
-                if (! isset($widths[$columnIndex])) {
-                    $widths[$columnIndex] = 0;
+                if (!static::isWhitespace($text) && ($prevName == 'p' || $prevName == 'div')) {
+                    return "\n" . $text;
                 }
-                $width = strlen($cell) + 4;
-                if ($width > $widths[$columnIndex]) {
-                    $widths[$columnIndex] = $width;
+                return $text;
+            }
+        }
+
+        if ($node instanceof \DOMDocumentType || $node instanceof \DOMProcessingInstruction) {
+            // ignore
+            return "";
+        }
+
+        $name = strtolower($node->nodeName);
+        $nextName = static::nextChildName($node);
+
+        // start whitespace
+        switch ($name) {
+            case "hr":
+                $prefix = '';
+                if ($prevName != null) {
+                    $prefix = "\n";
+                }
+                return $prefix . "---------------------------------------------------------------\n";
+
+            case "style":
+            case "head":
+            case "title":
+            case "meta":
+            case "script":
+                // ignore these tags
+                return "";
+
+            case "h1":
+            case "h2":
+            case "h3":
+            case "h4":
+            case "h5":
+            case "h6":
+            case "ol":
+            case "ul":
+            case "pre":
+            case "table":
+                // add two newlines
+                $output = "\n\n";
+                break;
+
+            case "td":
+            case "th":
+                // add tab char to separate table fields
+                $output = "\t";
+                break;
+
+            case "p":
+                // Microsoft exchange emails often include HTML which, when passed through
+                // html2text, results in lots of double line returns everywhere.
+                //
+                // To fix this, for any p element with a className of `MsoNormal` (the standard
+                // classname in any Microsoft export or outlook for a paragraph that behaves
+                // like a line return) we skip the first line returns and set the name to br.
+                if ($is_office_document && $node->getAttribute('class') == 'MsoNormal') {
+                    $output = "";
+                    $name = 'br';
+                    break;
+                }
+
+                // add two lines
+                $output = "\n\n";
+                break;
+
+            case "tr":
+                // add one line
+                $output = "\n";
+                break;
+
+            case "div":
+                $output = "";
+                if ($prevName !== null) {
+                    // add one line
+                    $output .= "\n";
+                }
+                break;
+
+            case "li":
+                $output = "- ";
+                break;
+
+            default:
+                // print out contents of unknown tags
+                $output = "";
+                break;
+        }
+
+        // debug
+        //$output .= "[$name,$nextName]";
+
+        if (isset($node->childNodes)) {
+
+            $n = $node->childNodes->item(0);
+            $previousSiblingNames = array();
+            $previousSiblingName = null;
+
+            $parts = array();
+            $trailing_whitespace = 0;
+
+            while ($n != null) {
+
+                $text = static::iterateOverNode($n, $previousSiblingName, $in_pre || $name == 'pre', $is_office_document, $options);
+
+                // Pass current node name to next child, as previousSibling does not appear to get populated
+                if ($n instanceof \DOMDocumentType
+                    || $n instanceof \DOMProcessingInstruction
+                    || ($n instanceof \DOMText && static::isWhitespace($text))) {
+                    // Keep current previousSiblingName, these are invisible
+                    $trailing_whitespace++;
+                }
+                else {
+                    $previousSiblingName = strtolower($n->nodeName);
+                    $previousSiblingNames[] = $previousSiblingName;
+                    $trailing_whitespace = 0;
+                }
+
+                $node->removeChild($n);
+                $n = $node->childNodes->item(0);
+
+                $parts[] = $text;
+            }
+
+            // Remove trailing whitespace, important for the br check below
+            while ($trailing_whitespace-- > 0) {
+                array_pop($parts);
+            }
+
+            // suppress last br tag inside a node list if follows text
+            $last_name = array_pop($previousSiblingNames);
+            if ($last_name === 'br') {
+                $last_name = array_pop($previousSiblingNames);
+                if ($last_name === '#text') {
+                    array_pop($parts);
                 }
             }
+
+            $output .= implode('', $parts);
         }
 
-        $out       = [];
-        $separator = '';
+        // end whitespace
+        switch ($name) {
+            case "h1":
+            case "h2":
+            case "h3":
+            case "h4":
+            case "h5":
+            case "h6":
+            case "pre":
+            case "table":
+            case "p":
+                // add two lines
+                $output .= "\n\n";
+                break;
 
-        foreach ($array[0] as $i => $cell) {
-            $separator .= str_pad('+', $widths[$i], '-', STR_PAD_RIGHT);
-        }
-        $separator .= '+';
-        $out[] = $separator;
+            case "br":
+                // add one line
+                $output .= "\n";
+                break;
 
-        if ($headers) {
-            $headers = '|';
-            foreach ($array[0] as $i => $cell) {
-                $headers .= ' ' . str_pad($cell, $widths[$i] - 2, ' ', STR_PAD_RIGHT) . '|';
-            }
-            $out[] = $headers;
-            $out[] = $separator;
-            array_shift($array);
-        }
+            case "div":
+                break;
 
-        foreach ($array as $row) {
-            $cells = '|';
-            foreach ($row as $i => $cell) {
-                $cells .= ' ' . str_pad($cell, $widths[$i] - 2, ' ', STR_PAD_RIGHT) . '|';
-            }
-            $out[] = $cells;
-        }
-        $out[] = $separator;
+            case "a":
+                // links are returned in [text](link) format
+                $href = $node->getAttribute("href");
 
-        return $out;
-    }
+                $output = trim($output);
 
-    /**
-     * Cleans up user inputted html for saving to a database
-     *
-     * @param string $html
-     * @param array $tags An array of tags to be allowed e.g. ['p','h1'] or to
-     * only allow certain attributes on tags ['p'=>['class','style]];
-     * The defaults are :
-     * ['h1', 'h2', 'h3', 'h4', 'h5', 'h6','p','i', 'em', 'strong', 'b', 'del', 'blockquote' => ['cite']
-     * 'a','ul', 'li', 'ol', 'br','code', 'pre', 'div', 'span']
-     * @return string
-     */
-    public function sanitize(string $html, array $tags = null): string
-    {
-        $defaults = [
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6','p','i', 'em', 'strong', 'b', 'del', 'blockquote' => ['cite'],'a','ul', 'li', 'ol', 'br','code', 'pre', 'div', 'span',
-        ];
+                // remove double [[ ]] s from linking images
+                if (substr($output, 0, 1) == "[" && substr($output, -1) == "]") {
+                    $output = substr($output, 1, strlen($output) - 2);
 
-        if ($tags === null) {
-            $tags = $defaults;
-        }
-
-        // Normalize tag options
-        $options = [];
-        foreach ($tags as $key => $value) {
-            if (is_int($key)) {
-                $key = $value;
-                $value = [];
-            }
-            $options[$key] = $value;
-        }
-
-        $html = str_replace(["\r\n", "\n"], PHP_EOL, $html); // Standardize line endings
-        /**
-         * When document is imported it will have HTML and body tag.
-         */
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-
-        /**
-         * Add html/body but not doctype. body will be removed later
-         */
-        @$doc->loadHTML($html, LIBXML_HTML_NODEFDTD);
-        foreach ($doc->firstChild->childNodes as $node) {
-            $this->_sanitize($node, $options); // body
-        }
-
-        return $this->removeWrapper($html, $doc->saveHTML() ?: 'An error occured');
-    }
-
-    /**
-     * Workhorse
-     *
-     * @param DOMNode $node
-     * @param array $tags
-     * @return void
-     */
-    private function _sanitize(DOMNode $node, array $tags = []): void
-    {
-        if ($node->hasChildNodes()) {
-            for ($i = 0; $i < $node->childNodes->length; $i++) {
-                $this->_sanitize($node->childNodes->item($i), $tags);
-            }
-        }
-        if ($node->nodeType !== XML_ELEMENT_NODE) {
-            return;
-        }
-
-        $remove = $change = $attributes = [];
-        if (! isset($tags[$node->nodeName]) && $node->nodeName !== 'body') {
-            $remove[] = $node;
-            /* This is for keeping text between divs. Keep for now until committed
-            foreach ($node->childNodes as $child) {
-                     $change[] = [$child, $node];
-                 }
-             */
-        }
-
-        if ($node->attributes) {
-            foreach ($node->attributes as $attr) {
-                if (! isset($tags[$node->nodeName]) || ! in_array($attr->nodeName, $tags[$node->nodeName])) {
-                    $attributes[] = $attr->nodeName;
+                    // for linking images, the title of the <a> overrides the title of the <img>
+                    if ($node->getAttribute("title")) {
+                        $output = $node->getAttribute("title");
+                    }
                 }
-            }
+
+                // if there is no link text, but a title attr
+                if (!$output && $node->getAttribute("title")) {
+                    $output = $node->getAttribute("title");
+                }
+
+                if ($href == null) {
+                    // it doesn't link anywhere
+                    if ($node->getAttribute("name") != null) {
+                        if ($options['drop_links']) {
+                            $output = "$output";
+                        } else {
+                            $output = "[$output]";
+                        }
+                    }
+                } else {
+                    if ($href == $output || $href == "mailto:$output" || $href == "http://$output" || $href == "https://$output") {
+                        // link to the same address: just use link
+                        $output = "$output";
+                    } else {
+                        // replace it
+                        if ($output) {
+                            if ($options['drop_links']) {
+                                $output = "$output";
+                            } else {
+                                $output = "[$output]($href)";
+                            }
+                        } else {
+                            // empty string
+                            $output = "$href";
+                        }
+                    }
+                }
+
+                // does the next node require additional whitespace?
+                switch ($nextName) {
+                    case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
+                    $output .= "\n";
+                    break;
+                }
+                break;
+
+            case "img":
+                if ($options["drop_images"]) {
+                    $output = "";
+                } elseif ($node->getAttribute("title")) {
+                    $output = "[" . $node->getAttribute("title") . "]";
+                } elseif ($node->getAttribute("alt")) {
+                    $output = "[" . $node->getAttribute("alt") . "]";
+                } else {
+                    $output = "";
+                }
+                break;
+
+            case "li":
+                $output .= "\n";
+                break;
+
+            case "blockquote":
+                // process quoted text for whitespace/newlines
+                $output = static::processWhitespaceNewlines($output, $options['keep_empty_lines']);
+
+                // add leading newline
+                $output = "\n" . $output;
+
+                // prepend '> ' at the beginning of all lines
+                $output = preg_replace("/\n/im", "\n> ", $output);
+
+                // replace leading '> >' with '>>'
+                $output = preg_replace("/\n> >/im", "\n>>", $output);
+
+                // add another leading newline and trailing newlines
+                $output = "\n" . $output . "\n\n";
+                break;
+            default:
+                // do nothing
         }
 
-        /**
-         * Remove attributes
-         */
-        foreach ($attributes as $attr) {
-            $node->removeAttribute($attr);
-        }
-
-        /*
-        # Add inserts first
-        foreach ($change as list($a, $b)) {
-            $b->parentNode->insertBefore($a, $b);
-        }
-        */
-
-        # Now remove what we need
-        foreach ($remove as $n) {
-            if ($n->parentNode) {
-                $n->parentNode->removeChild($n);
-            }
-        }
+        return $output;
     }
-
-    /**
-     * Strips HTML tags and the content of those tags
-     *
-     * @param string $html
-     * @param array $tags array of tags to strip, leave empty to strip all tags
-     * @return string|null text or html
-     */
-    public function stripTags(string $html, array $tags = []): ?string
-    {
-        $doc = new DOMDocument();
-        /**
-         * Html should not be modified in anyway
-         */
-        $doc->preserveWhiteSpace = true;
-        $doc->formatOutput = false;
-        @$doc->loadHTML($html, LIBXML_HTML_NODEFDTD);
-        $remove = [];
-        foreach ($tags as $tag) {
-            $nodes = $doc->getElementsByTagName($tag);
-            foreach ($nodes as $node) {
-                $remove[] = $node;
-            }
-        }
-        foreach ($remove as $node) {
-            $node->parentNode->removeChild($node);
-        }
-
-        return $this->removeWrapper($html, $doc->saveHTML() ?: 'An error occured');
-    }
-
-    /**
-     * Escapes Html for output in a secure way
-     *
-     * @param string $html
-     * @param string $encoding
-     * @return string
-     */
-    public function escape(string $html, string $encoding = 'UTF-8'): string
-    {
-        return htmlspecialchars($html, ENT_QUOTES, $encoding);
-    }
-
 }

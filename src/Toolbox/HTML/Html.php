@@ -6,6 +6,7 @@ use DOMDocument;
 use DOMXPath;
 use Simtabi\Enekia\Vanilla\Validators;
 use Simtabi\Pheg\Toolbox\String\Str;
+use Soundasleep\Html2Text;
 
 final class Html
 {
@@ -274,9 +275,9 @@ final class Html
         return $tags;
     }
 
-    public function html2Text(): Html2Text
+    public function html2Text($html, $config): Html2Text
     {
-        return new Html2Text;
+        return Html2Text::convert($html, $config);
     }
 
     public function htmlCleaner(): HtmlCleaner
@@ -288,4 +289,5 @@ final class Html
     {
         return new Form;
     }
+
 }
