@@ -58,7 +58,8 @@
         "coduo/php-humanizer": "^4.0.2",
         "voku/stringy": "^6.5.3",
         "rinvex/countries": "^v8.1.0",
-        "soundasleep/html2text": "dev-master"
+        "soundasleep/html2text": "dev-master",
+        "mews/purifier": "^3.3.4"
     },
     "require-dev": {
         "ext-bcmath": "*",

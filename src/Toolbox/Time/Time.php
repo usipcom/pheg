@@ -532,7 +532,10 @@ final class Time
         return Carbon::parse($string);
     }
 
-    public function evaluateCertainTime($dateTimeStr, $operand = '>', $datetimeFormat = "Y-m-d H:i:s")
+    /**
+     * @throws Exception
+     */
+    public function evaluateCertainTime($dateTimeStr, $operand = '>', $datetimeFormat = "Y-m-d H:i:s"): bool
     {
         $timeNow = new DateTime($this->getCurrentTime(true, $datetimeFormat));
         $timeAgo = new DateTime($dateTimeStr);
@@ -547,14 +550,14 @@ final class Time
     }
 
 
-
     /**
      * Return a timestamp as DateTime object.
      *
-     * @param  mixed  $value
+     * @param mixed $value
+     * @param string $datetimeFormat
      * @return Carbon
      */
-    public function timestamp2DateTime($value, $datetimeFormat = 'Y-m-d H:i:s')
+    public function timestamp2DateTime(mixed $value, string $datetimeFormat = 'Y-m-d H:i:s'): Carbon
     {
         // If this value is already a Carbon instance, we shall just return it as is.
         // This prevents us having to re-instantiate a Carbon instance when we know
@@ -653,4 +656,79 @@ final class Time
     {
         return array_fill_keys($this->dates2range($from, $to, $step, $outputFormat), $default);
     }
+
+    public function getDefaultDateFormats(): array
+    {
+        $formats = [
+            'Y-m-d',
+            'Y-M-d',
+            'y-m-d',
+            'm-d-Y',
+            'M-d-Y',
+        ];
+
+        foreach ($formats as $format) {
+            $formats[] = str_replace('-', '/', $format);
+        }
+
+        $formats[] = 'M d, Y';
+
+        return $formats;
+    }
+
+    public function formatTime(Carbon $timestamp, ?string $format = 'j M Y H:i'): string
+    {
+        $first = Carbon::create(0000, 0, 0, 00, 00, 00);
+
+        if ($timestamp->lte($first)) {
+            return '';
+        }
+
+        return $timestamp->format($format);
+    }
+
+    public function formatDate(?string $date, ?string $format = null): ?string
+    {
+        if (empty($format)) {
+            $format = 'Y-m-d';
+        }
+
+        if (empty($date)) {
+            return $date;
+        }
+
+        return $this->formatTime(Carbon::parse($date), $format);
+    }
+
+    public function formatDateJs(?string $date, ?string $format = null): ?string
+    {
+        if (empty($format)) {
+            $format = 'yyyy-mm-dd';
+        }
+
+        return $this->formatDate($date, $format);
+    }
+
+    public function formatDateTime(?string $date, ?string $format = null): ?string
+    {
+        if (empty($format)) {
+            $format ='Y-m-d H:i:s';
+        }
+
+        if (empty($date)) {
+            return $date;
+        }
+
+        return $this->formatTime(Carbon::parse($date), $format);
+    }
+
+    public function formatDateTimeJs(?string $date, ?string $format = null): ?string
+    {
+        if (empty($format)) {
+            $format ='yyyy-mm-dd H:i:s';
+        }
+
+        return $this->formatDateTime($date, $format);
+    }
+
 }

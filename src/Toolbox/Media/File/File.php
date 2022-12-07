@@ -194,14 +194,14 @@ class File extends FileStream
      * permissions('/path/to/file', 0644);
      * ```
      *
-     * @param string  $path        The path to read the permissions for.
-     * @param integer $permissions The new permissions as an octal value.
+     * @param string $path The path to read the permissions for.
+     * @param integer|null $permissions The new permissions as an octal value.
      *
-     * @return integer The Unix permissions.
+     * @return int|null The Unix permissions.
      *
      * @throws PathException If the permissions could not be read.
      */
-    function permissions($path, $permissions = null)
+    function permissions(string $path, ?int $permissions = null): ?int
     {
         if (!file_exists($path)) {
             throw new PathException('The path "%s" does not exist.', $path);
@@ -300,14 +300,14 @@ class File extends FileStream
      * $real = resolve('/path/to/link');
      * ```
      *
-     * @param string  $link      The name of the symbolic link.
+     * @param string $link      The name of the symbolic link.
      * @param boolean $recursive Recursively resolve the link?
      *
      * @return string The path from the resolved symbolic link.
      *
      * @throws PathException If the symbolic link could not be resolved.
      */
-    function resolve($link, $recursive = true)
+    function resolve(string $link, bool $recursive = true)
     {
         if (!is_link($link)) {
             throw new PathException('The path "%s" is not a symbolic link.', $link);
@@ -410,14 +410,14 @@ class File extends FileStream
      * $path = temp_path(null, '/path/to/dir');
      * ```
      *
-     * @param string      $template The file name template.
-     * @param null|string $dir      The path to the temporary directory.
+     * @param string|null $template The file name template.
+     * @param string|null $dir      The path to the temporary directory.
      *
      * @return string The path to the file.
      *
      * @throws TempException If the path could not be generated.
      */
-    function tempPath($template = null, $dir = null)
+    function tempPath(?string $template = null, ?string $dir = null): string
     {
         if (null === $dir) {
             $dir = sys_get_temp_dir();
@@ -440,10 +440,11 @@ class File extends FileStream
 
     /**
      * Get file extension
-     * @param  string $filename File path
+     * @param string $filename File path
      * @return string file extension
      */
-    public function getFileExtension($filename) {
+    public function getFileExtension(string $filename): string
+    {
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 

@@ -271,16 +271,6 @@ class JSON implements JSONInterface
         return $out;
     }
 
-    /**
-     * @param array $data
-     * @return string
-     * @throws JsonException
-     */
-    function pretifyEncode(string $data)
-    {
-        return json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    }
-
     public function escapeUnicode($str){
         return json_decode((preg_replace('/\\\u([0-9a-z]{4})/', '&#x$1;', Transfigure::toJson($str))));
     }
@@ -311,4 +301,24 @@ class JSON implements JSONInterface
         return new Json2File($file);
     }
 
+    /**
+     * @throws JsonException
+     */
+    public function encodePrettify(array|string $data): string
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    }
+
+    public function stringify($content): ?string
+    {
+        if (is_string($content)) {
+            return $content;
+        }
+
+        if (is_array($content)) {
+            return json_encode($content);
+        }
+
+        return null;
+    }
 }

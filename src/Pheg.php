@@ -13,6 +13,7 @@ use Simtabi\Pheg\Toolbox\Breadcrumbs;
 use Simtabi\Pheg\Toolbox\Cli;
 use Simtabi\Pheg\Toolbox\Colors\Colors;
 use Simtabi\Pheg\Toolbox\CopyrightText;
+use Simtabi\Pheg\Toolbox\Ini;
 use Simtabi\Pheg\Toolbox\Localization\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
@@ -204,12 +205,17 @@ class Pheg
         return new Helpers;
     }
 
+    public function ini(): Ini
+    {
+        return new Ini();
+    }
+
     public function http(): Http
     {
         return new Http;
     }
 
-    public function readable(): Humanizer
+    public function humanizer(): Humanizer
     {
         return new Humanizer;
     }

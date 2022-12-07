@@ -442,4 +442,7 @@ final class Humanizer
         return round(pow($calcBase, $base - floor($base)), 2) . ' ' . $suffixes[floor($base)];
     }
 
+
+
+
 }

@@ -293,4 +293,13 @@ final class Html
         return new Form;
     }
 
+    public function clean(array|string|null $dirty, array|string $config = null, bool $enableLessSecureWeb = false): ?string
+    {
+        if ($enableLessSecureWeb) {
+            return $dirty;
+        }
+
+        return clean($dirty ?: '', $config);
+    }
+
 }

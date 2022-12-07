@@ -83,12 +83,12 @@ final class Str
         return preg_replace("/[^A-Za-z0-9 -]/", '', $text);
     }
 
-    public function stripSpecialCharactersAndSpaces(string $string, string $replacer = '-'):string
+    public static function removeSpecialCharacters(?string $string): array|string|null
     {
-        return preg_replace('/[^A-Za-z0-9\-]/', $replacer,
-            str_replace(' ', $replacer,
-                preg_replace('/\s+/', $replacer, $string)
-            ));
+        $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+
+        return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
     }
 
     public function stripSEONeat($str, $total = 5, $delimiter = '...')
@@ -1604,6 +1604,22 @@ final class Str
     {
         return (new Slugify($config, $provider))->slugify($string, $options);
     }
+
+    public function removeQueryStringVars(?string $url, array|string $key): ?string
+    {
+        if (! is_array($key)) {
+            $key = [$key];
+        }
+
+        foreach ($key as $item) {
+            $url = preg_replace('/(.*)(?|&)' . $item . '=[^&]+?(&)(.*)/i', '$1$2$4', $url . '&');
+            $url = substr($url, 0, -1);
+        }
+
+        return $url;
+    }
+
+
 
     public function compare(): Compare
     {

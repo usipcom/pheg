@@ -563,4 +563,28 @@ class Color
         return "#" . $result;
     }
 
+
+
+
+
+    // added
+    public function hexToRgba(string $color, float $opacity = 1): string
+    {
+        $rgb = implode(',', self::hexToRgb($color));
+
+        if ($opacity == 1) {
+            return 'rgb(' . $rgb . ')';
+        }
+
+        return 'rgba(' . $rgb . ', ' . $opacity . ')';
+    }
+
+    public function hexToRgb(string $color): array
+    {
+        [$red, $green, $blue] = sscanf($color, '#%02x%02x%02x');
+
+        $blue = $blue === null ? 0 : $blue;
+
+        return compact('red', 'green', 'blue');
+    }
 }
