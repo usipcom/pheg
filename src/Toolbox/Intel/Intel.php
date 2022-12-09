@@ -6,6 +6,7 @@ use Simtabi\Pheg\Toolbox\Intel\Info\Ip;
 use Simtabi\Pheg\Toolbox\Intel\Info\Network;
 use Simtabi\Pheg\Toolbox\Intel\Info\Os\Os;
 use Simtabi\Pheg\Toolbox\Intel\Info\Ssl;
+use Spatie\Url\Url;
 
 final class Intel
 {
@@ -35,6 +36,11 @@ final class Intel
     public function getOsInfo(): Os
     {
         return new Os();
+    }
+
+    public function getUrlInfo($url): Url
+    {
+        return Url::fromString($url);
     }
 
     public function isBot()

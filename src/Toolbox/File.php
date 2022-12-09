@@ -932,4 +932,22 @@ class File
         }
     }
 
+    public function deleteStorageSymlink(): bool
+    {
+        try {
+
+            $path = public_path('storage');
+            if (File::exists($path)) {
+                if (File::delete($path)) {
+                    return true;
+                }
+            }else{
+                return true;
+            }
+
+        } catch (Exception $exception) {
+            info($exception->getMessage());
+        }
+        return false;
+    }
 }

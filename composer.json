@@ -53,7 +53,7 @@
         "jimmiw/php-time-ago": "dev-master",
         "sokil/php-isocodes": "^3.3.15",
         "masterminds/html5": "^2.7.5",
-        "spatie/url": "^2.1.0",
+        "spatie/url": "dev-main",
         "justinrainbow/json-schema": "^5.2.11",
         "seld/jsonlint": "^1.8.9",
         "coduo/php-humanizer": "^4.0.2",
