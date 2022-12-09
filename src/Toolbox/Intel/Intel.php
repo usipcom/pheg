@@ -1,11 +1,41 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Server\Entities;
+namespace Simtabi\Pheg\Toolbox\Intel;
+
+use Simtabi\Pheg\Toolbox\Intel\Info\Ip;
+use Simtabi\Pheg\Toolbox\Intel\Info\Network;
+use Simtabi\Pheg\Toolbox\Intel\Info\Os\Os;
+use Simtabi\Pheg\Toolbox\Intel\Info\Ssl;
 
 final class Intel
 {
 
     public function __construct() {}
+
+    public function intel(): Intel
+    {
+        return new Intel();
+    }
+
+    public function getIpInfo(): Ip
+    {
+        return new Ip();
+    }
+
+    public function getNetworkInfo(): Network
+    {
+        return new Network();
+    }
+
+    public function getSslInfo(): Ssl
+    {
+        return new Ssl();
+    }
+
+    public function getOsInfo(): Os
+    {
+        return new Os();
+    }
 
     public function isBot()
     {
@@ -34,11 +64,6 @@ final class Intel
 
     public function getDeviceType()
     {
-
-    }
-
-
-    public function getIPInfo() {
 
     }
 

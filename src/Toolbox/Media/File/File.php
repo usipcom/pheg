@@ -448,4 +448,6 @@ class File extends FileStream
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
+
+
 }

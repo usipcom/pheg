@@ -5,7 +5,7 @@ namespace Simtabi\Pheg\Toolbox\Time\Exceptions;
 use DateTimeInterface;
 use Exception;
 
-class InvalidPeriod extends Exception
+class InvalidTimePeriod extends Exception
 {
     public static function startDateTimeCannotBeAfterEndDateTime(DateTimeInterface $startDateTime, DateTimeInterface $endDateTime): static
     {

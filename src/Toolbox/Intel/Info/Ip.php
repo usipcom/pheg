@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Pheg\Toolbox\Server\Entities;
+namespace Simtabi\Pheg\Toolbox\Intel\Info;
 
 /**
  * Class IP
@@ -8,7 +8,7 @@ namespace Simtabi\Pheg\Toolbox\Server\Entities;
  * @package Simtabi\Pheg\Toolbox
  * @SuppressWarnings(PHPMD.ShortClassName)
  */
-final class IP
+final class Ip
 {
 
     public function __construct() {}
@@ -138,7 +138,8 @@ final class IP
         return long2ip($resultMask) ?: null;
     }
 
-    public function blockAddress(string $address, array $blacklisted, $message = "Your IP('%s') has been blocked!"){
+    public function blockAddress(string $address, array $blacklisted, $message = "Your IP('%s') has been blocked!"): void
+    {
         if(in_array($address, $blacklisted)){
             die(sprintf($message, $address));
         }

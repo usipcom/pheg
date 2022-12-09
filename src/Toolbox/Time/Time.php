@@ -2,7 +2,7 @@
 
 namespace Simtabi\Pheg\Toolbox\Time;
 
-use DateTime;
+use DateTime as BaseDateTime;
 use DateTimeZone;
 use Exception;
 use Moment\Moment;
@@ -11,9 +11,14 @@ use Simtabi\Pheg\Toolbox\Transfigures\Transfigure;
 use Westsworld\TimeAgo;
 use Simtabi\Enekia\Vanilla\Validators;
 use DateTimeInterface;
+use BadMethodCallException;
+use DateTimeImmutable;
+use InvalidArgumentException;
+use Throwable;
 
 final class Time
 {
+
     public const MINUTE     = 60;
     public const HOUR       = 3600;
     public const DAY        = 86400;
@@ -31,9 +36,14 @@ final class Time
         $this->validators = new Validators();
     }
 
-    public function period($startDateTime = null, $endDateTime = null): Period
+    public function period($startDateTime = null, $endDateTime = null): DatePeriod
     {
-        return new Period($startDateTime, $endDateTime );
+        return new DatePeriod($startDateTime, $endDateTime );
+    }
+
+    public function dateTime($time = "now", $timezone = null, ?string $format = null): DateTime
+    {
+        return new DateTime($time, $timezone, $format);
     }
 
     /**
@@ -41,18 +51,19 @@ final class Time
      *
      * @param mixed $time
      * @param null $timezone
-     * @return DateTime
+     *
+     * @return BaseDateTime
      * @throws Exception
      */
-    public function factory($time = null, $timezone = null): DateTime
+    public function factory($time = null, $timezone = null): BaseDateTime
     {
         $timezone = $this->getTimezoneObject($timezone);
 
-        if ($time instanceof DateTime) {
+        if ($time instanceof BaseDateTime) {
             return $time->setTimezone($timezone);
         }
 
-        $dateTime = new DateTime('@' . $this->convertToTimestamp($time));
+        $dateTime = new BaseDateTime('@' . $this->convertToTimestamp($time));
         $dateTime->setTimezone($timezone);
 
         return $dateTime;
@@ -60,7 +71,7 @@ final class Time
 
     public function getCurrentTime($asTimestamp = false, $format = "Y-m-d H:i:s", $defaultTime = null, $timezone = "Africa/Nairobi") {
 
-        $objDateTime = new DateTime();
+        $objDateTime = new BaseDateTime();
         $objDateTime->setTimezone(new DateTimeZone($timezone));
 
         if (!empty($defaultTime)) {
@@ -101,12 +112,12 @@ final class Time
                 $expTimezone  = explode('/', $timezone);
 
                 // Let's sample the time there right now
-                $currentTime  = new DateTime('', $dateTimeZone);
+                $currentTime = new BaseDateTime('', $dateTimeZone);
                 if (isset($expTimezone[0])) {
                     if ($expTimezone[0] !== $lastRegion) {
                         $lastRegion = $expTimezone[0];
                     }
-                    $getOffset = $this->formatDisplayOffset($dateTimeZone->getOffset(new DateTime()));
+                    $getOffset = $this->formatDisplayOffset($dateTimeZone->getOffset(new BaseDateTime()));
                     $grouped[$formatName($lastRegion)][$formatName($timezone)] = [
                         'timezone' => $timezone,
                         'offset'   => $getOffset,
@@ -205,9 +216,9 @@ final class Time
 
         $fmt  = 'Y-m-d H:i:s';
         $str  = $this->convertToSimpleTime($startTime, $fmt);
-        $now  = new DateTime($str);
+        $now = new BaseDateTime($str);
         $end  = $this->convertToSimpleTime($endTime, $fmt);
-        $ref  = new DateTime($end);
+        $ref = new BaseDateTime($end);
         $diff = $now->diff($ref);
 
         // build formats
@@ -391,13 +402,14 @@ final class Time
     /**
      * Convert to timestamp
      *
-     * @param string|int|DateTime|null $time
-     * @param bool                     $currentIsDefault
+     * @param string|int|BaseDateTime|null $time
+     * @param bool                         $currentIsDefault
+     *
      * @return int
      */
     public function convertToTimestamp($time = null, bool $currentIsDefault = true): int
     {
-        if ($time instanceof DateTime) {
+        if ($time instanceof BaseDateTime) {
             return (int) $time->format('U');
         }
 
@@ -468,8 +480,8 @@ final class Time
 
     public function convertStringToDate($string, $fromFormat = 'Y-m-d', $toFormat = 'F j, Y')
     {
-        $date = DateTime::createFromFormat($fromFormat, $string);
-        return ($date instanceof DateTime) ? $date->format($toFormat) : '';
+        $date = BaseDateTime::createFromFormat($fromFormat, $string);
+        return ($date instanceof BaseDateTime) ? $date->format($toFormat) : '';
     }
 
     public function convertToSqlFormat(?string $time, $forSql = true, $readFormat = self::SQL_FORMAT, $storeFormat = self::SQL_FORMAT): string|null
@@ -504,13 +516,13 @@ final class Time
         $inputFormat = empty($inputFormat) ? 'Y-m-d H:i:s' : $inputFormat;
 
         // init date object
-        $dateObj     = new DateTime();
+        $dateObj = new BaseDateTime();
         $dateObj->setTimezone(new DateTimeZone($timezone));
 
         $time        = $dateObj->setTimestamp($time)->format($inputFormat);
-        $formatted   = DateTime::createFromFormat($inputFormat, $time);
+        $formatted = BaseDateTime::createFromFormat($inputFormat, $time);
         if($formatted && $formatted->format($inputFormat) == $time){
-            return (new DateTime($time))->format($outputFormat);
+            return (new BaseDateTime($time))->format($outputFormat);
         }
     }
 
@@ -521,7 +533,7 @@ final class Time
 
     public function formatDisplayOffset($offset, $showUTC = true): ?string
     {
-        $initial = new DateTime();
+        $initial = new BaseDateTime();
         $initial->setTimestamp(abs($offset));
 
         return ($showUTC === true ? "UTC " : null) . ($offset >= 0 ? '+':'-') . $initial->format('H:i');
@@ -537,8 +549,8 @@ final class Time
      */
     public function evaluateCertainTime($dateTimeStr, $operand = '>', $datetimeFormat = "Y-m-d H:i:s"): bool
     {
-        $timeNow = new DateTime($this->getCurrentTime(true, $datetimeFormat));
-        $timeAgo = new DateTime($dateTimeStr);
+        $timeNow = new BaseDateTime($this->getCurrentTime(true, $datetimeFormat));
+        $timeAgo = new BaseDateTime($dateTimeStr);
 
         return match (strtolower($operand)) {
             '>'  => ($timeAgo > $timeNow),

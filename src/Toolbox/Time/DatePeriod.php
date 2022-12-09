@@ -4,14 +4,14 @@ namespace Simtabi\Pheg\Toolbox\Time;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
-use Simtabi\Pheg\Toolbox\Time\Exceptions\InvalidPeriod;
+use Simtabi\Pheg\Toolbox\Time\Exceptions\InvalidTimePeriod;
 use DateTimeInterface;
 use Illuminate\Support\Str;
 
 /**
  * @deprecated since 2021, plan to move it to laranail side
  */
-class Period
+class DatePeriod
 {
     /**
      * Available past types.
@@ -45,7 +45,8 @@ class Period
     /**
      * @param DateTimeInterface|string|null $startDateTime
      * @param DateTimeInterface|string|null $endDateTime
-     * @throws InvalidPeriod
+     *
+     * @throws InvalidTimePeriod
      */
     public function __construct($startDateTime = null, $endDateTime = null)
     {
@@ -54,7 +55,7 @@ class Period
 
         if ($startDateTime instanceof DateTimeInterface && $endDateTime instanceof DateTimeInterface) {
             if ($startDateTime > $endDateTime) {
-                throw InvalidPeriod::startDateTimeCannotBeAfterEndDateTime($startDateTime, $endDateTime);
+                throw InvalidTimePeriod::startDateTimeCannotBeAfterEndDateTime($startDateTime, $endDateTime);
             }
         }
 
@@ -67,7 +68,8 @@ class Period
      *
      * @param DateTimeInterface|string|null $startDateTime
      * @param DateTimeInterface|string|null $endDateTime
-     * @throws InvalidPeriod
+     *
+     * @throws InvalidTimePeriod
      */
     public static function create($startDateTime = null, $endDateTime = null): self
     {
@@ -78,7 +80,8 @@ class Period
      * Create a new Period instance with only a start date time.
      *
      * @param DateTimeInterface|string|null $startDateTime
-     * @throws InvalidPeriod
+     *
+     * @throws InvalidTimePeriod
      */
     public static function since($startDateTime = null): self
     {
@@ -89,7 +92,8 @@ class Period
      * Create a new Period instance with only a end date time.
      *
      * @param DateTimeInterface|string|null $endDateTime
-     * @throws InvalidPeriod
+     *
+     * @throws InvalidTimePeriod
      */
     public static function upto($endDateTime = null): self
     {

@@ -1619,11 +1619,59 @@ final class Str
         return $url;
     }
 
-
-
     public function compare(): Compare
     {
         return new Compare();
+    }
+
+    /**
+     * Generates title text from a dirty text
+     *
+     * @param string $text
+     * @param string $with
+     * @return string
+     */
+    public function makeTitle(string $text, string $with = ' '): string
+    {
+        $text = trim($text);
+        $text = str_replace([
+            '/',
+            '\\',
+            ':',
+            ';',
+            '!',
+            '@',
+            '#',
+            '$',
+            '%',
+            '^',
+            '*',
+            '(',
+            ')',
+            '_',
+            '-',
+            '+',
+            '=',
+            '|',
+            '{',
+            '}',
+            '[',
+            ']',
+            '"',
+            "'",
+            '<',
+            '>',
+            ',',
+            '?',
+            '~',
+            '`',
+            '&',
+            ' ',
+            '.',
+        ], $with, $text);
+
+        // Finally run preg_replace function. This will replace anything that isn't a letter, number or space.
+        return mb_convert_case(preg_replace("/[^a-zA-Z 0-9]+/", $with, $text), MB_CASE_TITLE, 'UTF-8');
     }
 
 }

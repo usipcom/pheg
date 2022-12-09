@@ -13,7 +13,9 @@ use Simtabi\Pheg\Toolbox\Breadcrumbs;
 use Simtabi\Pheg\Toolbox\Cli;
 use Simtabi\Pheg\Toolbox\Colors\Colors;
 use Simtabi\Pheg\Toolbox\CopyrightText;
+use Simtabi\Pheg\Toolbox\File;
 use Simtabi\Pheg\Toolbox\Ini;
+use Simtabi\Pheg\Toolbox\Intel\Intel;
 use Simtabi\Pheg\Toolbox\Localization\Countries\Countries;
 use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
@@ -37,7 +39,6 @@ use Simtabi\Pheg\Toolbox\PhpDocs;
 use Simtabi\Pheg\Toolbox\Request;
 use Simtabi\Pheg\Toolbox\Sanitize;
 use Simtabi\Pheg\Toolbox\Serialize;
-use Simtabi\Pheg\Toolbox\Server\Server;
 use Simtabi\Pheg\Toolbox\SimpleTimer;
 use Simtabi\Pheg\Toolbox\SqlHandler;
 use Simtabi\Pheg\Toolbox\Stats;
@@ -115,9 +116,9 @@ class Pheg
         return new Media();
     }
 
-    public function server(): Server
+    public function intel(): Intel
     {
-        return new Server();
+        return new Intel();
     }
 
     public function transfigure(): Transfigure
@@ -188,6 +189,11 @@ class Pheg
     public function env(): Env
     {
         return new Env;
+    }
+
+    public function file(): File
+    {
+        return new File();
     }
 
     public function filter(): Filter
