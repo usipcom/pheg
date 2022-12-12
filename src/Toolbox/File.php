@@ -582,7 +582,7 @@ class File
      */
     public function ensureDirectoryExists($path, $mode = 0755, $recursive = true)
     {
-        if (! $this->isDirectory($path)) {
+        if ((! $this->isDirectory($path)) || (! $this->exists($path))) {
             $this->makeDirectory($path, $mode, $recursive);
         }
     }
