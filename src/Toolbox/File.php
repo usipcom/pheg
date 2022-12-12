@@ -4,6 +4,7 @@ namespace Simtabi\Pheg\Toolbox;
 
 use ErrorException;
 use Exception;
+use FilesystemIterator;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use RuntimeException;
 use Simtabi\Pheg\Core\Exceptions\PhegException;
@@ -17,9 +18,19 @@ use Symfony\Component\Mime\MimeTypes;
 class File
 {
 
+    private Filesystem $filesystem;
+
     public function __construct()
     {
         $this->filesystem = new Filesystem();
+    }
+
+    /**
+     * @return Filesystem
+     */
+    public function getFilesystem(): Filesystem
+    {
+        return $this->filesystem;
     }
 
     /**
@@ -286,7 +297,7 @@ class File
      * @param  string  $target
      * @return bool
      */
-    public function move($path, $target)
+    public function move(string $path, string $target): bool
     {
         return rename($path, $target);
     }
@@ -340,7 +351,7 @@ class File
      *
      * @throws PhegException
      */
-    public function relativeLink($target, $link)
+    public function relativeLink(string $target, string $link): void
     {
         try {
             if (! class_exists(Filesystem::class)) {
@@ -363,7 +374,7 @@ class File
      * @param  string  $path
      * @return string
      */
-    public function name($path)
+    public function name(string $path): string
     {
         return pathinfo($path, PATHINFO_FILENAME);
     }
@@ -374,7 +385,7 @@ class File
      * @param  string  $path
      * @return string
      */
-    public function basename($path)
+    public function basename(string $path): string
     {
         return pathinfo($path, PATHINFO_BASENAME);
     }
@@ -385,7 +396,7 @@ class File
      * @param  string  $path
      * @return string
      */
-    public function dirname($path)
+    public function dirname(string $path): string
     {
         return pathinfo($path, PATHINFO_DIRNAME);
     }
@@ -396,7 +407,7 @@ class File
      * @param  string  $path
      * @return string
      */
-    public function extension($path)
+    public function extension(string $path): string
     {
         return pathinfo($path, PATHINFO_EXTENSION);
     }
@@ -410,7 +421,7 @@ class File
      *
      * @throws PhegException
      */
-    public function guessExtension($path): ?string
+    public function guessExtension(string $path): ?string
     {
         try {
             if (! class_exists(MimeTypes::class)) {
@@ -431,7 +442,7 @@ class File
      * @param  string  $path
      * @return string
      */
-    public function type($path)
+    public function type(string $path): string
     {
         return filetype($path);
     }
@@ -442,7 +453,7 @@ class File
      * @param  string  $path
      * @return string|false
      */
-    public function mimeType($path)
+    public function mimeType(string $path): bool|string
     {
         return finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
     }
@@ -453,7 +464,7 @@ class File
      * @param  string  $path
      * @return int
      */
-    public function size($path)
+    public function size(string $path): int
     {
         return filesize($path);
     }
@@ -461,10 +472,11 @@ class File
     /**
      * Get the file's last modification time.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return int
      */
-    public function lastModified($path)
+    public function lastModified(string $path): int
     {
         return filemtime($path);
     }
@@ -472,10 +484,11 @@ class File
     /**
      * Determine if the given path is a directory.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return bool
      */
-    public function isDirectory($directory)
+    public function isDirectory(string $directory): bool
     {
         return is_dir($directory);
     }
@@ -483,10 +496,11 @@ class File
     /**
      * Determine if the given path is readable.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return bool
      */
-    public function isReadable($path)
+    public function isReadable(string $path): bool
     {
         return is_readable($path);
     }
@@ -494,10 +508,11 @@ class File
     /**
      * Determine if the given path is writable.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return bool
      */
-    public function isWritable($path)
+    public function isWritable(string $path): bool
     {
         return is_writable($path);
     }
@@ -505,10 +520,11 @@ class File
     /**
      * Determine if the given path is a file.
      *
-     * @param  string  $file
+     * @param string $file
+     *
      * @return bool
      */
-    public function isFile($file)
+    public function isFile(string $file): bool
     {
         return is_file($file);
     }
@@ -516,11 +532,12 @@ class File
     /**
      * Find path names matching a given pattern.
      *
-     * @param  string  $pattern
-     * @param  int  $flags
+     * @param string $pattern
+     * @param int    $flags
+     *
      * @return array
      */
-    public function glob($pattern, $flags = 0)
+    public function glob(string $pattern, int $flags = 0): array
     {
         return glob($pattern, $flags);
     }
@@ -532,7 +549,7 @@ class File
      * @param  bool  $hidden
      * @return SplFileInfo[]
      */
-    public function files($directory, $hidden = false)
+    public function files(string $directory, bool $hidden = false): array
     {
         return iterator_to_array(
             Finder::create()->files()->ignoreDotFiles(! $hidden)->in($directory)->depth(0)->sortByName(),
@@ -543,11 +560,12 @@ class File
     /**
      * Get all the files from the given directory (recursive).
      *
-     * @param  string  $directory
-     * @param  bool  $hidden
+     * @param string $directory
+     * @param bool   $hidden
+     *
      * @return SplFileInfo[]
      */
-    public function allFiles($directory, $hidden = false)
+    public function allFiles(string $directory, bool $hidden = false): array
     {
         return iterator_to_array(
             Finder::create()->files()->ignoreDotFiles(! $hidden)->in($directory)->sortByName(),
@@ -558,10 +576,11 @@ class File
     /**
      * Get all the directories within a given directory.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return array
      */
-    public function directories($directory)
+    public function directories(string $directory): array
     {
         $directories = [];
 
@@ -578,13 +597,16 @@ class File
      * @param  string  $path
      * @param  int  $mode
      * @param  bool  $recursive
-     * @return void
+     *
+     * @return bool
      */
-    public function ensureDirectoryExists($path, $mode = 0755, $recursive = true)
+    public function ensureDirectoryExists(string $path, int $mode = 0755, bool $recursive = true): bool
     {
-        if ((! $this->isDirectory($path)) || (! $this->exists($path))) {
-            $this->makeDirectory($path, $mode, $recursive);
+        if ((! $this->isDirectory($path)) || (! $this->exists($path)) && (! $this->isFile($path))) {
+            return $this->makeDirectory($path, $mode, $recursive);
         }
+
+        return false;
     }
 
     /**
@@ -596,7 +618,7 @@ class File
      * @param  bool  $force
      * @return bool
      */
-    public function makeDirectory($path, $mode = 0755, $recursive = false, $force = false)
+    public function makeDirectory(string $path, int $mode = 0755, bool $recursive = false, bool $force = false): bool
     {
         if ($force) {
             return @mkdir($path, $mode, $recursive);
@@ -608,12 +630,13 @@ class File
     /**
      * Move a directory.
      *
-     * @param  string  $from
-     * @param  string  $to
-     * @param  bool  $overwrite
+     * @param string $from
+     * @param string $to
+     * @param bool   $overwrite
+     *
      * @return bool
      */
-    public function moveDirectory($from, $to, $overwrite = false)
+    public function moveDirectory(string $from, string $to, bool $overwrite = false): bool
     {
         if ($overwrite && $this->isDirectory($to) && ! $this->deleteDirectory($to)) {
             return false;
@@ -625,12 +648,14 @@ class File
     /**
      * Copy a directory from one location to another.
      *
-     * @param  string  $directory
-     * @param  string  $destination
-     * @param  int|null  $options
+     * @param string   $directory
+     * @param string   $destination
+     * @param int|null $options
+     *
      * @return bool
+     * @throws PhegException
      */
-    public function copyDirectory($directory, $destination, $options = null)
+    public function copyDirectory(string $directory, string $destination, int $options = null): bool
     {
         if (! $this->isDirectory($directory)) {
             return false;
@@ -677,11 +702,13 @@ class File
      *
      * The directory itself may be optionally preserved.
      *
-     * @param  string  $directory
-     * @param  bool  $preserve
+     * @param string $directory
+     * @param bool   $preserve
+     *
      * @return bool
+     * @throws PhegException
      */
-    public function deleteDirectory($directory, $preserve = false)
+    public function deleteDirectory(string $directory, bool $preserve = false)
     {
         if (! $this->isDirectory($directory)) {
             return false;
@@ -715,10 +742,12 @@ class File
     /**
      * Remove all the directories within a given directory.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return bool
+     * @throws PhegException
      */
-    public function deleteDirectories($directory)
+    public function deleteDirectories(string $directory): bool
     {
         $allDirectories = $this->directories($directory);
 
@@ -736,8 +765,10 @@ class File
     /**
      * Empty the specified directory of all files and folders.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return bool
+     * @throws PhegException
      */
     public function cleanDirectory(string $directory): bool
     {
