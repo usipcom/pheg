@@ -602,7 +602,7 @@ class File
      */
     public function ensureDirectoryExists(string $path, int $mode = 0755, bool $recursive = true): bool
     {
-        if ((! $this->isDirectory($path)) || (! $this->exists($path)) && (! $this->isFile($path))) {
+        if (((! $this->isDirectory($path)) || (! $this->exists($path))) && (! $this->isFile($path))) {
             return $this->makeDirectory($path, $mode, $recursive);
         }
 
