@@ -5,6 +5,8 @@ namespace Simtabi\Pheg\Toolbox\Intel;
 use Simtabi\Pheg\Toolbox\Intel\Info\Ip;
 use Simtabi\Pheg\Toolbox\Intel\Info\Network;
 use Simtabi\Pheg\Toolbox\Intel\Info\Os\Os;
+use Simtabi\Pheg\Toolbox\Intel\Info\Request;
+use Simtabi\Pheg\Toolbox\Intel\Info\Server;
 use Simtabi\Pheg\Toolbox\Intel\Info\Ssl;
 use Spatie\Url\Url;
 
@@ -12,11 +14,6 @@ final class Intel
 {
 
     public function __construct() {}
-
-    public function intel(): Intel
-    {
-        return new Intel();
-    }
 
     public function getIpInfo(): Ip
     {
@@ -26,6 +23,16 @@ final class Intel
     public function getNetworkInfo(): Network
     {
         return new Network();
+    }
+
+    public function getRequestInfo(): Request
+    {
+        return new Request();
+    }
+
+    public function getServerInfo(): Server
+    {
+        return new Server();
     }
 
     public function getSslInfo(): Ssl

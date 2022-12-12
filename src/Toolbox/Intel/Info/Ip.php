@@ -2,6 +2,8 @@
 
 namespace Simtabi\Pheg\Toolbox\Intel\Info;
 
+use Simtabi\Pheg\Toolbox\Intel\Info\Whip\Whip;
+
 /**
  * Class IP
  *
@@ -145,4 +147,8 @@ final class Ip
         }
     }
 
+    public function getWhip($enabled = Whip::ALL_METHODS, array $whitelists = [], $source = null): Whip
+    {
+        return new Whip($enabled, $whitelists, $source);
+    }
 }
