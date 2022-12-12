@@ -890,8 +890,8 @@ class File
                 $data = (new JSON())->encodePrettify($data);
             }
 
-            if (! $this->isDirectory(File::dirname($path))) {
-                $this->makeDirectory(File::dirname($path), 493, true);
+            if (! $this->isDirectory($this->dirname($path))) {
+                $this->makeDirectory($this->dirname($path), 493, true);
             }
 
             $this->put($path, $data);
@@ -937,8 +937,8 @@ class File
         try {
 
             $path = public_path('storage');
-            if (File::exists($path)) {
-                if (File::delete($path)) {
+            if ($this->exists($path)) {
+                if ($this->delete($path)) {
                     return true;
                 }
             }else{
