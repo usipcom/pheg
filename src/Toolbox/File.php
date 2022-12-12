@@ -635,6 +635,7 @@ class File
      * @param bool   $overwrite
      *
      * @return bool
+     * @throws PhegException
      */
     public function moveDirectory(string $from, string $to, bool $overwrite = false): bool
     {
@@ -775,9 +776,6 @@ class File
         return $this->deleteDirectory($directory, true);
     }
 
-
-
-
     /**
      * Appends timestamp to a given file.
      *
@@ -827,9 +825,6 @@ class File
         return false;
     }
 
-
-
-
     /**
      * Fill placeholders in given single file.
      *
@@ -851,7 +846,6 @@ class File
             throw new PhegException($exception->getMessage());
         }
     }
-
 
     /**
      * Gets file permissions
@@ -878,7 +872,6 @@ class File
 
     }
 
-
     /**
      * Get the size of a given directory
      *
@@ -896,9 +889,18 @@ class File
         return $size;
     }
 
-    public function getFileData(string $file, bool $convertToArray = true)
+    /**
+     * Fetch all contents of a file
+     *
+     * @param string $file
+     * @param bool   $convertToArray
+     *
+     * @return array|mixed|string|null
+     * @throws PhegException
+     */
+    public function getFileData(string $file, bool $convertToArray = true): mixed
     {
-        $file = File::get($file);
+        $file = $this->get($file);
         if (! empty($file)) {
             if ($convertToArray) {
                 return json_decode($file, true);
@@ -914,6 +916,15 @@ class File
         return [];
     }
 
+    /**
+     * Saves data to a file
+     *
+     * @param string       $path
+     * @param array|string $data
+     * @param bool         $json
+     *
+     * @return bool
+     */
     public function saveFileData(string $path, array|string $data, bool $json = true): bool
     {
         try {
@@ -935,6 +946,14 @@ class File
         }
     }
 
+    /**
+     * Get all files in a given directory
+     *
+     * @param string $path
+     * @param array  $ignoreFiles
+     *
+     * @return array
+     */
     public function scanDirectory(string $path, array $ignoreFiles = []): array
     {
         if ($this->isDirectory($path)) {
@@ -946,7 +965,6 @@ class File
 
         return [];
     }
-
 
     /**
      * Load helpers from a directory
@@ -963,6 +981,11 @@ class File
         }
     }
 
+    /**
+     * Unlink storage symbolic link
+     *
+     * @return bool
+     */
     public function deleteStorageSymlink(): bool
     {
         try {
