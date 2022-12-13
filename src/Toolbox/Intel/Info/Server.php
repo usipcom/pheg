@@ -69,4 +69,24 @@ class Server
         return dirname(__DIR__, $levels) . "/" . (!empty($resource) ? "{$resource}" : "");
     }
 
+    /**
+     * Get or all installed apache modules, or check if a
+     * given module is installed
+     *
+     * @param string|null $moduleName
+     *
+     * @return bool|array
+     */
+    public function getInstalledApacheModules(?string $moduleName = null): bool|array
+    {
+        $moduleName = trim($moduleName);
+        $modules    = apache_get_modules();
+
+        if (empty($moduleName)) {
+            return $modules;
+        }
+
+        return (bool) array_search($moduleName, $modules);
+    }
+
 }
