@@ -26,7 +26,6 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-fileinfo": "*",
-        "ext-apache": "*",
         "guzzlehttp/guzzle": "^7.4.2",
         "myclabs/deep-copy": "^1.11.0",
         "eclipxe/xmlschemavalidator": "^3.0.2",
@@ -65,6 +64,7 @@
     },
     "require-dev": {
         "ext-bcmath": "*",
+        "ext-apache": "*",
         "symfony/translation": "^v6.0.6",
         "symfony/yaml": "^v6.0.3",
         "aeon-php/calendar": "^1.0.4",
