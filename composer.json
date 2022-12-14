@@ -26,6 +26,7 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-fileinfo": "*",
+        "ext-apache": "*",
         "guzzlehttp/guzzle": "^7.4.2",
         "myclabs/deep-copy": "^1.11.0",
         "eclipxe/xmlschemavalidator": "^3.0.2",
