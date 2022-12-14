@@ -81,7 +81,7 @@ class Server
     {
         if (function_exists('apache_get_modules')) {
             $moduleName = trim($moduleName);
-            $modules    = apache_get_modules();
+            $modules    = \apache_get_modules();
 
             if (empty($moduleName)) {
                 return $modules;
