@@ -79,14 +79,18 @@ class Server
      */
     public function getInstalledApacheModules(?string $moduleName = null): bool|array
     {
-        $moduleName = trim($moduleName);
-        $modules    = apache_get_modules();
+        if (function_exists('apache_get_modules')) {
+            $moduleName = trim($moduleName);
+            $modules    = apache_get_modules();
 
-        if (empty($moduleName)) {
-            return $modules;
+            if (empty($moduleName)) {
+                return $modules;
+            }
+
+            return (bool) array_search($moduleName, $modules);
         }
 
-        return (bool) array_search($moduleName, $modules);
+        return false;
     }
 
 }
