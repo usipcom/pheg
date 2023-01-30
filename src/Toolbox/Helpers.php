@@ -12,7 +12,7 @@ class Helpers
      * @param bool $format
      * @return string
      */
-    public function formatAddress(object $addressObject, bool $format = true): string
+    public function formatAddress(object $addressObject, bool $format = true, bool $countryName = false): string
     {
 
         // format presentation
@@ -27,12 +27,19 @@ class Helpers
         }
 
         // build address strings
-        $address = !empty($address)          ? $address . ", $format"                               : '';
+        $address = !empty($address)          ? $address . ", $format"                                       : '';
         $street  = !empty($object->street)   ? $object->street . ", $format"                                : '';
         $city    = !empty($object->city)     ? ucwords(strtolower($object->city)) . ", $format"             : '';
         $state   = !empty($object->state)    ? ucwords(strtolower($object->state)) . " "                    : '';
         $zip     = !empty($object->zip_code) ? ' — ' . ucwords(strtolower($object->zip_code)) . ", $format" : '';
         $country = $object->country;
+
+        if ($countryName) {
+            // @todo add country code to country name conversion
+            $country = ucwords(strtolower($country));
+        }else {
+            $country = strtoupper($country);
+        }
 
         return trim("
            $address
