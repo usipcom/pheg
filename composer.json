@@ -35,7 +35,7 @@
         "adbario/php-dot-notation": ">=3.1.1",
         "ramsey/uuid": "^4.3.1",
         "spomky-labs/otphp": "^10.0.3",
-        "nesbot/carbon": "^2.57.0",
+        "nesbot/carbon": ">=2.66.0",
         "cocur/slugify": "^4.1.0",
         "vincoweb/easy-php-file-info": "^1.0.6",
         "respect/validation": "^2.2.3",
