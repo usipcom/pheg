@@ -57,7 +57,6 @@
         "justinrainbow/json-schema": "^5.2.11",
         "seld/jsonlint": "^1.8.9",
         "coduo/php-humanizer": "^4.0.2",
-        "voku/stringy": "^6.5.3",
         "rinvex/countries": "^v8.1.0",
         "soundasleep/html2text": "dev-master"
     },
@@ -72,9 +71,9 @@
     },
 
     "suggest": {
-        "ext-bcmath": "Compare time units with high precision"
+        "ext-bcmath": "Compare time units with high precision",
+        "voku/stringy": "A PHP string manipulation library with multibyte support."
     },
-
     "autoload": {
         "psr-4": {
             "Simtabi\\Pheg\\": "src/"
