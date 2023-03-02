@@ -5,8 +5,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\Enum;
-
+namespace Simtabi\Pheg\Toolbox\Intel\Info\Os\Enum;
 final class OsName extends Enum
 {
     public const AIX = 'AIX';

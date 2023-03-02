@@ -8,17 +8,11 @@
 namespace Simtabi\Pheg\Toolbox\Intel\Info\Os;
 
 use Exception;
-use Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\Enum\Family;
-use Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\Enum\FamilyName;
-use Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\Enum\Os as OsEnum;
-use Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\Enum\OsName;
+use Simtabi\Pheg\Toolbox\Intel\Info\Os\Enum\Family;
+use Simtabi\Pheg\Toolbox\Intel\Info\Os\Enum\FamilyName;
+use Simtabi\Pheg\Toolbox\Intel\Info\Os\Enum\Os as OsEnum;
+use Simtabi\Pheg\Toolbox\Intel\Info\Os\Enum\OsName;
 use Simtabi\Pheg\Toolbox\Intel\Info\Os\Contracts\OsInfoInterface;
-use function define;
-use function defined;
-use function is_string;
-
-use const PHP_OS;
-use const PHP_OS_FAMILY;
 
 final class Os implements OsInfoInterface
 {
