@@ -25,7 +25,6 @@
         "ext-ctype": "*",
         "ext-intl": "*",
         "ext-bcmath": "*",
-        "ext-apache": "*",
         "ext-mbstring": "*",
         "ext-fileinfo": "*",
         "symfony/filesystem": "*",
@@ -63,6 +62,7 @@
         "soundasleep/html2text": "dev-master"
     },
     "require-dev": {
+        "ext-apache": "*",
         "symfony/translation": "^v6.0.6",
         "symfony/yaml": "^v6.0.3",
         "aeon-php/calendar": "^1.0.4",
