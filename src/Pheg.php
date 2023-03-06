@@ -21,6 +21,9 @@ use Simtabi\Pheg\Toolbox\CsvParser;
 use Simtabi\Pheg\Toolbox\Data\DataFactory;
 use Simtabi\Pheg\Toolbox\Distance\Calculate;
 use Simtabi\Pheg\Toolbox\Helpers;
+use Simtabi\Pheg\Toolbox\PhoneNumber\Exceptions\PhoneNumberParseException;
+use Simtabi\Pheg\Toolbox\PhoneNumber\PhoneNumber;
+use Simtabi\Pheg\Toolbox\PhoneNumber\Supports\PhoneNumberFormat;
 use Simtabi\Pheg\Toolbox\Time\Time;
 use Simtabi\Pheg\Toolbox\Email;
 use Simtabi\Pheg\Toolbox\Env;
@@ -34,7 +37,6 @@ use Simtabi\Pheg\Toolbox\Media\Media;
 use Simtabi\Pheg\Toolbox\JSON\JSON;
 use Simtabi\Pheg\Toolbox\Name;
 use Simtabi\Pheg\Toolbox\Password;
-use Simtabi\Pheg\Toolbox\PhoneNumber;
 use Simtabi\Pheg\Toolbox\PhpDocs;
 use Simtabi\Pheg\Toolbox\Request;
 use Simtabi\Pheg\Toolbox\Sanitize;
@@ -109,6 +111,14 @@ class Pheg
     public function json(): JSON
     {
         return new JSON();
+    }
+
+    /**
+     * @throws PhoneNumberParseException
+     */
+    public function phoneNumber(string $phoneNumber, ?string $regionCode = PhoneNumberFormat::DEFAULT_REGION): \Simtabi\Pheg\Toolbox\PhoneNumber\PhoneNumber
+    {
+        return PhoneNumber::parse($phoneNumber, $regionCode);
     }
 
     public function media(): Media
@@ -240,11 +250,6 @@ class Pheg
     public function password(): Password
     {
         return new Password;
-    }
-
-    public function phoneNumber(): PhoneNumber
-    {
-        return new PhoneNumber;
     }
 
     public function phpDocs(): PhpDocs

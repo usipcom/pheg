@@ -239,76 +239,170 @@ final class Email
         return is_array($emails) ? array_keys(array_flip($emails)) : [$emails];
     }
 
-
-
     /**
-     * method masks the username of an email address
-     *
-     * @param string $email the email address to mask
-     * @param int $level the percent of the username to mask
-     * @param string $char the character to use to mask with
-     * @return false|string $result
-     */
-    public function mask($email, $level = 50, $char = '*' ){
-
-        if(!empty($email)){
-            list( $user, $domain ) = preg_split("/@/", $email );
-
-            //username parts mask
-            $len_user            = strlen( $user );
-            $username_mask_count = floor( $len_user * $level /100 );
-            $username_offset     = floor( ( $len_user - $username_mask_count ) / 2 );
-            $masked_username     = substr( $user, 0, (int)$username_offset )
-                .str_repeat( $char, (int)$username_mask_count)
-                .substr( $user, (int)$username_mask_count);
-
-            //domain part mask
-            $len_domain          = strlen( $user );
-            $random              = rand(60,90);
-            $domain_mask_count   = floor( $len_domain * $random /100 );
-            $domain_offset       = floor( ( $len_domain - $domain_mask_count ) / 2 );
-            $masked_domain       = substr( $domain, 0, (int)$domain_offset )
-                .str_repeat( $char, (int)$domain_mask_count)
-                .substr( $domain, (int)$domain_mask_count);
-
-            //return results
-            return( $masked_username.'@'.$masked_domain );
-
-        }
-
-        return false;
-    }
-
-    /**
-     * Obfuscates email addresses
-     * ryan@yellowpencil.com == ry**@ye**********.com
+     * Splits a given email address into various parts
      *
      * @param string $email
      *
-     * @return string
+     * @return array
      */
-    function obfuscate(string $email)
+    public function splitEmailToParts(string $email): array
     {
-        $out = [];
-        foreach (explode("@", $email) as $str) {
-            array_push(
-                $out,
-                preg_replace_callback(
-                    '/(?<=^.{2})[^.]*/',
-                    function ($m) {
-                        return str_repeat('*', strlen($m[0]));
-                    },
-                    $str
-                )
-            );
+        $parts      = explode("@", $email); // Splits the email at the @ symbol
+        $username   = $parts[0] ?? null; // Can be used as a username if you'd like, but we'll use it to find names anyway
+        $domain     = $parts[1] ?? null; // Grab the domain part of the email
+        $delimiters = [".", "-", "_"]; // List of common email name delimiters, feel free to add to it
+
+        if (!empty($username))
+        {
+            foreach ($delimiters as $delimiter)
+            {
+                // Checks all the delimiters
+                if ( strpos($username, $delimiter) )
+                { // If the delimiter is found in the string
+                    $nameParts = preg_replace("/\d+$/","", $username); // Remove numbers from string
+                    $nameParts = explode( $delimiter, $nameParts); // Split the username at the delimiter
+                    break; // If we've found a delimiter we can move on
+                }
+            }
+
+            if ( isset($nameParts) && !empty($nameParts) )
+            {
+                // If we've found a delimiter we can use it
+                $firstName = ucfirst(strtolower(($nameParts[0] ?? null))); // Let's tidy up the names so the first letter is a capital and rest lower case
+                $lastName  = ucfirst(strtolower(($nameParts[1] ?? null)));
+
+                /* This code just shows what you can do with the names, but you can use it for something more interesting! */
+                echo $firstName . ' ' . $lastName;
+            }
         }
 
-        return implode('@', $out);
+        return [
+            'first_name' => $firstName ?? null,
+            'last_name'  => $lastName  ?? null,
+            'domain'     => $domain  ?? null,
+        ];
     }
 
-    public function encode($email='info@domain.com', $linkText='Contact Us', $attrs ='class="emailencoder"' )
+    /**
+     * Masks parts of an email address
+     *
+     * @param string $email          the email address to mask
+     * @param int    $maskPercentile the percent of the username to mask
+     * @param string $char           the character to use to mask with
+     *
+     * @return string|null $result
+     */
+    public function mask(string $email, int $maskPercentile = 50, string $char = '*' ): string|null
     {
-        // remplazar aroba y puntos
+        $str     = new Str();
+        $data    = explode("@", $email);
+        $name    = (string) $data[0] ?? '';
+        $domain  = (string) $data[1] ?? '';
+
+        if (!empty($name) && !empty($domain))
+        {
+            $maskedName     = $str->maskString($name, $maskPercentile, $char);
+            $maskPercentile = rand(mb_strlen($email, (mb_strlen($email) / 2)) / $maskPercentile);
+            $maskedDomain   = $str->maskString($domain, $maskPercentile, $char);
+
+            //return results
+            return("{$maskedName}@{$maskedDomain}");
+        }
+
+        return null;
+    }
+
+    /**
+     * Masks a given email address
+     *
+     * @param string $email
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    public function maskAlt(string $email, string $delimiter = '@'): string
+    {
+        $data = [];
+        foreach (explode($delimiter, $email) as $str) {
+            $data[] = preg_replace_callback('/(?<=^.{2})[^.]*/', function ($m) {
+                return str_repeat('*', strlen($m[0]));
+            }, $str);
+        }
+
+        return implode($delimiter, $data);
+    }
+
+    /**
+     * Obfuscate email
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function obfuscate(string $string): string
+    {
+
+        // Safeguard string.
+        $safeguard = '$%$!!$%$';
+
+        // Safeguard some stuff before parsing.
+        $prevent   = [
+            '|<input [^>]*@[^>]*>|is', // <input>
+            '|(<textarea(?:[^>]*)>)(.*?)(</textarea>)|is', // <textarea>
+            '|(<head(?:[^>]*)>)(.*?)(</head>)|is', // <head>
+            '|(<script(?:[^>]*)>)(.*?)(</script>)|is', // <script>
+        ];
+
+        foreach ($prevent as $pattern) {
+            $string = preg_replace_callback($pattern, function ($matches) use ($safeguard) {
+                return str_replace('@', $safeguard, $matches[0]);
+            }, $string);
+        }
+
+        // Define patterns for extracting emails.
+        $patterns = [
+            '|\<a[^>]+href\=\"mailto\:([^">?]+)(\?[^?">]+)?\"[^>]*\>(.*?)\<\/a\>|ism', // mailto anchors
+            '|[_a-z0-9-]+(?:\.[_a-z0-9-]+)*@[a-z0-9-]+(?:\.[a-z0-9-]+)*(?:\.[a-z]{2,3})|i', // plain emails
+        ];
+
+        foreach ($patterns as $pattern)
+        {
+            $string = preg_replace_callback($pattern, function ($parts) use ($safeguard)
+            {
+                // Clean up element parts.
+                $parts = array_map('trim', $parts);
+
+                // ROT13 implementation for JS-enabled browsers
+                $js    = '<script type="text/javascript">
+                            Rot13 = {map:null,convert:function(e){Rot13.init();var t="";for(i=0;i<e.length;i++){var n=e.charAt(i);t+=n>="A"&&n<="Z"||n>="a"&&n<="z"?Rot13.map[n]:n}return t},init:function(){if(Rot13.map!=null)return;var e=new Array;var t="abcdefghijklmnopqrstuvwxyz";for(i=0;i<t.length;i++)e[t.charAt(i)]=t.charAt((i+13)%26);for(i=0;i<t.length;i++)e[t.charAt(i).toUpperCase()]=t.charAt((i+13)%26).toUpperCase();Rot13.map=e},write:function(e){document.write(Rot13.convert(e))}}
+                            
+                            Rot13.write(' . "'" . str_rot13($parts[0]) . "'" . ');
+                          </script>';
+
+                // Reversed direction implementation for non-JS browsers
+                if (stripos($parts[0], '<a') === 0) {
+                    // Mailto tag; if link content equals the email, just display the email, otherwise display a formatted string.
+                    $noJs = ($parts[1] == $parts[3]) ? $parts[1] : (' > ' . $parts[1] . ' < ' . $parts[3]);
+                } else {
+                    // Plain email; display the plain email.
+                    $noJs = $parts[0];
+                }
+
+                $noJs = '<noscript><span style="unicode-bidi:bidi-override;direction:rtl;">' . strrev($noJs) . '</span></noscript>';
+
+                // Safeguard the obfuscation, so it won't get picked up by the next iteration.
+                return str_replace('@', $safeguard, $js . $noJs);
+            }, $string);
+        }
+
+        // Revert all safeguards.
+        return str_replace($safeguard, '@', $string);
+    }
+
+    public function encode(string $email = 'info@domain.com', string $linkText = 'Contact Us', string $attrs = 'class="emailencoder"' )
+    {
+
         $email = str_replace('@', '&#64;', $email);
         $email = str_replace('.', '&#46;', $email);
         $email = str_split($email, 5);

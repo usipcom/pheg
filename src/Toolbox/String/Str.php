@@ -1674,4 +1674,25 @@ final class Str
         return mb_convert_case(preg_replace("/[^a-zA-Z 0-9]+/", $with, $text), MB_CASE_TITLE, 'UTF-8');
     }
 
+    /**
+     * This method masks parts of a given string
+     *
+     * @param string|int $string         the number address to mask
+     * @param int        $maskPercentile the percent of the number to mask
+     * @param string     $maskChar       the character to use to mask with
+     *
+     * @return string $result
+     */
+    public function maskString(string|int $string, int $maskPercentile = 60, string $maskChar = '*'): string
+    {
+
+        $maskPercentile  = $maskPercentile >= 100 ? 99 : $maskPercentile;
+        $numberLength    = mb_strlen((string) $string);
+        $numberMaskCount = floor($numberLength * $maskPercentile / 100);
+        $numberOffset    = floor(( $numberLength - $numberMaskCount ) / 2);
+
+        return substr($string, 0, (int) $numberOffset)
+            .str_repeat( $maskChar, (int) $numberMaskCount)
+            .substr( $string, (int) $numberMaskCount);
+    }
 }
