@@ -41,7 +41,7 @@ return [
         'beta_tester'   => 'Beta Tester',
         'creative'      => 'Creative',
         'vendor'        => 'Vendor',
-        'client'        => 'Client',
+        'client'        => 'OpenAiClient',
         'regular'       => 'Regular',
         'guest'         => 'Guest',
     ],

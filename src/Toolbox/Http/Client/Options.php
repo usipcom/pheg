@@ -1,13 +1,13 @@
 <?php
 
 /**
- * JBZoo Toolbox - Http-Client
+ * JBZoo Toolbox - Http-OpenAiClient
  *
  * This file is part of the JBZoo Toolbox project.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package    Http-Client
+ * @package    Http-OpenAiClient
  * @license    MIT
  * @copyright  Copyright (C) JBZoo.com, All rights reserved.
  * @link       https://github.com/JBZoo/Http-Client
@@ -34,7 +34,7 @@ final class Options
     public const DEFAULT_EXCEPTIONS      = false;
     public const DEFAULT_ALLOW_REDIRECTS = true;
     public const DEFAULT_MAX_REDIRECTS   = 10;
-    public const DEFAULT_USER_AGENT      = 'JBZoo/Http-Client';
+    public const DEFAULT_USER_AGENT      = 'JBZoo/Http-OpenAiClient';
 
     /**
      * @var Data
