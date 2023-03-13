@@ -41,30 +41,34 @@ class Compare
      *
      * @return string Returns the phrase passed in
      */
-    public function levenshtein($first, $second)
+    public function levenshtein(string $first, string $second): string
     {
-        $l = new \Simtabi\Pheg\Toolbox\String\Compare\Levenshtein();
-
-        return $l->compare($first, $second);
+        return (new Levenshtein())->compare($first, $second);
     }
 
-    public function jaroWinkler($first, $second)
+    public function jaroWinkler(string $first, string $second): float
     {
-        $jw = new \Simtabi\Pheg\Toolbox\String\Compare\JaroWinkler();
-
-        return $jw->compare($first, $second);
+        return (new JaroWinkler())->compare($first, $second);
     }
 
-    public function smg($first, $second)
+    public function smg(string $first, string $second): float|int
     {
-        $o = new \Simtabi\Pheg\Toolbox\String\Compare\SmithWatermanGotoh();
-        return $o->compare($first, $second);
+        return (new SmithWatermanGotoh())->compare($first, $second);
     }
 
-    public function similarText($first, $second)
+    public function similarText($first, $second): float
     {
         similar_text($first, $second, $percent);
 
         return $percent;
+    }
+
+    public function string(string $var1, string $var2): bool
+    {
+        if (strcasecmp($var1, $var2) == 0) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1695,4 +1695,5 @@ final class Str
             .str_repeat( $maskChar, (int) $numberMaskCount)
             .substr( $string, (int) $numberMaskCount);
     }
+
 }
