@@ -1,5 +1,5 @@
 {
-    "name"              : "simtabi/pheg",
+    "name"              : "usipcom/pheg",
     "license"           : "MIT",
     "description"       : "A collection of handy and useful utility library for the everyday PHP developer",
     "type"              : "package",
