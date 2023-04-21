@@ -45,7 +45,7 @@
         "irfa/php-sn-generator": "^1.1",
         "html2text/html2text": "^4.3.1",
         "phlak/strgen": "^3.0.0",
-        "gpslab/base64uid": "dev-master",
+        "gpslab/base64uid": "^1.2",
         "ezyang/htmlpurifier": "^v4.13.0",
         "fightbulc/moment": "^1.33.0",
         "maxakawizard/json-collection-parser": "dev-master",
